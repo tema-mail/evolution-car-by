@@ -59,7 +59,7 @@ old,status,clicks,impressions,position,action,target,why,top_queries,tilda_redir
 /lixiangl62024model,200,12,2394,23.9,301,/catalog/lixiang/l6/,есть такая же карточка товара,li l6; li l6 купить минск; li auto l6 2024; li6 купить минск; ли 6 купить минск,
 /teslamodely,200,11,1517,25.3,301,/catalog/tesla/model-y/,есть такая же карточка товара,купить тесла модель y; тесла у; купить теслу в беларуси; тесла беларусь; tesla беларусь,
 /zeekr0012024model,200,11,651,20.1,301,/catalog/zeekr/001/,есть такая же карточка товара,zeekr 001 2024; зикр 001 купить; zeekr купить в беларуси; zeekr 001 купить минск; zeekr 001 купить беларусь,
-/fawbestunenat-85658,301,11,301,12.0,склеить дубль → новая карточка,(новая карточка вместо /fawbestunenat),дубль Tilda /fawbestunenat-85658 → /fawbestunenat; модели нет на новом сайте — перенести страницу,faw bestune nat; faw bestune nat купить; faw bestune; nat bestune; электромобиль faw bestune nat,/fawbestunenat
+/fawbestunenat-85658,301,11,301,12.0,склеить дубль,/catalog/faw/bestune-nat/,"дубль страницы /fawbestunenat на Тильде, склеиваем с её карточкой",faw bestune nat; faw bestune nat купить; faw bestune; nat bestune; электромобиль faw bestune nat,/fawbestunenat
 /bydyuanpluschampionedition,200,11,179,12.6,301,/catalog/byd/yuan-plus-chapmion-edition/,есть такая же карточка товара,byd champion; byd чемпион; champion plus автомати; byd yuan plus купить; byd yuan plus champion edition,
 /zeekr7x2024,200,10,584,19.8,301,/catalog/zeekr/7x/,есть такая же карточка товара,zeekr 7x купить минск; zeekr 7x; купить zeekr 7x; zeekr 7x купить в минске; купить зикер 7х,
 /bydsong,200,9,1645,33.6,301,/catalog/byd/song-plus-ev/,есть такая же карточка товара,byd song plus купить минск; купить byd song plus в беларуси; купить byd song plus ev; byd song plus; byd song plus из китая,
@@ -96,7 +96,7 @@ old,status,clicks,impressions,position,action,target,why,top_queries,tilda_redir
 /geelygeometryee,200,2,177,11.3,301,/catalog/geely/,"модели нет, трафика почти нет — на каталог",джили геометрия е; geely geometry e; geely geometry; geely geometry e характеристики; купить электромобиль geely,
 /lixiangl82024model,200,2,171,12.5,301,/catalog/lixiang/l8/,есть такая же карточка товара,lixiang l8; купить ли 8 беларусь; 2024; li l8 купить; лисян 2024 цена,
 /tproduct/713015369652-kia-ev5,200,2,170,13.2,301,/catalog/,"модели нет, трафика почти нет — на каталог",kia ev5; киа ev5; kia ev 5; kia evo 5; ev 5 kia,
-/hongqih9top-78252,301,2,145,10.2,склеить дубль → новая карточка,(новая карточка вместо /hongqih9top),дубль Tilda /hongqih9top-78252 → /hongqih9top; модели нет на новом сайте — перенести страницу,хончи h9 купить; hongqi h9; honghi; honghi h9; h9,/hongqih9top
+/hongqih9top-78252,301,2,145,10.2,склеить дубль,/catalog/hongqi/h9/,"дубль страницы /hongqih9top на Тильде, склеиваем с её карточкой",хончи h9 купить; hongqi h9; honghi; honghi h9; h9,/hongqih9top
 /avto-iz-korei,200,2,107,6.0,301,/korea/,есть такой же раздел,evolution car; эволюшн кар; авто из кореи минск; евокарс; авто из кореи в минск,
 /tproduct/739377043182-zeekr-7x,200,2,100,47.3,301,/catalog/,"модели нет, трафика почти нет — на каталог",zeekr 7x; зикр 7x; zeekr 7; зикр 7; zeekr 7x canada,
 /hiphiy,200,2,73,13.4,301,/catalog/,"модели нет, трафика почти нет — на каталог",hiphi; hiphi y; купить хифи; hiphi y цена; купить электромобиль в беларуси,
@@ -107,16 +107,16 @@ old,status,clicks,impressions,position,action,target,why,top_queries,tilda_redir
 /avto-iz-evropy,200,1,202,3.6,301,/europa/,есть такой же раздел,evolution car; эволюшн кар; evolutioncar; evolution cars; evalution car,
 /kupit-elektromobil-v-minske,200,1,122,4.1,301,/catalog/elektromobili/,есть такой же раздел,купить электричку в минске; evolution car; эволюшн кар; evolutioncar; купить электромобиль минск,
 /lixiang,200,1,111,38.4,301,/catalog/lixiang/,каталог марки,lixiang сайт; lixiang; lixiang электромобиль; lixiang официальный сайт; каталог lixiang,
-/geelygeometryc-10231,301,1,90,12.8,склеить дубль → новая карточка,(новая карточка вместо /geelygeometryc),дубль Tilda /geelygeometryc-10231 → /geelygeometryc; модели нет на новом сайте — перенести страницу,geely geometry c; geely geometry c цена; geometry c geely; geely c; geely geometry c купить,/geelygeometryc
+/geelygeometryc-10231,301,1,90,12.8,склеить дубль,/catalog/geely/geometry-c/,"дубль страницы /geelygeometryc на Тильде, склеиваем с её карточкой",geely geometry c; geely geometry c цена; geometry c geely; geely c; geely geometry c купить,/geelygeometryc
 /about-87984,301,1,44,2.3,склеить дубль,/about/,дубль Tilda /about-87984 → /about2; есть такой же раздел,эволюшн кар; evolution car,/about2
 /page60563519.html,301,1,43,22.3,склеить дубль,/,дубль Tilda /page60563519.html → /; есть такой же раздел,evolutioncar; evolution car; купить электромобиль из китая в минске; электромобили из китая в минске; заказ электромобиля из китая,/
-/denzad9-65661,301,1,42,41.1,склеить дубль → новая карточка,(новая карточка вместо /denzad9),дубль Tilda /denzad9-65661 → /denzad9; модели нет на новом сайте — перенести страницу,denza d9 купить минск; denza d9; denza; денза,/denzad9
-/toyotabz4x-98955,301,1,40,10.5,склеить дубль → новая карточка,(новая карточка вместо /toyotabz4x),дубль Tilda /toyotabz4x-98955 → /toyotabz4x; модели нет на новом сайте — перенести страницу,toyota bz4x; тойота bz4x,/toyotabz4x
+/denzad9-65661,301,1,42,41.1,склеить дубль,/catalog/denza/d9/,"дубль страницы /denzad9 на Тильде, склеиваем с её карточкой",denza d9 купить минск; denza d9; denza; денза,/denzad9
+/toyotabz4x-98955,301,1,40,10.5,склеить дубль,/catalog/toyota/bz4x/,"дубль страницы /toyotabz4x на Тильде, склеиваем с её карточкой",toyota bz4x; тойота bz4x,/toyotabz4x
 /vwid4cross-35607,301,1,40,7.8,склеить дубль,/catalog/volkswagen/id-4-crozz/,дубль Tilda /vwid4cross-35607 → /vwid4cross; есть такая же карточка товара,vw id 4 crozz; id 4 prime,/vwid4cross
 /geelymonjaro-25139,301,1,39,34.8,склеить дубль,/catalog/geely/monjaro/,дубль Tilda /geelymonjaro-25139 → /geelymonjaro; есть такая же карточка товара,geely monjaro; monjaro geely; автомобиль geely monjaro; джили монджаро; manjaro geely,/geelymonjaro
 /xiaomisu7-35718,301,1,34,13.2,склеить дубль,/catalog/xiaomi/su7/,дубль Tilda /xiaomisu7-35718 → /xiaomisu7; есть такая же карточка товара,xiaomi su7; машина сяоми су 7; xiaomi su7 клиренс,/xiaomisu7
 /zeekr001-70334,301,1,34,12.2,склеить дубль,/catalog/zeekr/001/,дубль Tilda /zeekr001-70334 → /zeekr001; есть такая же карточка товара,zeekr; zeekr автомобиль цена; zeekr из китая; зекарь; машина zeekr цена,/zeekr001
-/hiphiz-35526,301,1,30,11.2,склеить дубль → новая карточка,(новая карточка вместо /hiphiz),дубль Tilda /hiphiz-35526 → /hiphiz; модели нет на новом сайте — перенести страницу,hiphi z,/hiphiz
+/hiphiz-35526,301,1,30,11.2,склеить дубль,/catalog/hiphi/z/,"дубль страницы /hiphiz на Тильде, склеиваем с её карточкой",hiphi z,/hiphiz
 /denza,200,1,29,47.0,301,/catalog/denza/,каталог марки,денза; denza; evolution car; denza z; denza z9s,
 /kiaev5light-62519,301,1,29,8.2,склеить дубль,/catalog/kia/ev5-light/,дубль Tilda /kiaev5light-62519 → /kiaev5light; есть такая же карточка товара,kia ev5; kia v5; mia ev5; киа ev5,/kiaev5light
 /teslamodel3-82329,301,1,26,12.1,склеить дубль,/catalog/tesla/model-3/,дубль Tilda /teslamodel3-82329 → /teslamodel3; есть такая же карточка товара,тесла модель 3; tesla model 3; тесла модел3,/teslamodel3
@@ -126,7 +126,7 @@ old,status,clicks,impressions,position,action,target,why,top_queries,tilda_redir
 /zeekrx-38037,301,1,15,41.7,склеить дубль,/catalog/zeekr/x/,дубль Tilda /zeekrx-38037 → /zeekrx; есть такая же карточка товара,zeekr x электромобиль купить; zeekr электромобиль; зикр х электромобиль; зикр х электромобиль купить; зикр электромобиль,/zeekrx
 /yangwangu8-12790,301,1,14,7.9,склеить дубль,/catalog/yangwang/u8/,дубль Tilda /yangwangu8-12790 → /yangwangu8; есть такая же карточка товара,yangwang u8; u8; u8 автомобиль; yangwang,/yangwangu8
 /mercedeseqb-83428,301,1,11,12.4,склеить дубль,/catalog/mercedes-benz/eqb/,дубль Tilda /mercedeseqb-83428 → /mercedeseqb; есть такая же карточка товара,mercedes benz eqb,/mercedeseqb
-/fawnatpro-14532,301,1,5,10.6,склеить дубль → новая карточка,(новая карточка вместо /fawnatpro),дубль Tilda /fawnatpro-14532 → /fawnatpro; модели нет на новом сайте — перенести страницу,купить электромобиль faw,/fawnatpro
+/fawnatpro-14532,301,1,5,10.6,склеить дубль,/catalog/faw/nat-pro/,"дубль страницы /fawnatpro на Тильде, склеиваем с её карточкой",купить электромобиль faw,/fawnatpro
 /CHANGAN,200,1,2,3,301,/catalog/changan/,каталог марки,,
 /bydyuanup2024,200,0,440,33.7,301,/catalog/byd/yuan-up/,карточка создана из страницы старого сайта,byd yuan plus; byd юань плюс; бид юань плюс; yuan plus; yuan plus byd,
 /tproduct/572630727352-lixiang-l7,200,0,248,39.7,301,/catalog/,"модели нет, трафика почти нет — на каталог",lixiang l7; lixian l7; li xiang l7; lixang l7; lixiang 7,
@@ -138,7 +138,7 @@ old,status,clicks,impressions,position,action,target,why,top_queries,tilda_redir
 /polestar,200,0,81,21.3,301,/catalog/polestar/,каталог марки,polestar; evolution car; volvo polestar; купить polestar 2; polestar 3,
 /leapmotor,200,0,67,6.6,301,/catalog/leapmotor/,каталог марки,эволюшн кар; evolution car; leapmotor; evolutioncar; leapmotor цена,
 /hiphi,200,0,59,50.8,301,/catalog/,"модели нет, трафика почти нет — на каталог",hiphi z; hiphi; купить хифи; hipfi; hiphi x,
-/hyndaielantra2024-17796,301,0,56,62.5,склеить дубль → новая карточка,(новая карточка вместо /hyndaielantra2024),дубль Tilda /hyndaielantra2024-17796 → /hyndaielantra2024; модели нет на новом сайте — перенести страницу,элантра хендай; elantra hyundai; hyundai elantra; хендай элантра; элантра,/hyndaielantra2024
+/hyndaielantra2024-17796,301,0,56,62.5,склеить дубль,/catalog/hyundai/elantra/,"дубль страницы /hyndaielantra2024 на Тильде, склеиваем с её карточкой",элантра хендай; elantra hyundai; hyundai elantra; хендай элантра; элантра,/hyndaielantra2024
 /hongqi,200,0,54,42.7,301,/catalog/hongqi/,каталог марки,hongqi; хонгки; электрокар hongqi,
 /kia,200,0,52,36.5,301,/catalog/kia/,каталог марки,киа электромобиль; kia ev5; киа ev5; kia электромобиль; kia electric car,
 /tproduct/983990031842-byd-yuan-up-2024,200,0,46,34.0,301,/catalog/,"модели нет, трафика почти нет — на каталог",byd yuan up 2024; yuan 2024; yuan up 2024; yuan up; byd yuan up 2024 цена,
@@ -158,7 +158,7 @@ old,status,clicks,impressions,position,action,target,why,top_queries,tilda_redir
 /tproduct/545239578402-zeekr-001-2024-model,200,0,28,21.3,301,/catalog/,"модели нет, трафика почти нет — на каталог",zeekr 001 2024; зикр 001 2024,
 /tproduct/803353547692-lixiang-l9,200,0,27,44.8,301,/catalog/,"модели нет, трафика почти нет — на каталог",lixiang l9; lixiang li 9; li xiang l9; l9 lixiang; li l9,
 /changandeepals7-95028,301,0,26,13.3,склеить дубль,/catalog/deepal/s07/,дубль Tilda /changandeepals7-95028 → /changandeepals7; есть такая же карточка товара,changan deepal s7; changan deepal купить; deepal s7,/changandeepals7
-/vwid6cross-33023,301,0,26,13.6,склеить дубль → новая карточка,(новая карточка вместо /vwid6cross),дубль Tilda /vwid6cross-33023 → /vwid6cross; модели нет на новом сайте — перенести страницу,id 6 crozz; id 6; volkswagen id.6; volkswagen id.6 crozz; volkswagen id 6 crozz,/vwid6cross
+/vwid6cross-33023,301,0,26,13.6,склеить дубль,/catalog/volkswagen/id6-crozz/,"дубль страницы /vwid6cross на Тильде, склеиваем с её карточкой",id 6 crozz; id 6; volkswagen id.6; volkswagen id.6 crozz; volkswagen id 6 crozz,/vwid6cross
 /changanuni-t2024,200,0,24,5.8,301,/catalog/changan/,"модели нет, трафика почти нет — на каталог",changan uni-t 2024; t2024; changan 24; changan uni t 2024,
 /tproduct/848301847172-changan-deepal-s7,200,0,23,24.8,301,/catalog/,"модели нет, трафика почти нет — на каталог",deepal s7; changan deepal; changan deepal s7; чанган дипал s7; чанган дипал,
 /geelycoolray-48570,301,0,20,7.2,склеить дубль,/catalog/geely/coolray/,дубль Tilda /geelycoolray-48570 → /geelycoolray; есть такая же карточка товара,cool ray car,/geelycoolray
@@ -168,11 +168,11 @@ old,status,clicks,impressions,position,action,target,why,top_queries,tilda_redir
 /nissanariya-96597,301,0,19,16.8,склеить дубль,/catalog/nissan/aryia/,дубль Tilda /nissanariya-96597 → /nissanariya; есть такая же карточка товара,nissan ariya; купить nissan ariya; ниссан ария; купить ниссан ария; nissan arya,/nissanariya
 /tproduct/188547184072-byd-song-plus,200,0,19,20.7,301,/catalog/,"модели нет, трафика почти нет — на каталог",byd song plus,
 /avatr12-85092,301,0,18,38.5,склеить дубль,/catalog/avatr/12/,дубль Tilda /avatr12-85092 → /avatr12; есть такая же карточка товара,avatr 12; avatr 12 купить; avatr 12 цены; аватар 12,/avatr12
-/geelyradarrd6-21854,301,0,17,6.7,склеить дубль → новая карточка,(новая карточка вместо /geelyradarrd6),дубль Tilda /geelyradarrd6-21854 → /geelyradarrd6; модели нет на новом сайте — перенести страницу,,/geelyradarrd6
+/geelyradarrd6-21854,301,0,17,6.7,склеить дубль,/catalog/geely/radar-rd6/,"дубль страницы /geelyradarrd6 на Тильде, склеиваем с её карточкой",,/geelyradarrd6
 /avto-iz-kitaya-s-probegom,200,0,15,9.9,301,/catalog/,"модели нет, трафика почти нет — на каталог",авто из китая с пробегом; эволюшн кар; evolutioncar; авто из китая с пробегом под заказ; авто с китая с пробегом,
 /polestar4-71069,301,0,14,10,склеить дубль,/catalog/polestar/4/,дубль Tilda /polestar4-71069 → /polestar4; есть такая же карточка товара,polestar; polestar 4,/polestar4
 /tproduct/389184842182-polestar-4,200,0,14,10.1,301,/catalog/,"модели нет, трафика почти нет — на каталог",polestar 4; polestar,
-/gacaiony-26112,301,0,12,9.8,склеить дубль → новая карточка,(новая карточка вместо /gacaiony),дубль Tilda /gacaiony-26112 → /gacaiony; модели нет на новом сайте — перенести страницу,gac aion; gac aion y; y model,/gacaiony
+/gacaiony-26112,301,0,12,9.8,склеить дубль,/catalog/gac/aion-y/,"дубль страницы /gacaiony на Тильде, склеиваем с её карточкой",gac aion; gac aion y; y model,/gacaiony
 /mercedes,200,0,12,27.8,301,/catalog/mercedes-benz/,каталог марки,mercedes benz eqb; mercedes eqb; мерседес электромобиль,
 /hyndai,200,0,11,22.4,301,/catalog/hyundai/,каталог марки,,
 /tesla,200,0,11,41.9,301,/catalog/tesla/,каталог марки,тесла модели; tesla cars by; tesla catalog; tesla model; машины тесла,
@@ -180,20 +180,20 @@ old,status,clicks,impressions,position,action,target,why,top_queries,tilda_redir
 /voyahdreamer-55631,301,0,11,8.2,склеить дубль,/catalog/voyah/dreamer/,дубль Tilda /voyahdreamer-55631 → /voyahdreamer; есть такая же карточка товара,,/voyahdreamer
 /bydqinplushono-78212,301,0,10,6.9,склеить дубль,/catalog/byd/qin-plus-ev/,дубль Tilda /bydqinplushono-78212 → /bydqinplushono; есть такая же карточка товара,byd qin plus,/bydqinplushono
 /geelycool,200,0,10,6.5,301,/catalog/geely/coolray/,есть такая же карточка товара,geely cool,
-/geelygeometrye2,301,0,10,6.9,склеить дубль → новая карточка,(новая карточка вместо /geelygeometrye),дубль Tilda /geelygeometrye2 → /geelygeometrye; модели нет на новом сайте — перенести страницу,,/geelygeometrye
+/geelygeometrye2,301,0,10,6.9,склеить дубль,/catalog/geely/geometry-e/,"дубль страницы /geelygeometrye на Тильде, склеиваем с её карточкой",,/geelygeometrye
 /zeekr009-46313,301,0,10,35.5,склеить дубль,/catalog/zeekr/009/,дубль Tilda /zeekr009-46313 → /zeekr009; есть такая же карточка товара,zeekr из китая; китайский электрокар zeekr; китайский электромобиль zeekr; электромобиль китай zeekr,/zeekr009
 /avto-s-probegom-iz-kitaya-katalog,200,0,9,12.3,301,/catalog/,"модели нет, трафика почти нет — на каталог",evolution car; эволюшн кар; авто из китая; авто из китая с пробегом,
 /lotuseletre-55537,301,0,9,20.4,склеить дубль,/catalog/lotus/eletre/,дубль Tilda /lotuseletre-55537 → /lotuseletre; есть такая же карточка товара,lotus eletre,/lotuseletre
 /tproduct/493318634052-byd-qin-plus-honor-edition-2024,200,0,9,8.7,301,/catalog/,"модели нет, трафика почти нет — на каталог",honor qin,
 /DENZA,200,0,8,75.8,301,/catalog/denza/,каталог марки,denza d9; denza; denza z9,
-/byddolphin-32627,301,0,8,10.4,склеить дубль → новая карточка,(новая карточка вместо /byddolphin),дубль Tilda /byddolphin-32627 → /byddolphin; модели нет на новом сайте — перенести страницу,byd dolphin,/byddolphin
+/byddolphin-32627,301,0,8,10.4,склеить дубль,/catalog/byd/dolphin/,"дубль страницы /byddolphin на Тильде, склеиваем с её карточкой",byd dolphin,/byddolphin
 /geely,200,0,8,27.8,301,/catalog/geely/,каталог марки,джили каталог; geely catalog; geely evolution; модели джили в беларуси,
 /hiphiy-79836,301,0,8,8.8,склеить дубль,/catalog/,"дубль Tilda /hiphiy-79836 → /hiphiy; модели нет, трафика почти нет — на каталог",китайская машина y,/hiphiy
-/hondaenp1-45566,301,0,8,36.4,склеить дубль → новая карточка,(новая карточка вместо /hondaenp1),дубль Tilda /hondaenp1-45566 → /hondaenp1; модели нет на новом сайте — перенести страницу,honda e np1; хонда электромобиль; honda e:np1,/hondaenp1
+/hondaenp1-45566,301,0,8,36.4,склеить дубль,/catalog/honda/enp1/,"дубль страницы /hondaenp1 на Тильде, склеиваем с её карточкой",honda e np1; хонда электромобиль; honda e:np1,/hondaenp1
 /leapmotorc11-87898,301,0,8,8.8,склеить дубль,/catalog/leapmotor/c11/,дубль Tilda /leapmotorc11-87898 → /leapmotorc11; есть такая же карточка товара,с 11; электромобиль leapmotor,/leapmotorc11
 /lynkampco09-47771,301,0,8,10,склеить дубль,/catalog/lynk-co/900-lynk-co-09/,дубль Tilda /lynkampco09-47771 → /lynkampco09; есть такая же карточка товара,lenkino,/lynkampco09
 /bydyuanpluschampionedition-33787,301,0,7,7,склеить дубль,/catalog/byd/yuan-plus-chapmion-edition/,дубль Tilda /bydyuanpluschampionedition-33787 → /bydyuanpluschampionedition; есть такая же карточка товара,byd yuan plus champion edition; byd champion price,/bydyuanpluschampionedition
-/lixiangmega-34631,301,0,7,24.1,склеить дубль → новая карточка,(новая карточка вместо /lixiangmega),дубль Tilda /lixiangmega-34631 → /lixiangmega; модели нет на новом сайте — перенести страницу,lixiang mega; купить лисян мега,/lixiangmega
+/lixiangmega-34631,301,0,7,24.1,склеить дубль,/catalog/lixiang/mega/,"дубль страницы /lixiangmega на Тильде, склеиваем с её карточкой",lixiang mega; купить лисян мега,/lixiangmega
 /tproduct/700044617732-denza-z9-gt,200,0,7,8.9,301,/catalog/,"модели нет, трафика почти нет — на каталог",denza z9; denza z9 gt,
 /bydseal-64238,301,0,6,60.7,склеить дубль,/catalog/byd/seal/,дубль Tilda /bydseal-64238 → /bydseal; есть такая же карточка товара,кулрей,/bydseal
 /geelycool-37808,301,0,6,7.5,склеить дубль,/catalog/geely/coolray/,дубль Tilda /geelycool-37808 → /geelycool; есть такая же карточка товара,geely cool,/geelycool
@@ -202,18 +202,18 @@ old,status,clicks,impressions,position,action,target,why,top_queries,tilda_redir
 /tproduct/209875847302-lixiang-l6-2024,200,0,5,45.4,301,/catalog/,"модели нет, трафика почти нет — на каталог",li l6 2024; lixiang l6 2024,
 /zeekr7x2024-75276,404,0,5,9.4,301,/catalog/,"сейчас 404, есть показы",zeekr 7x,
 /changanuni-k2024-79967,301,0,4,9.2,склеить дубль,/catalog/changan/,"дубль Tilda /changanuni-k2024-79967 → /changanuni-k2024; модели нет, трафика почти нет — на каталог",changan uni-k 2024,/changanuni-k2024
-/lynkampco05-39108,301,0,4,11,склеить дубль → новая карточка,(новая карточка вместо /lynkampco05),дубль Tilda /lynkampco05-39108 → /lynkampco05; модели нет на новом сайте — перенести страницу,lynk co 05,/lynkampco05
+/lynkampco05-39108,301,0,4,11,склеить дубль,/catalog/lynk-co/05/,"дубль страницы /lynkampco05 на Тильде, склеиваем с её карточкой",lynk co 05,/lynkampco05
 /honda,200,0,3,12,301,/catalog/honda/,каталог марки,,
 /lynk,200,0,3,7,301,/catalog/,"модели нет, трафика почти нет — на каталог",,
 /avatr11-95187,301,0,2,10,склеить дубль,/catalog/avatr/11/,дубль Tilda /avatr11-95187 → /avatr11; есть такая же карточка товара,,/avatr11
-/jetourdashengplug-inhibrid-18027,301,0,2,8,склеить дубль → новая карточка,(новая карточка вместо /jetourdashengplug-inhibrid),дубль Tilda /jetourdashengplug-inhibrid-18027 → /jetourdashengplug-inhibrid; модели нет на новом сайте — перенести страницу,,/jetourdashengplug-inhibrid
+/jetourdashengplug-inhibrid-18027,301,0,2,8,склеить дубль,/catalog/jetour/dashing-phev/,"дубль страницы /jetourdashengplug-inhibrid на Тильде, склеиваем с её карточкой",,/jetourdashengplug-inhibrid
 /,200,0,1,1,301,/,есть такой же раздел,evolution car; эволюшн кар; evolution; купить электромобиль; evolutioncar,
 /Hyndai,200,0,1,6,301,/catalog/hyundai/,каталог марки,,
-/changanuni-v-50187,301,0,1,1,склеить дубль → новая карточка,(новая карточка вместо /changanuni-v),дубль Tilda /changanuni-v-50187 → /changanuni-v; модели нет на новом сайте — перенести страницу,,/changanuni-v
+/changanuni-v-50187,301,0,1,1,склеить дубль,/catalog/changan/uni-v/,"дубль страницы /changanuni-v на Тильде, склеиваем с её карточкой",,/changanuni-v
 /evolutioncar.by/geelycoolray,404,0,1,1,301,/catalog/,"сейчас 404, есть показы",джили кулрей цена,
 /garanty-41296,301,0,1,7,склеить дубль → новая карточка,(новая карточка вместо /garanty2),дубль Tilda /garanty-41296 → /garanty2; служебная страница с трафиком — перенести,,/garanty2
 /invite-31027,301,0,1,8,склеить дубль,/,дубль Tilda /invite-31027 → /invite2; служебная без трафика,,/invite2
-/lynkampco08-20838,301,0,1,3,склеить дубль → новая карточка,(новая карточка вместо /lynkampco08),дубль Tilda /lynkampco08-20838 → /lynkampco08; модели нет на новом сайте — перенести страницу,,/lynkampco08
+/lynkampco08-20838,301,0,1,3,склеить дубль,/catalog/lynk-co/08/,"дубль страницы /lynkampco08 на Тильде, склеиваем с её карточкой",,/lynkampco08
 /pay-30376,301,0,1,9,склеить дубль,/catalog/,"дубль Tilda /pay-30376 → /pay2; модели нет, трафика почти нет — на каталог",,/pay2
 /volkswagen,200,0,1,6,301,/catalog/volkswagen/,каталог марки,,
 /avatr,200,0,0,,301,/catalog/avatr/,каталог марки,,
