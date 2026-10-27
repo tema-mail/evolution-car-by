@@ -1,22 +1,32 @@
 # >>> evolution-car: автосалон Evolution Car (Минск) – блок добавляет deploy/install.sh
-# Боевой домен включается после переключения DNS на hoster.by.
-evolutioncar.by {
+# Проверочный адрес. Сертификат настоящий, чтобы владелец открывал стенд
+# без предупреждений браузера; от поисковиков закрыт заголовком и robots.txt.
+evolution-car.45.12.72.227.nip.io {
 	encode gzip zstd
 	header {
-		Strict-Transport-Security "max-age=31536000"
 		X-Content-Type-Options "nosniff"
 		Referrer-Policy "strict-origin-when-cross-origin"
+		X-Robots-Tag "noindex, nofollow"
 		-Server
 	}
 	reverse_proxy evolution-car-web:8080
 }
-www.evolutioncar.by, http://www.evolutioncar.by {
-	redir https://evolutioncar.by{uri} permanent
-}
-# Проверочный адрес до переключения домена: свой сертификат Caddy (curl -k),
-# закрыт от поисковиков заголовком – чтобы стенд не попал в индекс.
-evolution-car.45.12.72.227.nip.io {
-	tls internal
-	header X-Robots-Tag "noindex, nofollow"
-	reverse_proxy evolution-car-web:8080
-}
+# Боевой домен включается ОТДЕЛЬНО, в момент переключения DNS на hoster.by:
+# пока A-запись evolutioncar.by смотрит не на нас, Caddy не сможет выпустить
+# для него сертификат и будет впустую долбиться в Let's Encrypt.
+# Тогда же снять Disallow в robots.txt.ts и noindex в BaseLayout.
+#
+# evolutioncar.by {
+# 	encode gzip zstd
+# 	header {
+# 		Strict-Transport-Security "max-age=31536000"
+# 		X-Content-Type-Options "nosniff"
+# 		Referrer-Policy "strict-origin-when-cross-origin"
+# 		-Server
+# 	}
+# 	reverse_proxy evolution-car-web:8080
+# }
+# www.evolutioncar.by, http://www.evolutioncar.by {
+# 	redir https://evolutioncar.by{uri} permanent
+# }
+# <<< evolution-car

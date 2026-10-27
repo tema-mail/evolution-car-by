@@ -35,9 +35,15 @@ scp -i "$KEY" "$HERE/evolution-car.caddy" "$HOST:/tmp/evolution-car.caddy"
   CADDY=/opt/dzenbot/Caddyfile
   BAK="$CADDY.bak-evolution-car-$(date +%Y%m%d%H%M%S)"
   cp "$CADDY" "$BAK"
-  # свой старый блок (от маркера до его закрывающей скобки) убираем,
-  # чтобы повторный запуск не плодил копии; чужие блоки не трогаем
-  awk "/^# >>> evolution-car:/{skip=1} skip&&/^}\$/{skip=0;next} !skip" "$BAK" > "$CADDY"
+  # Свой старый блок убираем целиком, иначе повторный запуск задваивает
+  # адрес и Caddy ругается «ambiguous site definition». Границы – пара
+  # маркеров; у блока, поставленного до их появления, конца нет, и тогда
+  # режем до конца файла: наш блок всегда дописывается последним.
+  if grep -q "^# <<< evolution-car" "$BAK"; then
+    awk "/^# >>> evolution-car/{skip=1} /^# <<< evolution-car/{skip=0;next} !skip" "$BAK" > "$CADDY"
+  else
+    sed "/^# >>> evolution-car:/,\$d" "$BAK" > "$CADDY"
+  fi
   cat /tmp/evolution-car.caddy >> "$CADDY"
   rm -f /tmp/evolution-car.caddy
   if docker exec dzenbot-caddy-1 caddy validate --config /etc/caddy/Caddyfile --adapter caddyfile >/dev/null 2>&1; then
