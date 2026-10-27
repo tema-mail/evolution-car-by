@@ -5,3 +5,7 @@ dist/
 .playwright-cli/
 __pycache__/
 *.pyc
+
+# Отчёты кабинета и ключи сборщика – коммерческие данные, в публичный репозиторий не кладём
+analytics/out/
+analytics/secrets/
