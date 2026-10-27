@@ -36,13 +36,17 @@ function utmFromUrl(): string {
 }
 
 /**
- * Отправка заявки на сервер сайта. Адрес приёмника задаётся
- * PUBLIC_LEAD_ENDPOINT при сборке; на статичном превью без сервера
- * переменной нет – тогда заявка только логируется, чтобы форма не
- * показывала человеку ошибку там, где принимать заявку просто некому.
+ * Отправка заявки на сервер сайта. По умолчанию – свой приёмник
+ * /api/lead на том же домене (сервис lead.mjs на VPS: копия заявки
+ * в файл и сообщение в Telegram). PUBLIC_LEAD_ENDPOINT перекрывает
+ * адрес, а пустая строка выключает отправку – это нужно превью
+ * на GitHub Pages, где сервера нет и принимать заявку некому.
  */
+const DEFAULT_LEAD_ENDPOINT = '/api/lead';
+
 export async function submitLead(lead: Lead): Promise<boolean> {
-  const endpoint = import.meta.env.PUBLIC_LEAD_ENDPOINT;
+  const configured = import.meta.env.PUBLIC_LEAD_ENDPOINT;
+  const endpoint = configured === undefined ? DEFAULT_LEAD_ENDPOINT : configured;
 
   const payload = {
     ...lead,

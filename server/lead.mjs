@@ -45,7 +45,7 @@ function cleanItems(list) {
 const pad = (n) => String(n).padStart(2, '0');
 function leadId(d) {
   const n = new Date(d.getTime() + 7 * 3600e3); // время Новосибирска в номере
-  return `GM-${String(n.getUTCFullYear()).slice(2)}${pad(n.getUTCMonth() + 1)}${pad(n.getUTCDate())}-${pad(n.getUTCHours())}${pad(n.getUTCMinutes())}${Math.random().toString(36).slice(2, 4)}`;
+  return `EC-${String(n.getUTCFullYear()).slice(2)}${pad(n.getUTCMonth() + 1)}${pad(n.getUTCDate())}-${pad(n.getUTCHours())}${pad(n.getUTCMinutes())}${Math.random().toString(36).slice(2, 4)}`;
 }
 async function readStages() {
   try { return JSON.parse(await readFile(`${DATA}/stages.json`, 'utf8')); } catch { return {}; }
@@ -228,7 +228,7 @@ createServer(async (req, res) => {
       for await (const c of req) { body += c; if (body.length > 2000) return send(res, 413, { ok: false }); }
       let stage;
       try { stage = JSON.parse(body).stage; } catch { return send(res, 400, { ok: false }); }
-      if (!STAGES.includes(stage) || !/^GM-[\w-]{6,30}$/.test(id)) return send(res, 422, { ok: false });
+      if (!STAGES.includes(stage) || !/^EC-[\w-]{6,30}$/.test(id)) return send(res, 422, { ok: false });
       const all = await readStages();
       const cur = all[id] || { stage: 'новая', history: [] };
       if (cur.stage !== stage) { cur.history = [...cur.history, { at: new Date().toISOString(), from: cur.stage, to: stage }].slice(-50); cur.stage = stage; }
@@ -256,13 +256,29 @@ createServer(async (req, res) => {
   let body;
   try { body = JSON.parse(Buffer.concat(chunks).toString('utf8')); } catch { return send(res, 400, { ok: false }, origin); }
 
+  // Формы сайта шлют плоскую заявку {name, phone, source, car, page, utm…},
+  // а формат эталона – {form, fields:{…}}. Принимаем оба: сайт менять не нужно.
+  const flat = body && body.fields === undefined;
+  const raw = flat
+    ? {
+        Имя: body.name, Phone: body.phone, Автомобиль: body.car,
+        Страница: body.page, Откуда: body.referrer,
+        utm: body.utm && typeof body.utm === 'object' ? Object.entries(body.utm).map(([k, v]) => `${k}=${v}`).join(' ') : body.utm,
+        website: body.company,
+      }
+    : body?.fields || {};
+
   const fields = {};
-  for (const [k, v] of Object.entries(body?.fields || {}).slice(0, 40)) fields[clean(k).slice(0, 120)] = clean(v);
-  // Ловушка для ботов: скрытое поле website люди не заполняют – отвечаем «ок», но не сохраняем.
+  for (const [k, v] of Object.entries(raw).slice(0, 40)) {
+    if (v === undefined || v === null || v === '') continue;
+    fields[clean(k).slice(0, 120)] = clean(v);
+  }
+  // Ловушка для ботов: скрытое поле люди не заполняют – отвечаем «ок», но не сохраняем.
   if (fields.website) return send(res, 200, { ok: true }, origin);
   delete fields.website;
   if (!phoneOk(fields.Phone)) return send(res, 422, { ok: false, error: 'phone' }, origin);
-  // Согласие на обработку ПДн проверяет и сервер (152-ФЗ, ст. 9): без него заявку не принимаем.
+  // Согласие на обработку персональных данных проверяет и сервер:
+  // Закон Республики Беларусь № 99-З «О защите персональных данных», ст. 5.
   if (body?.consent !== true) return send(res, 422, { ok: false, error: 'consent' }, origin);
 
   const ip = String(req.headers['x-forwarded-for'] || req.socket.remoteAddress || '').split(',')[0].trim();
@@ -272,7 +288,7 @@ createServer(async (req, res) => {
   const items = cleanItems(body.items);
   const page = fields.Page || '';
   const category = items[0]?.category || (page.split('/')[1] || '');
-  const lead = { id: leadId(now), at: now.toISOString(), form: clean(body.form || 'Заявка с сайта').slice(0, 200), fields, items, category, source: clean(body.source).slice(0, 120), consent: true, ip };
+  const lead = { id: leadId(now), at: now.toISOString(), form: clean(body.form || body.source || 'Заявка с сайта').slice(0, 200), fields, items, category, source: clean(body.source).slice(0, 120), consent: true, ip };
   try {
     await mkdir(DATA, { recursive: true });
     await appendFile(`${DATA}/leads.jsonl`, JSON.stringify(lead) + '\n');
