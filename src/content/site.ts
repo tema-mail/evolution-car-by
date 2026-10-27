@@ -27,6 +27,22 @@ export const site = {
   youtube: 'https://www.youtube.com/@Evoutioncar.by1',
 } as const;
 
+// Счётчики и виджеты, перенесённые с evolutioncar.by на Тильде вместе с сайтом.
+// Идентификаторы счётчиков публичные – они и так видны в коде любой страницы,
+// поэтому лежат здесь, а не в секретах: так сборка не может молча потерять их.
+// Любой из них отключается пустой строкой, а переменная окружения с тем же
+// именем перекрывает значение – это нужно для тестовых стендов.
+export const analytics = {
+  /** Яндекс Метрика: номер счётчика */
+  yandexMetrika: '98499004',
+  /** Google Tag Manager: контейнер */
+  gtm: 'GTM-PRHR43Z7',
+  /** Google Analytics 4 */
+  ga4: 'G-TGNJ6VM7TQ',
+  /** Виджет Битрикс24 (CRM site button): загрузчик портала b28916048.bitrix24.by */
+  bitrix24Widget: 'https://cdn-ru.bitrix24.by/b28916048/crm/site_button/loader_3_mf8tfr.js',
+} as const;
+
 // href, начинающийся с #, – якорь на главной: шапка добавляет к нему свой префикс
 export const nav: NavLink[] = [
   { label: 'Авто в наличии', href: '/catalog/v-nalichii/' },

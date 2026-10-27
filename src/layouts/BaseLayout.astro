@@ -1,6 +1,6 @@
 ---
 import '../styles/base.css';
-import { site } from '../content/site';
+import { analytics, site } from '../content/site';
 import Intro from '../components/v1/Intro.astro';
 import { productByPath, pageProductJson } from '../lib/product';
 
@@ -62,8 +62,31 @@ const productJson = product ? pageProductJson(product) : null;
 // на сайте нет тегов аналитики и рекламы Google – события лежат в dataLayer
 // (шрифты Google грузятся как и раньше). Пробелы и регистр в ID из секретов
 // workflow прощаются; всё, что не похоже на GTM-XXXX, отбрасывается.
-const gtmRaw = (import.meta.env.PUBLIC_GTM_ID ?? '').trim().toUpperCase();
+// Значение берётся из site.ts, а переменная окружения с тем же именем его
+// перекрывает: так тестовый стенд собирается без счётчиков, а прод – с ними.
+// Обращение к import.meta.env только по явному имени: Vite подставляет их
+// при сборке, динамический ключ вернёт undefined.
+const pick = (fromEnv: unknown, fallback: string) => {
+  const value = String(fromEnv ?? '').trim();
+  return value !== '' ? value : fallback;
+};
+
+const gtmRaw = pick(import.meta.env.PUBLIC_GTM_ID, analytics.gtm).toUpperCase();
 const gtmId = /^GTM-[A-Z0-9]+$/.test(gtmRaw) ? gtmRaw : null;
+
+const ymRaw = pick(import.meta.env.PUBLIC_YM_ID, analytics.yandexMetrika);
+const ymId = /^[0-9]{5,10}$/.test(ymRaw) ? ymRaw : null;
+
+const gaRaw = pick(import.meta.env.PUBLIC_GA_ID, analytics.ga4).toUpperCase();
+const gaId = /^G-[A-Z0-9]+$/.test(gaRaw) ? gaRaw : null;
+
+// Виджет Битрикс24 с формой заявки и обратным звонком – тот же, что стоял
+// на Тильде. Принимаем только адрес на домене bitrix24, чтобы опечатка
+// в настройке не превратилась в загрузку чужого скрипта.
+const b24Raw = pick(import.meta.env.PUBLIC_B24_WIDGET, analytics.bitrix24Widget);
+const b24Url = /^https:\/\/[a-z0-9.-]+\.bitrix24\.[a-z]{2,3}\/[A-Za-z0-9_/.-]+\.js$/.test(b24Raw)
+  ? b24Raw
+  : null;
 ---
 
 <!doctype html>
@@ -83,6 +106,49 @@ const gtmId = /^GTM-[A-Z0-9]+$/.test(gtmRaw) ? gtmRaw : null;
             j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i;
             f.parentNode.insertBefore(j, f);
           })(window, document, 'script', 'dataLayer', gtmId);
+        </script>
+      )
+    }
+    {
+      gaId && (
+        <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`} />
+      )
+    }
+    {
+      gaId && (
+        <script is:inline define:vars={{ gaId }}>
+          window.dataLayer = window.dataLayer || [];
+          function gtag() {
+            window.dataLayer.push(arguments);
+          }
+          gtag('js', new Date());
+          gtag('config', gaId);
+        </script>
+      )
+    }
+    {
+      ymId && (
+        <script is:inline define:vars={{ ymId }}>
+          (function (m, e, t, r, i, k, a) {
+            m[i] =
+              m[i] ||
+              function () {
+                (m[i].a = m[i].a || []).push(arguments);
+              };
+            m[i].l = 1 * new Date();
+            for (var j = 0; j < document.scripts.length; j++) {
+              if (document.scripts[j].src === r) return;
+            }
+            (k = e.createElement(t)), (a = e.getElementsByTagName(t)[0]), (k.async = 1), (k.src = r);
+            a.parentNode.insertBefore(k, a);
+          })(window, document, 'script', 'https://mc.yandex.ru/metrika/tag.js', 'ym');
+          window.ym(Number(ymId), 'init', {
+            ssr: true,
+            webvisor: true,
+            clickmap: true,
+            trackLinks: true,
+            accurateTrackBounce: true,
+          });
         </script>
       )
     }
@@ -125,6 +191,32 @@ const gtmId = /^GTM-[A-Z0-9]+$/.test(gtmRaw) ? gtmRaw : null;
     }
     {theme === 'v1' && <Intro />}
     <slot />
+    {
+      ymId && (
+        <noscript>
+          <div>
+            <img
+              src={`https://mc.yandex.ru/watch/${ymId}`}
+              style="position:absolute; left:-9999px"
+              alt=""
+            />
+          </div>
+        </noscript>
+      )
+    }
+    {
+      b24Url && (
+        <script is:inline define:vars={{ b24Url }}>
+          (function (w, d, u) {
+            var s = d.createElement('script');
+            s.async = true;
+            s.src = u + '?' + ((Date.now() / 60000) | 0);
+            var h = d.getElementsByTagName('script')[0];
+            h.parentNode.insertBefore(s, h);
+          })(window, document, b24Url);
+        </script>
+      )
+    }
     <script>
       import { initAnalytics } from '../lib/analytics';
       initAnalytics();
