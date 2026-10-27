@@ -26,7 +26,7 @@ old,status,clicks,impressions,position,action,target,why,top_queries,tilda_redir
 /aitom9,200,51,2222,8.6,301,/catalog/aito/m9/,есть такая же карточка товара,aito m9 минск; aito m9; аито м 9; купить aito m9; aito m9 характеристики,
 /avatr12,200,49,4547,8.8,301,/catalog/avatr/12/,есть такая же карточка товара,avatr 12 купить минск; avatr 12 цена; купить аватр 12; аватар 12 машина; аватар 12 цена,
 /contact2,200,49,1630,5.4,301,/contact/,есть такой же раздел,эволюшн кар; evolution car; дай ссылку на телеграмм; evolutioncar; evolution cars,
-/malanka,200,42,860,6.7,создать,(новая карточка вместо /malanka),служебная страница с трафиком — перенести,электромобиль для бизнеса; эволюшн кар; электромобили для бизнеса; электромобили; evolution car,
+/malanka,200,42,860,6.7,301,/dlya-biznesa/,та же тема: автомобили для бизнеса и автопарков,электромобиль для бизнеса; эволюшн кар; электромобили для бизнеса; электромобили; evolution car,
 /catalog,301,41,3236,22.4,склеить дубль,/catalog/,дубль Tilda /catalog → /catalog2; есть такой же раздел,эволюшн кар; evolution car; evolutioncar; каталог электромобилей; каталог китайских электромобилей,/catalog2
 /toyotabz4x,200,38,2612,8.2,301,/catalog/toyota/bz4x/,карточка создана из страницы старого сайта,toyota bz4x купить минск; тойота электромобиль; купить тойота bz4x; тойота электрическая; toyota bz4x купить,
 /teslamodel3,200,37,5152,9.5,301,/catalog/tesla/model-3/,есть такая же карточка товара,тесла модель 3; tesla model 3; tesla model 3 цена в беларуси; тесла модель 3 характеристики; tesla model 3 характеристики,
@@ -37,7 +37,7 @@ old,status,clicks,impressions,position,action,target,why,top_queries,tilda_redir
 /geelygalaxyl7,200,31,1314,13.6,301,/catalog/geely/galaxy-l7/,есть такая же карточка товара,geely galaxy l7 купить минск; geely l7 купить; geely galaxy l7 купить в беларуси; купить geely galaxy l7; geely galaxy l7,
 /lixiangl8,200,29,1500,10.9,301,/catalog/lixiang/l8/,есть такая же карточка товара,lixiang l8 купить; lixiang l8 цена; li l8 купить минск; li8 цена; li auto l8 цена,
 /garanty,301,26,1462,3.5,склеить дубль → новая карточка,(новая карточка вместо /garanty2),дубль Tilda /garanty → /garanty2; служебная страница с трафиком — перенести,эволюшн кар; evolution car; evolutioncar; эволюшн кар сервис; evolution cars,/garanty2
-/garanty2,200,26,1302,3.1,создать,(новая карточка вместо /garanty2),служебная страница с трафиком — перенести,эволюшн кар; evolution car; эволюшн кар сервис; сервис китайских авто минск; да,
+/garanty2,200,26,1302,3.1,создать,/servis/,"нужна страница сервиса: два адреса в Минске, запись – есть в pages.ts",эволюшн кар; evolution car; эволюшн кар сервис; сервис китайских авто минск; да,
 /geelygeometrye,200,26,1236,11.1,301,/catalog/geely/geometry-e/,карточка создана из страницы старого сайта,geely geometry e купить минск; geely geometry e; geely geometry; geely geometry e цена; geely geometry e характеристики,
 /geelyboyuel,200,25,3577,22.9,301,/catalog/geely/boyue-l/,есть такая же карточка товара,geely boyue l купить минск; купить geely boyue l; geely boyue l 2023; boyue l; geely boyue l купить,
 /catalog2,200,25,3271,34.9,301,/catalog/,есть такой же раздел,эволюшн кар; evolution car; электромобиль из китая; электромобиль китайский; купить электромобиль evolution,
@@ -51,7 +51,7 @@ old,status,clicks,impressions,position,action,target,why,top_queries,tilda_redir
 /geelygeometryc,200,18,948,7.4,301,/catalog/geely/geometry-c/,карточка создана из страницы старого сайта,geely geometry c; geely geometry c цена; geely geometry c характеристики; geely geometry; geometry c,
 /bydtang,200,17,1465,15.8,301,/catalog/byd/tang/,есть такая же карточка товара,byd tang; byd tang купить минск; byd tang 2023 характеристики; byd d tang; byd tang купить,
 /byd_han_l_ev,200,16,2166,16.8,301,/catalog/byd/han-l-ev/,карточка создана из страницы старого сайта,byd han l купить минск; byd han; купить byd han l ev беларусь; byd han l купить; купить byd han,
-/avto-iz-yaponii,200,16,168,4.9,создать,(новая карточка вместо /avto-iz-yaponii),служебная страница с трафиком — перенести,авто из японии в рб; авто из японии в беларусь; автомобили из японии под заказ; доставка авто из японии; заказ машины из японии,
+/avto-iz-yaponii,200,16,168,4.9,создать,/japan/,"нужно направление Япония: на главной уже заявлено, что возим из Японии",авто из японии в рб; авто из японии в беларусь; автомобили из японии под заказ; доставка авто из японии; заказ машины из японии,
 /leapmotorc11,200,15,462,17.7,301,/catalog/leapmotor/c11/,есть такая же карточка товара,leapmotor c11 купить; starmotor s11; с 11; leapmotor c11; купить leapmotor c11,
 /zeekr007,200,14,740,15.8,301,/catalog/zeekr/007/,есть такая же карточка товара,купить зикр 007; зикр 007 купить минск; zeekr 007 gt купить минск; zeekr 007 купить минск; зикр 007,
 /kiaev5light,200,14,283,16.1,301,/catalog/kia/ev5-light/,есть такая же карточка товара,kia ev5 купить минск; купить kia ev5; kia ev5; киа электромобиль; kia ev 5,
@@ -73,7 +73,7 @@ old,status,clicks,impressions,position,action,target,why,top_queries,tilda_redir
 /geelyboyuel2024,200,7,660,27.8,301,/catalog/geely/boyue-l/,есть такая же карточка товара,geely boyue l; boyue l; geely atlas l; geely boyue l купить; купить geely boyue l,
 /lotuseletre,200,7,299,14.1,301,/catalog/lotus/eletre/,есть такая же карточка товара,lotus eletre; lotus nyo цена; lotus eletre цена; купить лотус; лотус машина,
 /zeekr,200,7,126,12.5,301,/catalog/zeekr/,каталог марки,каталог zeekr; zeekr; zeekr из китая; zeekr электромобиль; evolution car,
-/faw,200,7,114,39.1,создать,(новая карточка вместо /faw),модели нет на новом сайте — перенести страницу,faw bestune nat; faw bestune; faw; bestune nat; faw nat,
+/faw,200,7,114,39.1,301,/catalog/faw/,страница марки FAW создана вместе с карточками Bestune NAT и NAT PRO,faw bestune nat; faw bestune; faw; bestune nat; faw nat,
 /bydqinplushono,200,6,769,9.7,301,/catalog/byd/qin-plus-ev/,есть такая же карточка товара,byd qin plus ev; byd qin plus 2024; byd qin plus цена; byd qin plus; qin plus,
 /geelypreface-24182,301,6,365,9.5,склеить дубль,/catalog/geely/preface/,дубль Tilda /geelypreface-24182 → /geelypreface; есть такая же карточка товара,geely preface купить; купить geely preface; geely preface беларусь; geely preface; geely preface цена в беларуси,/geelypreface
 /byd,200,6,140,18.8,301,/catalog/byd/,каталог марки,byd из китая; каталог byd; byd каталог; byd минск; byd song plus 2025,
