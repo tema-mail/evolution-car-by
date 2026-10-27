@@ -1,0 +1,179 @@
+---
+// Страницы сайта по сущностям – перенос кабинета-стандарта (Milovini → gaz-mag, эталон Elite Rose):
+// Главная, Направления, Каталоги (раскрываются – внутри карточки автомобилей), Конфигураторы,
+// Города, Внутренние, Юридические, Технические.
+// Название страницы ведёт в её карточку /admin/page/<адрес>/ (как у EV SIBIR).
+import Admin from '../../layouts/Admin.astro';
+import { cars, sections, carPath, brandPath, countries } from '../../content/cars';
+import { allBrands } from '../../content/brands';
+import { directions } from '../../content/directions';
+import { cities } from '../../content/cities';
+import { legalPages } from '../../content/pages';
+import { configurators } from '../../content/configurators';
+
+const site = (p: string) => new URL(p, Astro.site).href;
+const card = (p: string) => '/admin/page' + (p === '/' ? '/' : p.replace(/\/?$/, '/'));
+
+const brands = allBrands();
+const inner = [
+  { name: 'О компании', path: '/about/' },
+  { name: 'Контакты', path: '/contact/' },
+  { name: 'Пригнали', path: '/portfolio/' },
+  { name: 'Отзывы', path: '/rew/' },
+  { name: 'Доставка и растаможка', path: '/dostavka-i-rastamozhka/' },
+  { name: 'Для бизнеса', path: '/dlya-biznesa/' },
+  { name: 'Для таксопарков', path: '/dlya-taksoparkov/' },
+  { name: 'Партнёрам', path: '/partneram/' },
+  { name: 'Конфигураторы (хаб)', path: '/konfiguratory/' },
+];
+const tech = [
+  { name: 'Спасибо', path: '/thank_page/' },
+  { name: 'Страница не найдена', path: '/404' },
+];
+
+const total =
+  1 + directions.length + 1 + sections.length + brands.length + cars.length +
+  configurators.length + cities.length + inner.length + legalPages.length + tech.length;
+---
+
+<Admin title="Страницы сайта" active="pages">
+  <div class="tools">
+    <h1>Страницы сайта</h1>
+    <span class="muted">{total} страниц · {cars.length} карточек автомобиля · {brands.length} марок</span>
+    <a class="btn" href="/" target="_blank">Открыть сайт ↗</a>
+  </div>
+
+  <div class="pages">
+    <div class="phead">
+      <span></span><span>Страница</span><span>Адрес</span><span style="text-align:right">Сущность</span>
+    </div>
+
+    <div class="pgroup">Главная <span>1</span></div>
+    <div class="prow">
+      <img class="thumb" src="/img/cars/lynk-co-08.jpg" alt="" />
+      <div>
+        <a class="pname pcard" href={card('/')}>Главная</a>
+        <div class="muted" style="font-size:12px">Автомобили из Китая, Кореи, США и Европы под заказ в Минске</div>
+      </div>
+      <a class="purl" href="/" target="_blank">{site('/')}</a>
+      <span class="pkind">Главная</span>
+    </div>
+
+    <div class="pgroup">Направления <span>{directions.length}</span></div>
+    {directions.map((d) => (
+      <div class="prow">
+        <img class="thumb" src={d.cover ?? '/img/cars/denza-d9.jpg'} alt="" />
+        <div>
+          <a class="pname pcard" href={card(`/${d.slug}/`)}>{d.title ?? d.slug}</a>
+          <div class="muted" style="font-size:12px">{d.lead ?? ''}</div>
+        </div>
+        <a class="purl" href={`/${d.slug}/`} target="_blank">{site(`/${d.slug}/`)}</a>
+        <span class="pkind">Хаб</span>
+      </div>
+    ))}
+
+    <div class="pgroup">Каталоги <span>{1 + sections.length + brands.length} · {cars.length} карточек</span></div>
+    <details class="pcat">
+      <summary class="prow">
+        <img class="thumb" src="/img/cars/hiphi-z.jpg" alt="" />
+        <div>
+          <span class="pname"><i class="caret"></i><a class="pcard" href={card('/catalog/')} onclick="event.stopPropagation()">Общий каталог</a></span>
+          <div class="muted" style="font-size:12px">{cars.length} автомобилей · {sections.length} подборок · {brands.length} марок</div>
+        </div>
+        <a class="purl" href="/catalog/" target="_blank" onclick="event.stopPropagation()">{site('/catalog/')}</a>
+        <span class="pkind">Каталог</span>
+      </summary>
+      {cars.map((c) => (
+        <div class="prow lvl1">
+          <img class="thumb" src={c.photo} alt="" />
+          <div>
+            <a class="pname pcard" href={card(carPath(c))}>{c.title}</a>
+            <div class="muted" style="font-size:12px">{c.brand} · {countries[c.country].label}{c.priceUsd ? ` · от ${c.priceUsd.toLocaleString('ru-RU')} $` : ' · цена по запросу'}</div>
+          </div>
+          <a class="purl" href={carPath(c)} target="_blank">{site(carPath(c))}</a>
+          <span class="pkind">Карточка товара</span>
+        </div>
+      ))}
+    </details>
+
+    {sections.map((s) => (
+      <div class="prow">
+        <img class="thumb" src="/img/cars/byd-dolphin.jpg" alt="" />
+        <div>
+          <a class="pname pcard" href={card(`/catalog/${s.slug}/`)}>{s.title}</a>
+          <div class="muted" style="font-size:12px">подборка</div>
+        </div>
+        <a class="purl" href={`/catalog/${s.slug}/`} target="_blank">{site(`/catalog/${s.slug}/`)}</a>
+        <span class="pkind">Каталог</span>
+      </div>
+    ))}
+
+    {brands.map((b) => (
+      <div class="prow">
+        <img class="thumb" src={b.cars[0]?.photo ?? '/img/cars/denza-d9.jpg'} alt="" />
+        <div>
+          <a class="pname pcard" href={card(brandPath(b.name))}>{b.name}</a>
+          <div class="muted" style="font-size:12px">{b.cars.length} моделей</div>
+        </div>
+        <a class="purl" href={brandPath(b.name)} target="_blank">{site(brandPath(b.name))}</a>
+        <span class="pkind">Каталог марки</span>
+      </div>
+    ))}
+
+    <div class="pgroup">Конфигураторы <span>{configurators.length}</span></div>
+    {configurators.map((c) => (
+      <div class="prow">
+        <img class="thumb" src={c.cover} alt="" />
+        <div>
+          <a class="pname pcard" href={card(c.href)}>{c.brand} {c.model}</a>
+          <div class="muted" style="font-size:12px">{c.options}</div>
+        </div>
+        <a class="purl" href={c.href} target="_blank">{site(c.href)}</a>
+        <span class="pkind">Конфигуратор</span>
+      </div>
+    ))}
+
+    <div class="pgroup">Города <span>{cities.length}</span></div>
+    {cities.map((c) => (
+      <div class="prow">
+        <div class="thumb" style="background:#eef1f5"></div>
+        <div>
+          <a class="pname pcard" href={card(`/${c.slug}/`)}>{c.name ?? c.slug}</a>
+          <div class="muted" style="font-size:12px">городская страница</div>
+        </div>
+        <a class="purl" href={`/${c.slug}/`} target="_blank">{site(`/${c.slug}/`)}</a>
+        <span class="pkind">Хаб</span>
+      </div>
+    ))}
+
+    <div class="pgroup">Внутренние страницы <span>{inner.length}</span></div>
+    {inner.map((p) => (
+      <div class="prow">
+        <div class="thumb" style="background:#eef1f5"></div>
+        <div><a class="pname pcard" href={card(p.path)}>{p.name}</a></div>
+        <a class="purl" href={p.path} target="_blank">{site(p.path)}</a>
+        <span class="pkind">Страница</span>
+      </div>
+    ))}
+
+    <div class="pgroup">Юридические <span>{legalPages.length}</span></div>
+    {legalPages.map((p) => (
+      <div class="prow">
+        <div class="thumb" style="background:#eef1f5"></div>
+        <div><a class="pname pcard" href={card(`/${p.slug}/`)}>{p.title}</a></div>
+        <a class="purl" href={`/${p.slug}/`} target="_blank">{site(`/${p.slug}/`)}</a>
+        <span class="pkind">Юридическая</span>
+      </div>
+    ))}
+
+    <div class="pgroup">Технические <span>{tech.length}</span></div>
+    {tech.map((p) => (
+      <div class="prow">
+        <div class="thumb" style="background:#eef1f5"></div>
+        <div><a class="pname pcard" href={card(p.path)}>{p.name}</a></div>
+        <a class="purl" href={p.path} target="_blank">{site(p.path)}</a>
+        <span class="pkind">Техническая</span>
+      </div>
+    ))}
+  </div>
+</Admin>
