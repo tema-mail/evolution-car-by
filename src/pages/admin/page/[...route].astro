@@ -1,0 +1,84 @@
+---
+/** Кабинет → карточка страницы. Владелец 18.10.2026: «я хочу попадать внутрь
+    страницы, мне такой же функционал везде нужен» (эталон EV SIBIR).
+    Здесь: что стоит в SEO, как страница выглядит в поиске, и её цифры –
+    показы, заходы, целевые действия. Цифры приходят с сервера после входа:
+    их считает свой счётчик, независимо от cookie и Метрики. */
+import Admin from '../../../layouts/Admin.astro';
+import PageStats from '../../../islands/admin/PageStats';
+import { cars, carPath, brandPath, countries } from '../../../content/cars';
+import { allBrands } from '../../../content/brands';
+import { directions } from '../../../content/directions';
+import { cities } from '../../../content/cities';
+import { legalPages } from '../../../content/pages';
+import { configurators } from '../../../content/configurators';
+import { carMeta } from '../../../lib/seo';
+
+export function getStaticPaths() {
+  const list: { route: string; name: string; kind: string; title?: string; description?: string }[] = [
+    { route: '', name: 'Главная', kind: 'Главная' },
+    { route: 'catalog', name: 'Общий каталог', kind: 'Каталог' },
+    { route: 'konfiguratory', name: 'Конфигураторы', kind: 'Хаб' },
+    { route: 'about', name: 'О компании', kind: 'Страница' },
+    { route: 'contact', name: 'Контакты', kind: 'Страница' },
+    { route: 'portfolio', name: 'Пригнали', kind: 'Страница' },
+    { route: 'rew', name: 'Отзывы', kind: 'Страница' },
+    { route: 'dostavka-i-rastamozhka', name: 'Доставка и растаможка', kind: 'Страница' },
+    { route: 'dlya-biznesa', name: 'Для бизнеса', kind: 'Страница' },
+    { route: 'dlya-taksoparkov', name: 'Для таксопарков', kind: 'Страница' },
+    { route: 'partneram', name: 'Партнёрам', kind: 'Страница' },
+    { route: 'thank_page', name: 'Спасибо', kind: 'Техническая' },
+    ...directions.map((d) => ({ route: d.slug, name: d.title ?? d.slug, kind: 'Хаб' })),
+    ...cities.map((c) => ({ route: c.slug, name: c.name ?? c.slug, kind: 'Хаб' })),
+    ...legalPages.map((p) => ({ route: p.slug, name: p.title, kind: 'Юридическая' })),
+    ...allBrands().map((b) => ({ route: brandPath(b.name).replace(/^\/|\/$/g, ''), name: b.name, kind: 'Каталог марки' })),
+    ...configurators.map((c) => ({ route: c.href.replace(/^\/|\/$/g, ''), name: `${c.brand} ${c.model}`, kind: 'Конфигуратор' })),
+    ...cars.map((c) => {
+      const m = carMeta(c);
+      return {
+        route: carPath(c).replace(/^\/|\/$/g, ''), name: c.title, kind: 'Карточка товара',
+        title: m.title, description: m.description,
+      };
+    }),
+  ];
+  return list.map((p) => ({ params: { route: p.route || undefined }, props: p }));
+}
+
+const { route, name, kind, title, description } = Astro.props;
+const path = '/' + (route ? `${route}/` : '');
+const car = cars.find((c) => carPath(c) === path);
+---
+
+<Admin title={name} active="pages">
+  <div class="tools">
+    <a class="btn" href="/">← Все страницы</a>
+    <h1>{name}</h1>
+    <span class="muted">{kind}</span>
+    <a class="btn" href={path} target="_blank">Открыть на сайте ↗</a>
+  </div>
+
+  <section class="card-sec">
+    <h2>Что стоит в SEO</h2>
+    {title ? (
+      <dl class="seo-list">
+        <div><dt>Заголовок (title)</dt><dd>{title}<span class="muted"> — {title.length} знаков{title.length > 60 ? ', в поиске обрежется после 60' : ''}</span></dd></div>
+        <div><dt>Описание (description)</dt><dd>{description}<span class="muted"> — {description?.length} знаков{(description?.length ?? 0) > 160 ? ', обрежется после 160' : ''}</span></dd></div>
+        <div><dt>H1</dt><dd>{car?.title ?? name}</dd></div>
+        {car && <div><dt>Марка</dt><dd>{car.brand} · {countries[car.country].label}</dd></div>}
+        {car && <div><dt>Цена</dt><dd>{car.priceUsd ? `${car.priceUsd.toLocaleString('ru-RU')} $` : 'не указана — страница слабее в поиске'}</dd></div>}
+        {car && <div><dt>Характеристик</dt><dd>{car.specs.length}{car.specs.length <= 2 ? ' — мало, стоит дополнить' : ''}</dd></div>}
+      </dl>
+    ) : (
+      <p class="muted">Мета-теги этой страницы собираются при сборке сайта. Открыть и посмотреть: <a href={path} target="_blank">{path}</a></p>
+    )}
+  </section>
+
+  <section class="card-sec">
+    <h2>Цифры страницы</h2>
+    <p class="muted">
+      Считает свой счётчик сайта — все посетители, а не только согласившиеся на cookie.
+      Целевое действие — нажатие на телефон, на мессенджер, отправка формы сайта или формы в виджете Битрикс24.
+    </p>
+    <PageStats client:load page={path} />
+  </section>
+</Admin>

@@ -12,7 +12,7 @@ import { legalPages } from '../../content/pages';
 import { configurators } from '../../content/configurators';
 
 const site = (p: string) => new URL(p, Astro.site).href;
-const card = (p: string) => '/admin/page' + (p === '/' ? '/' : p.replace(/\/?$/, '/'));
+const card = (p: string) => '/page' + (p === '/' ? '/' : p.replace(/\/?$/, '/'));
 
 const brands = allBrands();
 const inner = [

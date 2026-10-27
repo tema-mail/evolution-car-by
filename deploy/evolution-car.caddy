@@ -39,4 +39,25 @@ evolution-car.45.12.72.227.nip.io {
 		reverse_proxy evolution-car-web:8080
 	}
 }
+# Кабинет живёт на своём поддомене (правило владельца 28.10.2026:
+# «во всех абсолютно админках делать admin.<домен>, так логичнее»).
+# Файлы лежат в /admin/ той же выкладки – подставляем префикс здесь,
+# чтобы кабинет не зависел от того, где он собран.
+admin.evolutioncar.by {
+	encode gzip zstd
+	header {
+		Strict-Transport-Security "max-age=31536000"
+		X-Content-Type-Options "nosniff"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		X-Robots-Tag "noindex, nofollow"
+		-Server
+	}
+	handle /api/* {
+		reverse_proxy evolution-car-api:8090
+	}
+	handle {
+		rewrite * /admin{uri}
+		reverse_proxy evolution-car-web:8080
+	}
+}
 # <<< evolution-car

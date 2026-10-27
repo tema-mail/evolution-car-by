@@ -179,3 +179,41 @@ details.pcat[open] .caret{transform:rotate(90deg)}
 /* Название страницы – ссылка на её карточку (разбор), как у EV */
 .pcard{color:inherit;text-decoration:none}
 .pcard:hover{color:#7a1f2b;text-decoration:underline}
+
+/* --- Автомобили, карточка страницы и цифры страницы ------------------------------ */
+.cars__bar { display: flex; gap: 10px; flex-wrap: wrap; margin: 14px 0; }
+.cars__bar input, .cars__bar select { padding: 8px 10px; border: 1px solid #d8dde3; border-radius: 8px; font: inherit; }
+.cars__bar input { min-width: 260px; }
+.cars__hint { margin: 6px 0 10px; }
+.cars__lists { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+.cars__chip { background: #eef1f5; border-radius: 999px; padding: 4px 12px; font-size: 13px; }
+.cars__table { width: 100%; border-collapse: collapse; font-size: 14px; }
+.cars__table th, .cars__table td { text-align: left; padding: 8px 10px; border-bottom: 1px solid #edf0f3; vertical-align: middle; }
+.cars__table th { font-weight: 600; color: #6b7682; font-size: 13px; }
+.cars__table img { border-radius: 8px; object-fit: cover; background: #f3f5f7; }
+.cars__name { font-weight: 600; color: #1b1f24; text-decoration: none; }
+.cars__name:hover { text-decoration: underline; }
+.cars__warn { color: #b4452f; }
+
+.card-sec { background: #fff; border: 1px solid #e6eaee; border-radius: 12px; padding: 18px 20px; margin-bottom: 16px; }
+.card-sec h2 { font-size: 16px; margin: 0 0 12px; }
+.seo-list { display: grid; gap: 10px; margin: 0; }
+.seo-list > div { display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: 12px; }
+.seo-list dt { color: #6b7682; font-size: 13px; }
+.seo-list dd { margin: 0; font-size: 14px; }
+
+.pstat__per { display: flex; gap: 6px; margin-bottom: 14px; }
+.pstat__per button { padding: 6px 14px; border: 1px solid #d8dde3; background: #fff; border-radius: 8px; font: inherit; font-size: 13px; cursor: pointer; }
+.pstat__per button.on { background: #1b1f24; color: #fff; border-color: #1b1f24; }
+.pstat__grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
+.pstat__tile { border: 1px solid #e6eaee; border-radius: 10px; padding: 12px 14px; display: grid; gap: 2px; }
+.pstat__tile b { font-size: 22px; }
+.pstat__tile span { font-size: 13px; }
+.pstat__tile i { font-size: 12px; color: #8a949e; font-style: normal; }
+.pstat__err { color: #b4452f; font-size: 14px; }
+
+@media (max-width: 640px) {
+  .seo-list > div { grid-template-columns: 1fr; gap: 2px; }
+  .cars__table th:nth-child(6), .cars__table td:nth-child(6),
+  .cars__table th:nth-child(7), .cars__table td:nth-child(7) { display: none; }
+}
