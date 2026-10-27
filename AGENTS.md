@@ -213,35 +213,34 @@ SU7 Ultra, YU7, N70, N90; Avatr 12; Voyah Dreamer 9.
 Номер товара строится только в `src/lib/product.ts`; Google Tag Manager
 включается переменной `PUBLIC_GTM_ID`, до приёмника заявок его не подключать.
 
-## GitHub и публикация
+## Где живёт сайт (с 27.10.2026)
 
-- Репозиторий: `github.com/tema-mail/evolution-car-by`, основная ветка `main`.
-- **Все изменения идут через git.** Правка без коммита не считается сделанной.
-  История ведётся целиком: каждый завершённый шаг — отдельный коммит
-  с описанием на русском, что и зачем поменялось.
-- Пуш в `main` запускает сборку и публикацию на GitHub Pages с доменом
-  **ликсианг.рф** (`xn--80agnajes3a.xn--p1ai`, punycode — так требует GitHub).
-  Старый адрес tema-mail.github.io/evolution-car-by перекидывает на домен.
-  Workflow — `.github/workflows/deploy.yml`, `PUBLIC_SITE_URL` указывает на домен.
-- DNS домена — в reg.ru (аккаунт artemiy.galimov@yandex.ru): A @ → 185.199.108–111.153,
-  CNAME www → tema-mail.github.io. MX и TXT — почта Яндекса, не трогать.
-- **Открытая проблема DNS:** у `@` остаётся лишняя A-запись `95.163.244.138`
-  (парковка reg.ru). Через неё каждый пятый заход получает 404 вместо сайта.
-  Проверка: `curl --resolve ликсианг.рф:80:<ip> http://ликсианг.рф/catalog/`.
-  Исправляется только в панели reg.ru — удалить эту запись.
-- Перед пушем в `main` — локальная сборка `npm run build` без ошибок.
-- `scripts/rebase-dist.mjs` нужен для зеркал в подпапке GitHub Pages. На домене
-  сайт отдаётся от корня, а зеркала собираются так:
-  `PUBLIC_SITE_URL=https://tema-mail.github.io/<репо> npx astro build`,
-  затем `node scripts/rebase-dist.mjs /<репо>`, затем копирование `dist/`
-  в клон репозитория зеркала (без `CNAME`, с `.nojekyll`).
-  Зеркала: `evolution-car-by-preview` (ветка `gh-pages`, копия main) и
-  `evolution-car-preview` (ветка `main`, сборка ветки `preview` со стилистикой v3).
-  Скрипт обязан проставлять префикс и островам Preact (`component-url`,
-  `renderer-url`), и путям к картинкам внутри их `props` — иначе на зеркале
-  конфигураторы не оживают и рендеры отдают 404.
-- Секреты в репозиторий не попадают: `.env` в `.gitignore`, ключи и токены
-  только в переменных окружения.
+- **Прод: https://evolutioncar.by** – статика на VPS Beget `45.12.72.227`,
+  рядом с gaz-mag. Контейнер `evolution-car-web` отдаёт
+  `/opt/evolution-car/releases/current`, наружу – общий Caddy
+  (контейнер `dzenbot-caddy-1`, конфиг `/opt/dzenbot/Caddyfile`).
+- Проверочный адрес: https://evolution-car.45.12.72.227.nip.io/ – тот же
+  сайт, закрыт от поисковиков заголовком. Удобно смотреть правки до прода.
+- Боевая ветка – `prod`: версия из форка Deford2027 (ветка `preview`)
+  плюс карточки и счётчики. `main` остался на прежней стилистике.
+- Выкладка руками: `npm run build` → `python3 admin/build.py dist` →
+  `DEPLOY_KEY=~/.ssh/evcar_deploy_ed25519 zsh deploy/upload.sh`.
+  Установка сервера (повторный запуск безопасен):
+  `DEPLOY_PUB=~/.ssh/evcar_deploy_ed25519.pub zsh deploy/install.sh`.
+- DNS домена – в кабинете hoster.by (ООО «Тренд Экспресс Авто»):
+  A `@` и A `www` → `45.12.72.227`. Не трогать: TXT-верификации Google
+  и Яндекса, поддомены `dashboard`, `social` и CNAME `catalog` (Railway).
+  Прежний IP Тильды, если понадобится откат: `45.155.60.8`.
+- **Домен истекает 13.11.2026** – продлить в кабинете hoster.by.
+- Редиректы со старых адресов Тильды: `deploy/redirects.conf`,
+  генерируется `node scripts/gen-redirects.mjs nginx` из карты миграции
+  `docs/seo-migration/karta-migracii.csv`. Карта – единственный источник.
+  Адрес, у которого есть своя страница в `dist`, не редиректится –
+  так сохранён `/lixiangl9` (1 207 кликов).
+- Счётчики и виджет Битрикс24 – в `src/content/analytics` (`site.ts`):
+  Метрика 98499004, GTM-PRHR43Z7, GA4 G-TGNJ6VM7TQ, портал b28916048.
+- Старый адрес на GitHub Pages (`ликсианг.рф`) остаётся зеркалом ветки
+  `main`; у домена в reg.ru так и не убрана лишняя A-запись парковки.
 
 ## Правила
 
