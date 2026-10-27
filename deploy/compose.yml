@@ -1,0 +1,24 @@
+# Evolution Car на VPS Beget: только статика, своего приёмника заявок нет –
+# заявки уходят в Битрикс24 через его виджет и в Telegram через Cloudflare Worker.
+# Порты наружу не публикуются: общий Caddy ходит к контейнеру по сети proxy.
+name: evolution-car
+services:
+  evolution-car-web:
+    image: nginxinc/nginx-unprivileged:1.27-alpine
+    container_name: evolution-car-web
+    restart: unless-stopped
+    volumes:
+      - /opt/evolution-car/releases:/srv:ro
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./redirects.conf:/etc/nginx/conf.d/redirects.conf:ro
+    read_only: true
+    tmpfs: [/tmp]
+    security_opt: [no-new-privileges:true]
+    cap_drop: [ALL]
+    mem_limit: 96m
+    networks: [proxy]
+
+networks:
+  proxy:
+    external: true
+    name: dzenbot_default
