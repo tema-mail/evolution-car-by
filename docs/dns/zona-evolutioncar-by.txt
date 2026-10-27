@@ -1,0 +1,10 @@
+# Зона evolutioncar.by – снимок 2026-10-27
+# источник: u1.hoster.by
+evolutioncar.by  SOA  u1.hoster.by. support.hoster.by. 2026102701 43200 7200 604800 3600
+evolutioncar.by  NS  u2.hoster.by.
+evolutioncar.by  NS  u1.hoster.by.
+evolutioncar.by  A  45.155.60.8
+www.evolutioncar.by  A  45.155.60.8
+evolutioncar.by  TXT  "yandex-verification: ba775d587e675c62"
+evolutioncar.by  TXT  "google-site-verification=PkMrmmw_SlXDRT30t3TsA9WrvqtvhslZNbK_SlReBFA"
+evolutioncar.by  TXT  "google-site-verification=OW1JKsRZrke8cF_Tc-TgB0nzuQ4qsrbxnXgiXP_ZY-E"
