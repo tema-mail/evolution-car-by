@@ -5733,5 +5733,1247 @@
   "countries": [
    "china"
   ]
+ },
+ {
+  "slug": "lynk-co-08",
+  "brand": "Lynk&CO",
+  "title": "Lynk & Co 08",
+  "country": "china",
+  "countries": [
+   "china"
+  ],
+  "categories": [
+   "Автомобили из Китая"
+  ],
+  "availability": "on-order",
+  "powertrain": "hybrid",
+  "year": "2024-2025",
+  "priceUsd": 38200,
+  "priceByn": 121100,
+  "photo": "/img/cars/lynk-co-08.jpg",
+  "description": "Подключаемый гибрид EM-P · 280 кВт · запас хода 120 км на электротяге, до 1200 км суммарно",
+  "note": "Цена и характеристики перенесены со страницы модели на evolutioncar.by и требуют подтверждения клиентом.",
+  "specs": [
+   {
+    "label": "Тип топлива",
+    "value": "Подключаемый гибрид EM-P"
+   },
+   {
+    "label": "Мощность",
+    "value": "280 кВт"
+   },
+   {
+    "label": "Крутящий момент",
+    "value": "615 Н·м"
+   },
+   {
+    "label": "Батарея",
+    "value": "38,9 кВт·ч"
+   },
+   {
+    "label": "Запас хода",
+    "value": "120 км на электротяге (CLTC), до 1200 км суммарно"
+   },
+   {
+    "label": "Разгон 0–100 км/ч",
+    "value": "4,6 с"
+   },
+   {
+    "label": "Максимальная скорость",
+    "value": "190 км/ч"
+   },
+   {
+    "label": "Колёсная база",
+    "value": "2848 мм"
+   },
+   {
+    "label": "Габариты",
+    "value": "4820 × 1915 × 1685 мм"
+   },
+   {
+    "label": "Кузов",
+    "value": "5-дверный 5-местный кроссовер"
+   }
+  ]
+ },
+ {
+  "slug": "lynk-co-05",
+  "brand": "Lynk&CO",
+  "title": "Lynk & Co 05",
+  "country": "china",
+  "countries": [
+   "china"
+  ],
+  "categories": [
+   "Автомобили из Китая"
+  ],
+  "availability": "on-order",
+  "powertrain": "hybrid",
+  "year": "2023-2025",
+  "priceUsd": 34000,
+  "priceByn": 107780,
+  "photo": "/img/cars/lynk-co-05.jpg",
+  "description": "Купе-кроссовер · подключаемый гибрид · батарея 38,9 кВт·ч · разгон 6,5 с",
+  "note": "Цена и характеристики перенесены со страницы модели на evolutioncar.by и требуют подтверждения клиентом.",
+  "specs": [
+   {
+    "label": "Тип топлива",
+    "value": "Подключаемый гибрид"
+   },
+   {
+    "label": "Крутящий момент",
+    "value": "265 Н·м"
+   },
+   {
+    "label": "Батарея",
+    "value": "38,9 кВт·ч"
+   },
+   {
+    "label": "Разгон 0–100 км/ч",
+    "value": "6,5 с"
+   },
+   {
+    "label": "Максимальная скорость",
+    "value": "230 км/ч"
+   },
+   {
+    "label": "Колёсная база",
+    "value": "2734 мм"
+   },
+   {
+    "label": "Габариты",
+    "value": "4614 × 1879 × 1628 мм"
+   },
+   {
+    "label": "Кузов",
+    "value": "Купе-кроссовер"
+   }
+  ]
+ },
+ {
+  "slug": "denza-d9",
+  "brand": "Denza",
+  "title": "Denza D9",
+  "country": "china",
+  "countries": [
+   "china"
+  ],
+  "categories": [
+   "Автомобили из Китая"
+  ],
+  "availability": "on-order",
+  "powertrain": "hybrid",
+  "year": "2024-2025",
+  "priceUsd": 63500,
+  "priceByn": 201300,
+  "photo": "/img/cars/denza-d9.jpg",
+  "description": "Представительский минивэн · гибрид · батарея 103,4 кВт·ч · колёсная база 3110 мм",
+  "note": "Цена и характеристики перенесены со страницы модели на evolutioncar.by и требуют подтверждения клиентом.",
+  "specs": [
+   {
+    "label": "Тип топлива",
+    "value": "Гибрид"
+   },
+   {
+    "label": "Крутящий момент",
+    "value": "374 Н·м"
+   },
+   {
+    "label": "Батарея",
+    "value": "103,4 кВт·ч"
+   },
+   {
+    "label": "Разгон 0–100 км/ч",
+    "value": "6,9 с"
+   },
+   {
+    "label": "Максимальная скорость",
+    "value": "180 км/ч"
+   },
+   {
+    "label": "Колёсная база",
+    "value": "3110 мм"
+   },
+   {
+    "label": "Габариты",
+    "value": "5250 × 1960 × 1920 мм"
+   },
+   {
+    "label": "Кузов",
+    "value": "Минивэн"
+   }
+  ]
+ },
+ {
+  "slug": "denza-z9-gt",
+  "brand": "Denza",
+  "title": "Denza Z9 GT",
+  "country": "china",
+  "countries": [
+   "china"
+  ],
+  "categories": [
+   "Автомобили из Китая"
+  ],
+  "availability": "on-order",
+  "powertrain": "hybrid",
+  "year": "2024-2025",
+  "priceUsd": 55500,
+  "priceByn": 180300,
+  "photo": "/img/cars/denza-z9-gt.jpg",
+  "description": "Гран-турер · гибрид · 966 Н·м · разгон 3,4 с · батарея 100,1 кВт·ч",
+  "note": "Цена и характеристики перенесены со страницы модели на evolutioncar.by и требуют подтверждения клиентом.",
+  "specs": [
+   {
+    "label": "Тип топлива",
+    "value": "Гибрид"
+   },
+   {
+    "label": "Крутящий момент",
+    "value": "966 Н·м"
+   },
+   {
+    "label": "Батарея",
+    "value": "100,1 кВт·ч"
+   },
+   {
+    "label": "Разгон 0–100 км/ч",
+    "value": "3,4 с"
+   },
+   {
+    "label": "Максимальная скорость",
+    "value": "240 км/ч"
+   },
+   {
+    "label": "Колёсная база",
+    "value": "2925 мм"
+   },
+   {
+    "label": "Габариты",
+    "value": "5180 × 1990 × 1500 мм"
+   },
+   {
+    "label": "Кузов",
+    "value": "Универсал-гран-турер"
+   }
+  ]
+ },
+ {
+  "slug": "hiphi-z",
+  "brand": "HiPhi",
+  "title": "HiPhi Z",
+  "country": "china",
+  "countries": [
+   "china"
+  ],
+  "categories": [
+   "Автомобили из Китая"
+  ],
+  "availability": "on-order",
+  "powertrain": "ev",
+  "year": "2023-2024",
+  "priceUsd": 75500,
+  "priceByn": 239340,
+  "photo": "/img/cars/hiphi-z.jpg",
+  "description": "Электрический гран-турер · батарея 120 кВт·ч · 672 Н·м · разгон 3,8 с",
+  "note": "Цена и характеристики перенесены со страницы модели на evolutioncar.by и требуют подтверждения клиентом.",
+  "specs": [
+   {
+    "label": "Тип топлива",
+    "value": "Электромобиль"
+   },
+   {
+    "label": "Крутящий момент",
+    "value": "672 Н·м"
+   },
+   {
+    "label": "Батарея",
+    "value": "120 кВт·ч"
+   },
+   {
+    "label": "Разгон 0–100 км/ч",
+    "value": "3,8 с"
+   },
+   {
+    "label": "Максимальная скорость",
+    "value": "200 км/ч"
+   },
+   {
+    "label": "Колёсная база",
+    "value": "3150 мм"
+   },
+   {
+    "label": "Габариты",
+    "value": "5036 × 2018 × 1439 мм"
+   },
+   {
+    "label": "Кузов",
+    "value": "Гран-турер"
+   }
+  ]
+ },
+ {
+  "slug": "gac-aion-y",
+  "brand": "GAC",
+  "title": "GAC Aion Y",
+  "country": "china",
+  "countries": [
+   "china"
+  ],
+  "categories": [
+   "Автомобили из Китая"
+  ],
+  "availability": "on-order",
+  "powertrain": "ev",
+  "year": "2024-2025",
+  "priceUsd": 21000,
+  "priceByn": null,
+  "photo": "/img/cars/gac-aion-y.jpg",
+  "description": "Компактный электрокроссовер · 135 кВт · батарея 76 кВт·ч · запас хода 600 км",
+  "note": "Цена и характеристики перенесены со страницы модели на evolutioncar.by и требуют подтверждения клиентом.",
+  "specs": [
+   {
+    "label": "Тип топлива",
+    "value": "Электромобиль"
+   },
+   {
+    "label": "Мощность электромотора",
+    "value": "135 кВт"
+   },
+   {
+    "label": "Крутящий момент",
+    "value": "225 Н·м"
+   },
+   {
+    "label": "Батарея",
+    "value": "76 кВт·ч, литиевая"
+   },
+   {
+    "label": "Запас хода",
+    "value": "600 км"
+   },
+   {
+    "label": "Привод",
+    "value": "Передний"
+   },
+   {
+    "label": "Колёсная база",
+    "value": "2750 мм"
+   },
+   {
+    "label": "Габариты",
+    "value": "4410 × 1870 × 1645 мм"
+   },
+   {
+    "label": "Кузов",
+    "value": "Кроссовер"
+   }
+  ]
+ },
+ {
+  "slug": "hyundai-elantra",
+  "brand": "Hyundai",
+  "title": "Hyundai Elantra",
+  "country": "china",
+  "countries": [
+   "china"
+  ],
+  "categories": [
+   "Автомобили из Китая"
+  ],
+  "availability": "on-order",
+  "powertrain": "petrol",
+  "year": "2024",
+  "priceUsd": 18800,
+  "priceByn": 59600,
+  "photo": "/img/cars/hyundai-elantra.jpg",
+  "description": "Седан · бензин · передний привод · автоматическая коробка",
+  "note": "Цена и характеристики перенесены со страницы модели на evolutioncar.by и требуют подтверждения клиентом.",
+  "specs": [
+   {
+    "label": "Тип топлива",
+    "value": "Бензин"
+   },
+   {
+    "label": "Коробка передач",
+    "value": "Автоматическая"
+   },
+   {
+    "label": "Привод",
+    "value": "Передний"
+   },
+   {
+    "label": "Количество мест",
+    "value": "5"
+   },
+   {
+    "label": "Максимальная скорость",
+    "value": "190 км/ч"
+   },
+   {
+    "label": "Колёсная база",
+    "value": "2700 мм"
+   },
+   {
+    "label": "Габариты",
+    "value": "4720 × 1810 × 1415 мм"
+   },
+   {
+    "label": "Кузов",
+    "value": "Седан"
+   }
+  ]
+ },
+ {
+  "slug": "byd-dolphin",
+  "brand": "BYD",
+  "title": "BYD Dolphin",
+  "country": "china",
+  "countries": [
+   "china"
+  ],
+  "categories": [
+   "Автомобили из Китая"
+  ],
+  "availability": "on-order",
+  "powertrain": "ev",
+  "year": "2023-2025",
+  "priceUsd": 21800,
+  "priceByn": 69170,
+  "photo": "/img/cars/byd-dolphin.jpg",
+  "description": "Городской электрохэтчбек · батарея 44,9 кВт·ч · быстрая зарядка 30 минут",
+  "note": "Цена и характеристики перенесены со страницы модели на evolutioncar.by и требуют подтверждения клиентом.",
+  "specs": [
+   {
+    "label": "Тип топлива",
+    "value": "Электромобиль"
+   },
+   {
+    "label": "Крутящий момент",
+    "value": "177 Н·м"
+   },
+   {
+    "label": "Батарея",
+    "value": "44,9 кВт·ч"
+   },
+   {
+    "label": "Зарядка 10–80 %",
+    "value": "30 мин"
+   },
+   {
+    "label": "Разгон 0–100 км/ч",
+    "value": "7,5 с"
+   },
+   {
+    "label": "Максимальная скорость",
+    "value": "150 км/ч"
+   },
+   {
+    "label": "Колёсная база",
+    "value": "2700 мм"
+   },
+   {
+    "label": "Габариты",
+    "value": "4125 × 1770 × 1570 мм"
+   },
+   {
+    "label": "Кузов",
+    "value": "Хэтчбек"
+   }
+  ]
+ },
+ {
+  "slug": "geely-radar-rd6",
+  "brand": "Geely",
+  "title": "Geely Radar RD6",
+  "country": "china",
+  "countries": [
+   "china"
+  ],
+  "categories": [
+   "Автомобили из Китая"
+  ],
+  "availability": "on-order",
+  "powertrain": "ev",
+  "year": "2023-2025",
+  "priceUsd": null,
+  "priceByn": null,
+  "photo": "/img/cars/geely-radar-rd6.jpg",
+  "description": "Электрический пикап · батарея 100 кВт·ч · колёсная база 3120 мм",
+  "note": "Цена и характеристики перенесены со страницы модели на evolutioncar.by и требуют подтверждения клиентом.",
+  "specs": [
+   {
+    "label": "Тип топлива",
+    "value": "Электромобиль"
+   },
+   {
+    "label": "Крутящий момент",
+    "value": "268 Н·м"
+   },
+   {
+    "label": "Батарея",
+    "value": "100 кВт·ч"
+   },
+   {
+    "label": "Зарядка 10–80 %",
+    "value": "30 мин"
+   },
+   {
+    "label": "Разгон 0–100 км/ч",
+    "value": "6,9 с"
+   },
+   {
+    "label": "Максимальная скорость",
+    "value": "185 км/ч"
+   },
+   {
+    "label": "Колёсная база",
+    "value": "3120 мм"
+   },
+   {
+    "label": "Габариты",
+    "value": "5260 × 1900 × 1830 мм"
+   },
+   {
+    "label": "Кузов",
+    "value": "Пикап"
+   }
+  ]
+ },
+ {
+  "slug": "changan-uni-v",
+  "brand": "Changan",
+  "title": "Changan UNI-V",
+  "country": "china",
+  "countries": [
+   "china"
+  ],
+  "categories": [
+   "Автомобили из Китая"
+  ],
+  "availability": "on-order",
+  "powertrain": "petrol",
+  "year": "2023-2025",
+  "priceUsd": 23890,
+  "priceByn": 75750,
+  "photo": "/img/cars/changan-uni-v.jpg",
+  "description": "Спортивный седан · бензин · разгон 6,37 с · максимальная скорость 205 км/ч",
+  "note": "Цена и характеристики перенесены со страницы модели на evolutioncar.by и требуют подтверждения клиентом.",
+  "specs": [
+   {
+    "label": "Тип топлива",
+    "value": "Бензин"
+   },
+   {
+    "label": "Крутящий момент",
+    "value": "188 Н·м"
+   },
+   {
+    "label": "Разгон 0–100 км/ч",
+    "value": "6,37 с"
+   },
+   {
+    "label": "Максимальная скорость",
+    "value": "205 км/ч"
+   },
+   {
+    "label": "Колёсная база",
+    "value": "2750 мм"
+   },
+   {
+    "label": "Габариты",
+    "value": "4720 × 1948 × 1430 мм"
+   },
+   {
+    "label": "Кузов",
+    "value": "Седан"
+   }
+  ]
+ },
+ {
+  "slug": "toyota-bz4x",
+  "brand": "Toyota",
+  "title": "Toyota bZ4X",
+  "country": "china",
+  "countries": [
+   "china"
+  ],
+  "categories": [
+   "Автомобили из Китая"
+  ],
+  "availability": "on-order",
+  "powertrain": "ev",
+  "year": "2023-2025",
+  "priceUsd": 27500,
+  "priceByn": 87180,
+  "photo": "/img/cars/toyota-bz4x.jpg",
+  "description": "Электрокроссовер Toyota · 150 кВт · батарея 71,4 кВт·ч",
+  "note": "Цена и характеристики перенесены со страницы модели на evolutioncar.by и требуют подтверждения клиентом.",
+  "specs": [
+   {
+    "label": "Тип топлива",
+    "value": "Электромобиль"
+   },
+   {
+    "label": "Максимальная мощность",
+    "value": "150 кВт"
+   },
+   {
+    "label": "Батарея",
+    "value": "71,4 кВт·ч (брутто)"
+   },
+   {
+    "label": "Зарядка 10–80 %",
+    "value": "30 мин"
+   },
+   {
+    "label": "Максимальная скорость",
+    "value": "160 км/ч"
+   },
+   {
+    "label": "Колёсная база",
+    "value": "2850 мм"
+   },
+   {
+    "label": "Габариты",
+    "value": "4690 × 1860 × 1650 мм"
+   },
+   {
+    "label": "Кузов",
+    "value": "Кроссовер"
+   }
+  ]
+ },
+ {
+  "slug": "zeekr-9x",
+  "brand": "Zeekr",
+  "title": "Zeekr 9X",
+  "country": "china",
+  "countries": [
+   "china"
+  ],
+  "categories": [
+   "Автомобили из Китая"
+  ],
+  "availability": "on-order",
+  "powertrain": "hybrid",
+  "year": "2025",
+  "priceUsd": null,
+  "priceByn": null,
+  "photo": "/img/cars/zeekr-9x.jpg",
+  "description": "Флагманский гибридный кроссовер · 660 кВт · разгон 3,9 с",
+  "note": "Цена и характеристики перенесены со страницы модели на evolutioncar.by и требуют подтверждения клиентом.",
+  "specs": [
+   {
+    "label": "Тип топлива",
+    "value": "Гибрид"
+   },
+   {
+    "label": "Максимальная мощность",
+    "value": "660 кВт"
+   },
+   {
+    "label": "Разгон 0–100 км/ч",
+    "value": "3,9 с"
+   },
+   {
+    "label": "Зарядка 20–80 %",
+    "value": "9 мин"
+   },
+   {
+    "label": "Максимальная скорость",
+    "value": "240 км/ч"
+   },
+   {
+    "label": "Колёсная база",
+    "value": "3169 мм"
+   },
+   {
+    "label": "Габариты",
+    "value": "5239 × 2029 × 1819 мм"
+   },
+   {
+    "label": "Кузов",
+    "value": "Кроссовер"
+   }
+  ]
+ },
+ {
+  "slug": "faw-bestune-nat",
+  "brand": "FAW",
+  "title": "FAW Bestune NAT",
+  "country": "china",
+  "countries": [
+   "china"
+  ],
+  "categories": [
+   "Автомобили из Китая"
+  ],
+  "availability": "on-order",
+  "powertrain": "ev",
+  "year": "2023-2024",
+  "priceUsd": 18750,
+  "priceByn": 59490,
+  "photo": "/img/cars/faw-bestune-nat.jpg",
+  "description": "Электромобиль для такси и каршеринга · батарея 55 кВт·ч · просторный салон",
+  "note": "Цена и характеристики перенесены со страницы модели на evolutioncar.by и требуют подтверждения клиентом.",
+  "specs": [
+   {
+    "label": "Тип топлива",
+    "value": "Электромобиль"
+   },
+   {
+    "label": "Крутящий момент",
+    "value": "238 Н·м"
+   },
+   {
+    "label": "Батарея",
+    "value": "55 кВт·ч"
+   },
+   {
+    "label": "Разгон 0–100 км/ч",
+    "value": "7,7 с"
+   },
+   {
+    "label": "Максимальная скорость",
+    "value": "215 км/ч"
+   },
+   {
+    "label": "Колёсная база",
+    "value": "2850 мм"
+   },
+   {
+    "label": "Габариты",
+    "value": "4770 × 1985 × 1689 мм"
+   },
+   {
+    "label": "Кузов",
+    "value": "Минивэн-кроссовер"
+   }
+  ]
+ },
+ {
+  "slug": "volkswagen-id6-crozz",
+  "brand": "Volkswagen",
+  "title": "Volkswagen ID.6 Crozz",
+  "country": "china",
+  "countries": [
+   "china"
+  ],
+  "categories": [
+   "Автомобили из Китая"
+  ],
+  "availability": "on-order",
+  "powertrain": "ev",
+  "year": "2023-2024",
+  "priceUsd": 33900,
+  "priceByn": 107560,
+  "photo": "/img/cars/volkswagen-id6-crozz.jpg",
+  "description": "Семиместный электрокроссовер · батарея 84,8 кВт·ч",
+  "note": "Цена и характеристики перенесены со страницы модели на evolutioncar.by и требуют подтверждения клиентом.",
+  "specs": [
+   {
+    "label": "Тип топлива",
+    "value": "Электромобиль"
+   },
+   {
+    "label": "Крутящий момент",
+    "value": "204 Н·м"
+   },
+   {
+    "label": "Батарея",
+    "value": "84,8 кВт·ч"
+   },
+   {
+    "label": "Зарядка 10–80 %",
+    "value": "30 мин"
+   },
+   {
+    "label": "Максимальная скорость",
+    "value": "160 км/ч"
+   },
+   {
+    "label": "Колёсная база",
+    "value": "2965 мм"
+   },
+   {
+    "label": "Габариты",
+    "value": "4891 × 1848 × 1679 мм"
+   },
+   {
+    "label": "Кузов",
+    "value": "Кроссовер"
+   }
+  ]
+ },
+ {
+  "slug": "geely-geometry-e",
+  "brand": "Geely",
+  "title": "Geely Geometry E",
+  "country": "china",
+  "countries": [
+   "china"
+  ],
+  "categories": [
+   "Автомобили из Китая"
+  ],
+  "availability": "on-order",
+  "powertrain": "ev",
+  "year": "2023-2024",
+  "priceUsd": null,
+  "priceByn": null,
+  "photo": "/img/cars/geely-geometry-e.jpg",
+  "description": "Компактный городской электромобиль · батарея 39,4 кВт·ч",
+  "note": "Цена и характеристики перенесены со страницы модели на evolutioncar.by и требуют подтверждения клиентом.",
+  "specs": [
+   {
+    "label": "Тип топлива",
+    "value": "Электромобиль"
+   },
+   {
+    "label": "Крутящий момент",
+    "value": "204 Н·м"
+   },
+   {
+    "label": "Батарея",
+    "value": "39,4 кВт·ч"
+   },
+   {
+    "label": "Максимальная скорость",
+    "value": "100 км/ч"
+   },
+   {
+    "label": "Колёсная база",
+    "value": "2485 мм"
+   },
+   {
+    "label": "Габариты",
+    "value": "4006 × 1765 × 1550 мм"
+   },
+   {
+    "label": "Кузов",
+    "value": "Хэтчбек"
+   }
+  ]
+ },
+ {
+  "slug": "geely-geometry-c",
+  "brand": "Geely",
+  "title": "Geely Geometry C",
+  "country": "china",
+  "countries": [
+   "china"
+  ],
+  "categories": [
+   "Автомобили из Китая"
+  ],
+  "availability": "on-order",
+  "powertrain": "ev",
+  "year": "2022-2024",
+  "priceUsd": null,
+  "priceByn": null,
+  "photo": "/img/cars/geely-geometry-c.jpg",
+  "description": "Электрокроссовер · батарея 53 кВт·ч · разгон 6,9 с",
+  "note": "Цена и характеристики перенесены со страницы модели на evolutioncar.by и требуют подтверждения клиентом.",
+  "specs": [
+   {
+    "label": "Тип топлива",
+    "value": "Электромобиль"
+   },
+   {
+    "label": "Крутящий момент",
+    "value": "204 Н·м"
+   },
+   {
+    "label": "Батарея",
+    "value": "53 кВт·ч"
+   },
+   {
+    "label": "Разгон 0–100 км/ч",
+    "value": "6,9 с"
+   },
+   {
+    "label": "Максимальная скорость",
+    "value": "150 км/ч"
+   },
+   {
+    "label": "Колёсная база",
+    "value": "2700 мм"
+   },
+   {
+    "label": "Габариты",
+    "value": "4432 × 1833 × 1560 мм"
+   },
+   {
+    "label": "Кузов",
+    "value": "Кроссовер"
+   }
+  ]
+ },
+ {
+  "slug": "byd-han-l-ev",
+  "brand": "BYD",
+  "title": "BYD Han L EV",
+  "country": "china",
+  "countries": [
+   "china"
+  ],
+  "categories": [
+   "Автомобили из Китая"
+  ],
+  "availability": "on-order",
+  "powertrain": "ev",
+  "year": "2025",
+  "priceUsd": 34000,
+  "priceByn": 101830,
+  "photo": "/img/cars/byd-han-l-ev.jpg",
+  "description": "Флагманский электроседан · 500 кВт (680 л.с.) · батарея 83,21 кВт·ч · разгон 5,5 с",
+  "note": "Цена и характеристики перенесены со страницы модели на evolutioncar.by и требуют подтверждения клиентом.",
+  "specs": [
+   {
+    "label": "Тип топлива",
+    "value": "Электромобиль"
+   },
+   {
+    "label": "Максимальная мощность",
+    "value": "500 кВт (680 л.с.)"
+   },
+   {
+    "label": "Батарея",
+    "value": "83,21 кВт·ч"
+   },
+   {
+    "label": "Разгон 0–100 км/ч",
+    "value": "5,5 с"
+   },
+   {
+    "label": "Максимальная скорость",
+    "value": "305 км/ч"
+   },
+   {
+    "label": "Колёсная база",
+    "value": "2920 мм"
+   },
+   {
+    "label": "Габариты",
+    "value": "5050 × 1960 × 1505 мм"
+   },
+   {
+    "label": "Кузов",
+    "value": "Седан"
+   }
+  ]
+ },
+ {
+  "slug": "honda-enp1",
+  "brand": "Honda",
+  "title": "Honda e:NP1",
+  "country": "china",
+  "countries": [
+   "china"
+  ],
+  "categories": [
+   "Автомобили из Китая"
+  ],
+  "availability": "on-order",
+  "powertrain": "ev",
+  "year": "2022-2024",
+  "priceUsd": 24200,
+  "priceByn": 76790,
+  "photo": "/img/cars/honda-enp1.jpg",
+  "description": "Электрокроссовер Honda · батарея 68,8 кВт·ч · быстрая зарядка 30 минут",
+  "note": "Цена и характеристики перенесены со страницы модели на evolutioncar.by и требуют подтверждения клиентом.",
+  "specs": [
+   {
+    "label": "Тип топлива",
+    "value": "Электромобиль"
+   },
+   {
+    "label": "Крутящий момент",
+    "value": "204 Н·м"
+   },
+   {
+    "label": "Батарея",
+    "value": "68,8 кВт·ч"
+   },
+   {
+    "label": "Зарядка 10–80 %",
+    "value": "30 мин"
+   },
+   {
+    "label": "Колёсная база",
+    "value": "2610 мм"
+   },
+   {
+    "label": "Габариты",
+    "value": "4388 × 1790 × 1560 мм"
+   },
+   {
+    "label": "Кузов",
+    "value": "Кроссовер"
+   }
+  ]
+ },
+ {
+  "slug": "jetour-dashing-phev",
+  "brand": "Jetour",
+  "title": "Jetour Dashing PHEV",
+  "country": "china",
+  "countries": [
+   "china"
+  ],
+  "categories": [
+   "Автомобили из Китая"
+  ],
+  "availability": "on-order",
+  "powertrain": "hybrid",
+  "year": "2023-2024",
+  "priceUsd": 27000,
+  "priceByn": 85600,
+  "photo": "/img/cars/jetour-dashing-phev.jpg",
+  "description": "Гибридный кроссовер · бензиновый двигатель 1,5 л 156 л.с. · батарея 19,27 кВт·ч",
+  "note": "Цена и характеристики перенесены со страницы модели на evolutioncar.by и требуют подтверждения клиентом.",
+  "specs": [
+   {
+    "label": "Тип топлива",
+    "value": "Подключаемый гибрид"
+   },
+   {
+    "label": "Двигатель",
+    "value": "Бензиновый, 1498 см³"
+   },
+   {
+    "label": "Мощность двигателя",
+    "value": "156 л.с. при 5500 об/мин"
+   },
+   {
+    "label": "Крутящий момент",
+    "value": "230 Н·м при 4000 об/мин"
+   },
+   {
+    "label": "Батарея",
+    "value": "19,27 кВт·ч"
+   },
+   {
+    "label": "Топливный бак",
+    "value": "57 л"
+   },
+   {
+    "label": "Максимальная скорость",
+    "value": "180 км/ч"
+   },
+   {
+    "label": "Колёсная база",
+    "value": "2720 мм"
+   },
+   {
+    "label": "Габариты",
+    "value": "4590 × 1900 × 1690 мм"
+   },
+   {
+    "label": "Кузов",
+    "value": "Кроссовер"
+   }
+  ]
+ },
+ {
+  "slug": "faw-nat-pro",
+  "brand": "FAW",
+  "title": "FAW NAT PRO",
+  "country": "china",
+  "countries": [
+   "china"
+  ],
+  "categories": [
+   "Автомобили из Китая"
+  ],
+  "availability": "on-order",
+  "powertrain": "ev",
+  "year": "2023-2024",
+  "priceUsd": null,
+  "priceByn": null,
+  "photo": "/img/cars/faw-nat-pro.jpg",
+  "description": "Электромобиль FAW для коммерческой эксплуатации · характеристики уточняются",
+  "note": "Цена и характеристики перенесены со страницы модели на evolutioncar.by и требуют подтверждения клиентом.",
+  "specs": [
+   {
+    "label": "Тип топлива",
+    "value": "Электромобиль"
+   },
+   {
+    "label": "Кузов",
+    "value": "Минивэн-кроссовер"
+   }
+  ]
+ },
+ {
+  "slug": "hongqi-h9",
+  "brand": "Hongqi",
+  "title": "Hongqi H9",
+  "country": "china",
+  "countries": [
+   "china"
+  ],
+  "categories": [
+   "Автомобили из Китая"
+  ],
+  "availability": "on-order",
+  "powertrain": "petrol",
+  "year": "2023-2025",
+  "priceUsd": 97550,
+  "priceByn": 309530,
+  "photo": "/img/cars/hongqi-h9.jpg",
+  "description": "Представительский седан · бензин 2,0 л 245 л.с. · колёсная база 3060 мм",
+  "note": "Цена и характеристики перенесены со страницы модели на evolutioncar.by и требуют подтверждения клиентом.",
+  "specs": [
+   {
+    "label": "Тип топлива",
+    "value": "Бензин"
+   },
+   {
+    "label": "Двигатель",
+    "value": "1989 см³"
+   },
+   {
+    "label": "Мощность двигателя",
+    "value": "245 л.с."
+   },
+   {
+    "label": "Крутящий момент",
+    "value": "380 Н·м"
+   },
+   {
+    "label": "Топливный бак",
+    "value": "62 л"
+   },
+   {
+    "label": "Количество мест",
+    "value": "5"
+   },
+   {
+    "label": "Максимальная скорость",
+    "value": "245 км/ч"
+   },
+   {
+    "label": "Колёсная база",
+    "value": "3060 мм"
+   },
+   {
+    "label": "Габариты",
+    "value": "5137 × 1904 × 1493 мм"
+   },
+   {
+    "label": "Кузов",
+    "value": "Седан"
+   }
+  ]
+ },
+ {
+  "slug": "lixiang-mega",
+  "brand": "Lixiang",
+  "title": "Lixiang MEGA",
+  "country": "china",
+  "countries": [
+   "china"
+  ],
+  "categories": [
+   "Автомобили из Китая"
+  ],
+  "availability": "on-order",
+  "powertrain": "ev",
+  "year": "2024-2025",
+  "priceUsd": 80450,
+  "priceByn": 255270,
+  "photo": "/img/cars/lixiang-mega.jpg",
+  "description": "Электрический минивэн · батарея 116,79 кВт·ч · зарядка 10–80 % за 11 минут",
+  "note": "Цена и характеристики перенесены со страницы модели на evolutioncar.by и требуют подтверждения клиентом.",
+  "specs": [
+   {
+    "label": "Тип топлива",
+    "value": "Электромобиль"
+   },
+   {
+    "label": "Крутящий момент",
+    "value": "544 Н·м"
+   },
+   {
+    "label": "Батарея",
+    "value": "116,79 кВт·ч"
+   },
+   {
+    "label": "Зарядка 10–80 %",
+    "value": "11 мин"
+   },
+   {
+    "label": "Разгон 0–100 км/ч",
+    "value": "5,4 с"
+   },
+   {
+    "label": "Колёсная база",
+    "value": "3300 мм"
+   },
+   {
+    "label": "Габариты",
+    "value": "5350 × 1965 × 1850 мм"
+   },
+   {
+    "label": "Кузов",
+    "value": "Минивэн"
+   }
+  ]
+ },
+ {
+  "slug": "byd-yuan-up",
+  "brand": "BYD",
+  "title": "BYD Yuan Up",
+  "country": "china",
+  "countries": [
+   "china"
+  ],
+  "categories": [
+   "Автомобили из Китая"
+  ],
+  "availability": "on-order",
+  "powertrain": "ev",
+  "year": "2024",
+  "priceUsd": null,
+  "priceByn": null,
+  "photo": "/img/cars/byd-yuan-up.jpg",
+  "description": "Компактный электрокроссовер · 70 кВт (95 л.с.) · батарея 32 кВт·ч",
+  "note": "Цена и характеристики перенесены со страницы модели на evolutioncar.by и требуют подтверждения клиентом.",
+  "specs": [
+   {
+    "label": "Тип топлива",
+    "value": "Электромобиль"
+   },
+   {
+    "label": "Максимальная мощность",
+    "value": "70 кВт (95 л.с.)"
+   },
+   {
+    "label": "Батарея",
+    "value": "32 кВт·ч"
+   },
+   {
+    "label": "Разгон 0–100 км/ч",
+    "value": "12 с"
+   },
+   {
+    "label": "Максимальная скорость",
+    "value": "150 км/ч"
+   },
+   {
+    "label": "Колёсная база",
+    "value": "2620 мм"
+   },
+   {
+    "label": "Габариты",
+    "value": "4310 × 1830 × 1675 мм"
+   },
+   {
+    "label": "Кузов",
+    "value": "Кроссовер"
+   }
+  ]
  }
 ]

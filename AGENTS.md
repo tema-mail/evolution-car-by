@@ -160,7 +160,8 @@ npm run build    # статика в dist/
 
 ## Конфигураторы
 
-Одиннадцать конфигураторов: Lixiang L6, L8, L9, i8, i9, MEGA и Xiaomi SU7, SU7 Ultra, YU7, N70, N90.
+Тринадцать конфигураторов: Lixiang L6, L8, L9, i8, i9, MEGA; Xiaomi SU7,
+SU7 Ultra, YU7, N70, N90; Avatr 12; Voyah Dreamer 9.
 Все рендеры — официальные, из заказных конфигураторов производителя.
 
 - Данные модели — `src/content/models/<модель>-config.ts`: `configTrims`,
@@ -192,11 +193,18 @@ npm run build    # статика в dist/
   `src/content/configurators.ts`, `src/pages/sitemap.xml.ts` и (если у модели
   есть карточка) в `CONFIGURATORS` внутри `src/pages/catalog/[brand]/[model].astro`.
 - Li Auto L7 снят с производства, i6 выходит 28.10.2026 — конфигураторов нет.
-- Разведка 17.10.2026, что ещё можно подключить: **Avatr** (`avatr.com/carset`,
-  готовые кадры `car_diagram_combine`) и **Voyah** (`configuration-3d-web.dsmp.voyah.com.cn`,
-  кадры `car-series-model-config`). Не выйдет: BYD и Denza (китайские сайты уводят
-  на европейский BYD, битый сертификат), Zeekr, Geely Galaxy (домены недоступны),
-  AITO (заказ только в приложении), Tesla/Volvo/Ford/GM (блокируют автоматизацию).
+- **Avatr** (`avatr.com/carset?productCarId=…`) и **Voyah**
+  (`configuration-3d-web.dsmp.voyah.com.cn`) отдают готовый кадр на каждую сборку —
+  слои собирать не нужно. У Avatr опции перебираются кликами по кружкам-свотчам
+  (их порядок: цвета, диски, салоны, опции), названия и цены читаются из текста
+  блоков `车身颜色` / `轮毂` / `内饰`. У Voyah свотчи различаются по координате Y,
+  а клик по нижним (опции) уводит со страницы — обходить только цвета, диски и салон;
+  кузов производитель показывает одним ракурсом, салон — тремя кадрами.
+  productCarId Avatr: 12 — `1640630933`, 07 — `149605015`, 07L — `1299128256`,
+  06 — `40817567`, 06T — `636556434`.
+- Не выйдет: BYD и Denza (китайские сайты уводят на европейский BYD, битый
+  сертификат), Zeekr, Geely Galaxy (домены недоступны), AITO (заказ только
+  в приложении), Tesla/Volvo/Ford/GM (блокируют автоматизацию).
 
 ## Google Ads
 
