@@ -1,22 +1,36 @@
 ---
-/** Админка → Заявки (перенос кабинета-стандарта Milovini; доска – эталон ALEX KROWN / EV). Заявки живые – с приёмника
-    Evolution Car на Beget (server/lead.mjs, GET /api/leads по паролю кабинета). Пока заявок нет – пример с меткой «Пример:»
-    на настоящих формах сайта: «Заказ из корзины», «Заказ в один клик», «Квиз: подбор котла HUBERT»,
-    «Заявка на подключение газа и монтаж отопления», «Акция: …». Товары – реальные позиции каталога. */
+/** Кабинет → «Заявки». Перенос кабинета-стандарта (Milovini → gaz-mag, доска – эталон ALEX KROWN / EV).
+    Заявки живые: приходят с приёмника на нашем сервере (server/lead.mjs, GET /api/leads
+    по паролю кабинета) – форма сайта, имя, телефон, автомобиль и этап.
+    Пока заявок нет, показываем пример с меткой «Пример:» на настоящих формах сайта
+    и настоящих моделях каталога, чтобы было видно, как выглядит заполненная доска. */
 import Admin from '../../layouts/Admin.astro';
 import Leads, { type Lead } from '../../islands/admin/Leads';
-import { CATALOGS } from '../../lib/site';
-const at = (d: number, h: number) => new Date(Date.UTC(2026, 9, d, h)).toISOString();
-const cats: Record<string, string> = Object.fromEntries(CATALOGS.flatMap((c) => [[c.slug, c.title], [c.href.split('/').pop()!, c.title]]));
-const sample: Lead[] = [
-  { id: 'GM-261018-1012', createdAt: at(18, 3), name: 'Пример: Сергей', phone: '+7 900 000-00-31', form: 'Заказ из корзины', page: '/catalog_boilers', stage: 'новая', source: 'Поиск Яндекса', message: 'Доставка в Болотное, нужен монтаж', items: [{ uid: '807447756702', title: 'Настенный газовый котел HUBERT Smart AGB 10-24DP', variant: 'Мощность, кВт: 24кВт', category: 'catalog_boilers', qty: 1, price: 53820 }, { uid: '202487854682', title: 'Коаксиальная традиционная система D60/100 KRATS', category: 'gas', qty: 1, price: 3000 }], category: 'catalog_boilers' },
-  { id: 'GM-261017-1540', createdAt: at(17, 8), name: 'Пример: Наталья', phone: '+7 900 000-00-32', form: 'Заказ в один клик: Котел газовый настенный двухконтурный NAVIEN DELUXE EXPERT 13-24кв (Мощность: 16 кВт)', page: '/catalog_boilers/tproduct/…', stage: 'в работе', source: 'Поиск Google', items: [{ uid: '765965851042', title: 'Котел газовый настенный двухконтурный NAVIEN DELUXE EXPERT 13-24кв', variant: 'Мощность: 16 кВт', category: 'catalog_boilers', qty: 1, price: 42000 }], category: 'catalog_boilers' },
-  { id: 'GM-261017-1105', createdAt: at(17, 4), name: 'Пример: Андрей', phone: '+7 900 000-00-33', form: 'Квиз: подбор котла HUBERT', page: '/hubert', stage: 'новая', source: 'Прямые заходы', items: [], category: 'hubert', extra: [['Какова общая отапливаемая площадь помещения?', 'От 120 до 180 м²'], ['Какой бюджет на котёл с обвязкой?', 'Стандарт (50–70 тыс.)']] },
-  { id: 'GM-261016-0930', createdAt: at(16, 2), name: 'Пример: Ольга', phone: '+7 900 000-00-34', form: 'Заявка на подключение газа и монтаж отопления', page: '/montag', stage: 'выполнена', source: 'Поиск Яндекса', items: [], category: 'montag' },
-  { id: 'GM-261015-1720', createdAt: at(15, 10), name: 'Пример: ООО «Тепломонтаж»', phone: '+7 900 000-00-35', form: 'Акция: Для юридических лиц и монтажников скидка 7%', page: '/akcii/yur-licam-i-montazhnikam', stage: 'отказ', source: 'Соцсети и мессенджеры', items: [], category: 'akcii' },
+import { cars } from '../../content/cars';
+
+const pick = (slug: string) => cars.find((c) => c.slug === slug) ?? cars[0];
+const demo: Lead[] = [
+  {
+    id: 'EC-ПРИМЕР-1', at: new Date().toISOString(), stage: 'новая',
+    form: 'Пример: Заказать автомобиль (карточка)',
+    fields: { 'Имя': 'Пример: Андрей', Phone: '+375 29 000-00-00', 'Автомобиль': pick('lynk-co-08').title },
+    category: pick('lynk-co-08').brand,
+  },
+  {
+    id: 'EC-ПРИМЕР-2', at: new Date().toISOString(), stage: 'в работе',
+    form: 'Пример: Квиз «Подобрать авто»',
+    fields: { 'Имя': 'Пример: Марина', Phone: '+375 33 000-00-00', 'Автомобиль': pick('denza-d9').title },
+    category: pick('denza-d9').brand,
+  },
+  {
+    id: 'EC-ПРИМЕР-3', at: new Date().toISOString(), stage: 'выполнена',
+    form: 'Пример: Расчёт стоимости под ключ',
+    fields: { 'Имя': 'Пример: Сергей', Phone: '+375 44 000-00-00', 'Автомобиль': pick('lixiang-l9').title },
+    category: pick('lixiang-l9').brand,
+  },
 ];
-const catsAll = { ...cats, hubert: 'Котлы HUBERT', 'kotly-hubert': 'Котлы HUBERT', montag: 'Подключение газа и монтаж', uslugi: 'Услуги', 'ustanovka-kotla': 'Установка котлов', akcii: 'Акции' };
 ---
+
 <Admin title="Заявки" active="leads">
-  <Leads client:load sample={sample} cats={catsAll} />
+  <Leads client:load demo={demo} />
 </Admin>
