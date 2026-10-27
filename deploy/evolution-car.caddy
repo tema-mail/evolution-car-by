@@ -55,6 +55,21 @@ admin.evolutioncar.by {
 	handle /api/* {
 		reverse_proxy evolution-car-api:8090
 	}
+	# Общие файлы сборки лежат в корне выкладки, а не внутри /admin:
+	# стили, скрипты островов, картинки и шрифты отдаём как есть,
+	# иначе префикс уводит их в 404 и кабинет остаётся без вёрстки.
+	handle /_astro/* {
+		reverse_proxy evolution-car-web:8080
+	}
+	handle /img/* {
+		reverse_proxy evolution-car-web:8080
+	}
+	handle /favicon* {
+		reverse_proxy evolution-car-web:8080
+	}
+	handle /apple-touch-icon* {
+		reverse_proxy evolution-car-web:8080
+	}
 	handle {
 		rewrite * /admin{uri}
 		reverse_proxy evolution-car-web:8080
