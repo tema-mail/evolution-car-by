@@ -1,0 +1,10 @@
+---
+/** Кабинет → «Позиции в поиске». Данные живые: отчёт собирается на сервере
+    (analytics/collect.py) и приходит по /api/admin/report/positions после входа. */
+import Admin from '../../layouts/Admin.astro';
+import Positions from '../../islands/admin/Positions';
+---
+
+<Admin title="Позиции в поиске" active="positions">
+  <Positions client:load />
+</Admin>

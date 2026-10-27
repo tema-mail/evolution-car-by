@@ -1,5 +1,7 @@
 import { trackLead } from './analytics';
 
+import { track } from './counter';
+
 export interface Lead {
   name: string;
   phone: string;
@@ -45,6 +47,8 @@ function utmFromUrl(): string {
 const DEFAULT_LEAD_ENDPOINT = '/api/lead';
 
 export async function submitLead(lead: Lead): Promise<boolean> {
+  // Своим счётчиком отправку формы считаем всегда – до и независимо от Метрики.
+  if (!lead.company) track('form');
   const configured = import.meta.env.PUBLIC_LEAD_ENDPOINT;
   const endpoint = configured === undefined ? DEFAULT_LEAD_ENDPOINT : configured;
 

@@ -16,7 +16,7 @@ export interface Lead {
 
 const STAGES: Lead['stage'][] = ['новая', 'в работе', 'выполнена', 'отказ'];
 const STAGE_TITLE: Record<Lead['stage'], string> = { 'новая': 'Новые', 'в работе': 'В работе', 'выполнена': 'Выполнена', 'отказ': 'Отказ' };
-const dt = (s: string) => new Date(s).toLocaleString('ru-RU', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Novosibirsk' });
+const dt = (s: string) => new Date(s).toLocaleString('ru-RU', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Minsk' });
 const rub = (n: number) => n.toLocaleString('ru-RU').replace(/[  ]/g, ' ') + ' ₽';
 const goods = (l: Lead) => l.items.map((i) => `${i.title}${i.variant ? ` (${i.variant})` : ''}${i.qty > 1 ? ` × ${i.qty}` : ''}`).join(', ');
 const sum = (l: Lead) => l.items.reduce((s, i) => s + i.price * i.qty, 0);

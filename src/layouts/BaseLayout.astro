@@ -219,7 +219,11 @@ const b24Url = /^https:\/\/[a-z0-9.-]+\.bitrix24\.[a-z]{2,3}\/[A-Za-z0-9_/.-]+\.
     }
     <script>
       import { initAnalytics } from '../lib/analytics';
+      import { initCounter } from '../lib/counter';
       initAnalytics();
+      // Свой счётчик целевых действий – считает всех, а не только согласившихся
+      // на cookie: телефон, мессенджеры, формы сайта и формы виджета Битрикс24.
+      initCounter();
     </script>
   </body>
 </html>

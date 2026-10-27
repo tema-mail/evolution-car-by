@@ -1,36 +1,31 @@
 ---
-/** Кабинет → «Заявки». Перенос кабинета-стандарта (Milovini → gaz-mag, доска – эталон ALEX KROWN / EV).
-    Заявки живые: приходят с приёмника на нашем сервере (server/lead.mjs, GET /api/leads
-    по паролю кабинета) – форма сайта, имя, телефон, автомобиль и этап.
-    Пока заявок нет, показываем пример с меткой «Пример:» на настоящих формах сайта
-    и настоящих моделях каталога, чтобы было видно, как выглядит заполненная доска. */
+/** Кабинет → «Заявки». Доска по этапам – эталон ALEX KROWN / EV.
+    Заявки живые: приходят с нашего приёмника (server/lead.mjs, GET /api/leads
+    под паролем кабинета). Пока заявок нет, показываем пример с меткой «Пример:»
+    на настоящих формах сайта и моделях каталога – чтобы было видно, как
+    выглядит заполненная доска. */
 import Admin from '../../layouts/Admin.astro';
 import Leads, { type Lead } from '../../islands/admin/Leads';
 import { cars } from '../../content/cars';
 
 const pick = (slug: string) => cars.find((c) => c.slug === slug) ?? cars[0];
-const demo: Lead[] = [
-  {
-    id: 'EC-ПРИМЕР-1', at: new Date().toISOString(), stage: 'новая',
-    form: 'Пример: Заказать автомобиль (карточка)',
-    fields: { 'Имя': 'Пример: Андрей', Phone: '+375 29 000-00-00', 'Автомобиль': pick('lynk-co-08').title },
-    category: pick('lynk-co-08').brand,
-  },
-  {
-    id: 'EC-ПРИМЕР-2', at: new Date().toISOString(), stage: 'в работе',
-    form: 'Пример: Квиз «Подобрать авто»',
-    fields: { 'Имя': 'Пример: Марина', Phone: '+375 33 000-00-00', 'Автомобиль': pick('denza-d9').title },
-    category: pick('denza-d9').brand,
-  },
-  {
-    id: 'EC-ПРИМЕР-3', at: new Date().toISOString(), stage: 'выполнена',
-    form: 'Пример: Расчёт стоимости под ключ',
-    fields: { 'Имя': 'Пример: Сергей', Phone: '+375 44 000-00-00', 'Автомобиль': pick('lixiang-l9').title },
-    category: pick('lixiang-l9').brand,
-  },
+const at = new Date().toISOString();
+const make = (n: number, stage: Lead['stage'], form: string, name: string, phone: string, slug: string): Lead => {
+  const car = pick(slug);
+  return {
+    id: `EC-ПРИМЕР-${n}`, createdAt: at, name: `Пример: ${name}`, phone, form,
+    page: `/catalog/${car.slug}/`, stage, source: form, category: car.brand,
+    items: [{ uid: car.slug, title: car.title, category: car.brand, qty: 1, price: car.priceUsd ?? 0 }],
+  };
+};
+const sample: Lead[] = [
+  make(1, 'новая', 'Пример: Заказать автомобиль (карточка)', 'Андрей', '+375 29 000-00-00', 'lynk-co-08'),
+  make(2, 'в работе', 'Пример: Квиз «Подобрать авто»', 'Марина', '+375 33 000-00-00', 'denza-d9'),
+  make(3, 'выполнена', 'Пример: Расчёт стоимости под ключ', 'Сергей', '+375 44 000-00-00', 'lixiang-l9'),
 ];
+const cats: Record<string, string> = Object.fromEntries([...new Set(cars.map((c) => c.brand))].map((b) => [b, b]));
 ---
 
 <Admin title="Заявки" active="leads">
-  <Leads client:load demo={demo} />
+  <Leads client:load sample={sample} cats={cats} />
 </Admin>

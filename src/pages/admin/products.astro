@@ -1,0 +1,24 @@
+---
+/** Кабинет → «Автомобили». Весь каталог, включая скрытые позиции.
+    Разделы сайта у нас не хранятся у машины, а вычисляются по её признакам
+    (наличие, тип двигателя, страна) – поэтому показываем их как есть,
+    а правятся они через поля машины. */
+import Admin from '../../layouts/Admin.astro';
+import CarsAdmin from '../../islands/admin/CarsAdmin';
+import { cars, sections, countries, availabilities, powertrains } from '../../content/cars';
+
+const items = cars.map((c) => ({
+  slug: c.slug, brand: c.brand, title: c.title, photo: c.photo,
+  priceUsd: c.priceUsd, priceByn: c.priceByn, year: c.year,
+  country: countries[c.country].label,
+  availability: availabilities[c.availability],
+  powertrain: powertrains[c.powertrain],
+  specs: c.specs.length,
+  note: c.note || '',
+}));
+const lists = sections.map((s) => ({ id: s.slug, title: s.title, count: cars.filter(s.match).length }));
+---
+
+<Admin title="Автомобили" active="products">
+  <CarsAdmin client:load items={items} lists={lists} />
+</Admin>

@@ -7,6 +7,9 @@
 // собирает evolution-car-analytics в /analytics (только чтение); PATCH /api/admin/recommendations/<id> {status} – решение владельца.
 // Окружение: TG_TOKEN, TG_CHAT (через запятую), ADMIN_LOGIN, ADMIN_PASS, PORT (8090), ORIGIN (https://evolutioncar.by).
 import { createServer } from 'node:http';
+// Счётчику нужны синхронные запись и склейка путей: событие пишется одной строкой.
+import fs from 'node:fs';
+import path from 'node:path';
 import { appendFile, mkdir, readFile, rename, writeFile } from 'node:fs/promises';
 import { createHash, timingSafeEqual } from 'node:crypto';
 
@@ -78,6 +81,53 @@ const QUEUE = process.env.QUEUE_DIR || '/queue';
 const STATE_DIR = process.env.STATE_DIR || '/state';
 const sha = (t) => createHash('sha1').update(t).digest('hex').slice(0, 16);
 const ANALYTICS = process.env.ANALYTICS_DIR || '/analytics';
+// --- Свой счётчик целевых действий ------------------------------------------------------------------
+// Владелец 28.10.2026: «по факту от и до всё считаем независимо от куки и метрики».
+// Человека не опознаём: ни cookie, ни идентификатора – только вид действия, страница и час.
+// Поэтому согласие на обработку данных не требуется: персональных данных здесь нет.
+const EVENT_KINDS = new Set(['in', 'pv', 'phone', 'msg', 'form', 'b24']);
+
+function noteEvent(body) {
+  const kind = String(body?.k || '');
+  if (!EVENT_KINDS.has(kind)) return false;
+  const row = {
+    at: new Date().toISOString(),
+    k: kind,
+    p: clean(body?.p).slice(0, 300) || '/',
+    r: clean(body?.r).slice(0, 200),
+  };
+  try {
+    fs.appendFileSync(path.join(DATA, 'events.jsonl'), JSON.stringify(row) + '\n');
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+/** Сводка для кабинета: сколько каких действий за период и по страницам. */
+function eventsSummary(days) {
+  const since = Date.now() - days * 24 * 3600 * 1000;
+  const total = { in: 0, pv: 0, phone: 0, msg: 0, form: 0, b24: 0 };
+  const pages = new Map();
+  let text = '';
+  try { text = fs.readFileSync(path.join(DATA, 'events.jsonl'), 'utf8'); } catch { return { total, pages: [], days }; }
+  for (const line of text.split('\n')) {
+    if (!line) continue;
+    let e; try { e = JSON.parse(line); } catch { continue; }
+    if (Date.parse(e.at) < since) continue;
+    if (total[e.k] === undefined) continue;
+    total[e.k] += 1;
+    const cur = pages.get(e.p) || { page: e.p, in: 0, pv: 0, phone: 0, msg: 0, form: 0, b24: 0 };
+    cur[e.k] += 1;
+    pages.set(e.p, cur);
+  }
+  // Целевое действие – любое обращение: телефон, мессенджер, форма сайта, форма Битрикса.
+  const actions = total.phone + total.msg + total.form + total.b24;
+  const rows = [...pages.values()].map((p) => ({ ...p, actions: p.phone + p.msg + p.form + p.b24 }));
+  rows.sort((a, b) => b.actions - a.actions || b.pv - a.pv);
+  return { days, total, actions, cr: total.pv ? +(actions / total.pv * 100).toFixed(2) : 0, pages: rows.slice(0, 300) };
+}
+
 const REPORTS = ['metrika', 'positions', 'seo', 'recommendations', 'demand', 'pages'];
 // статусы рекомендаций – как у агента улучшений (~/.claude/skills/uluchsheniya): новое, в работе, сделано, не надо
 const REC_STATUSES = ['novoe', 'v_rabote', 'sdelano', 'ne_nado'];
@@ -94,6 +144,12 @@ async function queueBuild(message) {
 }
 async function adminApi(req, res) {
   const url = req.url.split('?')[0];
+  // Сводка счётчика для кабинета – только по паролю.
+  if (url.startsWith('/api/admin/events') && req.method === 'GET') {
+    if (!authed(req)) return send(res, 401, { ok: false });
+    const days = Math.min(400, Math.max(1, Number(new URL(req.url, 'http://x').searchParams.get('days')) || 30));
+    return send(res, 200, eventsSummary(days));
+  }
   if (url === '/api/admin/products' && req.method === 'GET') {
     const text = await readFile(`${CONTENT}/products.json`, 'utf8');
     return send(res, 200, { ok: true, version: sha(text), products: JSON.parse(text) });
@@ -243,6 +299,16 @@ createServer(async (req, res) => {
     res.writeHead(204, { 'Access-Control-Allow-Origin': ORIGINS.includes(origin) ? origin : ORIGINS[0], 'Access-Control-Allow-Methods': 'POST', 'Access-Control-Allow-Headers': 'Content-Type', 'Access-Control-Max-Age': '600' });
     return res.end();
   }
+  // Свой счётчик целевых действий: обычный посетитель, пароль не нужен.
+  // Тело крошечное, персональных данных нет – только вид действия и страница.
+  if (req.url.split('?')[0] === '/api/ev' && req.method === 'POST') {
+    if (origin && !ORIGINS.includes(origin)) return send(res, 403, { ok: false, error: 'origin' }, origin);
+    let size = 0; const chunks = [];
+    for await (const c of req) { size += c.length; if (size > 4096) return send(res, 413, { ok: false }, origin); chunks.push(c); }
+    let body; try { body = JSON.parse(Buffer.concat(chunks).toString('utf8')); } catch { return send(res, 400, { ok: false }, origin); }
+    return send(res, 200, { ok: noteEvent(body) }, origin);
+  }
+
   if (req.url !== '/api/lead' || req.method !== 'POST') return send(res, 404, { ok: false });
   if (origin && !ORIGINS.includes(origin)) return send(res, 403, { ok: false, error: 'origin' });
 
@@ -259,10 +325,11 @@ createServer(async (req, res) => {
   // Формы сайта шлют плоскую заявку {name, phone, source, car, page, utm…},
   // а формат эталона – {form, fields:{…}}. Принимаем оба: сайт менять не нужно.
   const flat = body && body.fields === undefined;
+  // Ключи – те, что читает остров кабинета (Leads.tsx): Name, Phone, Page.
   const raw = flat
     ? {
-        Имя: body.name, Phone: body.phone, Автомобиль: body.car,
-        Страница: body.page, Откуда: body.referrer,
+        Name: body.name, Phone: body.phone, Page: body.page,
+        Откуда: body.referrer,
         utm: body.utm && typeof body.utm === 'object' ? Object.entries(body.utm).map(([k, v]) => `${k}=${v}`).join(' ') : body.utm,
         website: body.company,
       }
@@ -285,7 +352,11 @@ createServer(async (req, res) => {
   if (limited(ip)) return send(res, 429, { ok: false, error: 'rate' }, origin);
 
   const now = new Date();
-  const items = cleanItems(body.items);
+  // Автомобиль из карточки – позицией заявки: кабинет показывает его как товар,
+  // а марка идёт в категорию, чтобы работал фильтр «по категориям».
+  const items = cleanItems(
+    body.items || (body.car ? [{ title: body.car, qty: 1, price: 0, category: String(body.car).split(' ')[0] }] : []),
+  );
   const page = fields.Page || '';
   const category = items[0]?.category || (page.split('/')[1] || '');
   const lead = { id: leadId(now), at: now.toISOString(), form: clean(body.form || body.source || 'Заявка с сайта').slice(0, 200), fields, items, category, source: clean(body.source).slice(0, 120), consent: true, ip };
