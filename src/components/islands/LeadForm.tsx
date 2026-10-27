@@ -74,8 +74,19 @@ export default function LeadForm({
     );
   }
 
+  // method="post" и onsubmit="return false" попадают в разметку, которую сервер
+  // отдаёт до оживления острова. Без них человек, нажавший кнопку раньше, чем
+  // загрузится скрипт (медленная связь, блокировщик), отправил бы форму обычным
+  // GET: имя и телефон ушли бы в адресную строку, историю браузера и журналы
+  // сервера, а заявка потерялась бы.
   return (
-    <form class={`lead-form lead-form--${layout}`} onSubmit={onSubmit} novalidate>
+    <form
+      class={`lead-form lead-form--${layout}`}
+      method="post"
+      onsubmit="return false"
+      onSubmit={onSubmit}
+      novalidate
+    >
       <div class="lead-form__fields">
         <input
           class="lead-form__input"
