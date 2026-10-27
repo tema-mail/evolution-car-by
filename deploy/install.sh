@@ -28,17 +28,23 @@ scp -i "$KEY" "$HERE/compose.yml" "$HERE/nginx.conf" "$HERE/redirects.conf" "$HO
 
 echo "4/4 блок в Caddy"
 scp -i "$KEY" "$HERE/evolution-car.caddy" "$HOST:/tmp/evolution-car.caddy"
-"${SSH[@]}" 'CADDY=/etc/caddy/Caddyfile
-  cp "$CADDY" "$CADDY.bak.$(date +%s)"
-  # старый блок (между маркерами) убираем, чтобы повторный запуск не плодил копии
-  sed -i "/^# >>> evolution-car:/,/^}$/d" "$CADDY" 2>/dev/null || true
+# Caddy на этом сервере – общий для всех сайтов, запущен контейнером
+# dzenbot-caddy-1, конфиг монтируется из /opt/dzenbot/Caddyfile.
+# Поэтому и проверка, и перечитывание идут через docker exec, а не systemctl.
+"${SSH[@]}" 'set -e
+  CADDY=/opt/dzenbot/Caddyfile
+  BAK="$CADDY.bak-evolution-car-$(date +%Y%m%d%H%M%S)"
+  cp "$CADDY" "$BAK"
+  # свой старый блок (от маркера до его закрывающей скобки) убираем,
+  # чтобы повторный запуск не плодил копии; чужие блоки не трогаем
+  awk "/^# >>> evolution-car:/{skip=1} skip&&/^}\$/{skip=0;next} !skip" "$BAK" > "$CADDY"
   cat /tmp/evolution-car.caddy >> "$CADDY"
   rm -f /tmp/evolution-car.caddy
-  if caddy validate --config "$CADDY" --adapter caddyfile >/dev/null 2>&1; then
-    systemctl reload caddy && echo "   Caddy перечитан"
+  if docker exec dzenbot-caddy-1 caddy validate --config /etc/caddy/Caddyfile --adapter caddyfile >/dev/null 2>&1; then
+    docker exec dzenbot-caddy-1 caddy reload --config /etc/caddy/Caddyfile --adapter caddyfile && echo "   Caddy перечитан"
   else
     echo "   ОШИБКА: конфиг Caddy не прошёл проверку, откатываю" >&2
-    cp "$(ls -t $CADDY.bak.* | head -1)" "$CADDY"
+    cp "$BAK" "$CADDY"
     exit 1
   fi'
 
