@@ -1,6 +1,28 @@
 # >>> evolution-car: автосалон Evolution Car (Минск) – блок добавляет deploy/install.sh
-# Проверочный адрес. Сертификат настоящий, чтобы владелец открывал стенд
-# без предупреждений браузера; от поисковиков закрыт заголовком и robots.txt.
+# Боевой домен. Сертификат Caddy выпустит сам, как только A-запись
+# evolutioncar.by будет смотреть на этот сервер.
+evolutioncar.by {
+	encode gzip zstd
+	header {
+		Strict-Transport-Security "max-age=31536000"
+		X-Content-Type-Options "nosniff"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		-Server
+	}
+	# Заявки с форм и отчёты кабинета – отдельный сервис; всё остальное статика.
+	handle /api/* {
+		reverse_proxy evolution-car-api:8090
+	}
+	handle {
+		reverse_proxy evolution-car-web:8080
+	}
+}
+www.evolutioncar.by {
+	redir https://evolutioncar.by{uri} permanent
+}
+# Проверочный адрес остаётся рабочим и после переключения домена: удобно
+# смотреть изменения до того, как их увидят посетители. От поисковиков
+# закрыт заголовком, чтобы не плодить дубли боевых страниц.
 evolution-car.45.12.72.227.nip.io {
 	encode gzip zstd
 	header {
@@ -9,24 +31,12 @@ evolution-car.45.12.72.227.nip.io {
 		X-Robots-Tag "noindex, nofollow"
 		-Server
 	}
-	reverse_proxy evolution-car-web:8080
+	# Заявки с форм и отчёты кабинета – отдельный сервис; всё остальное статика.
+	handle /api/* {
+		reverse_proxy evolution-car-api:8090
+	}
+	handle {
+		reverse_proxy evolution-car-web:8080
+	}
 }
-# Боевой домен включается ОТДЕЛЬНО, в момент переключения DNS на hoster.by:
-# пока A-запись evolutioncar.by смотрит не на нас, Caddy не сможет выпустить
-# для него сертификат и будет впустую долбиться в Let's Encrypt.
-# Тогда же снять Disallow в robots.txt.ts и noindex в BaseLayout.
-#
-# evolutioncar.by {
-# 	encode gzip zstd
-# 	header {
-# 		Strict-Transport-Security "max-age=31536000"
-# 		X-Content-Type-Options "nosniff"
-# 		Referrer-Policy "strict-origin-when-cross-origin"
-# 		-Server
-# 	}
-# 	reverse_proxy evolution-car-web:8080
-# }
-# www.evolutioncar.by, http://www.evolutioncar.by {
-# 	redir https://evolutioncar.by{uri} permanent
-# }
 # <<< evolution-car

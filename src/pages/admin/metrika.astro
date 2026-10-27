@@ -1,0 +1,15 @@
+---
+/** Кабинет → «Метрика и каналы». Экран перенесён с gaz-mag (эталон EV SIBIR / TEYES):
+    Яндекс.Метрика (счётчик 98499004) и Google Search Console на одном экране –
+    переключатель периодов, сравнение, каналы, график поиска двумя линиями,
+    страницы входа и поисковые фразы.
+    Цифр в сборке нет: отчёт приходит с сервера (/api/admin/report/metrika) после входа.
+    Стили привязаны к обёртке .mx – замок кабинета подменяет содержимое body. */
+import Admin from '../../layouts/Admin.astro';
+import Metrika from '../../islands/admin/Metrika';
+import '../../styles/metrika.css';
+---
+
+<Admin title="Метрика и каналы" active="metrika">
+  <div class="mx"><div class="mx-main"><Metrika client:load /></div></div>
+</Admin>

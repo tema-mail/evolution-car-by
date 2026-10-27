@@ -1,6 +1,5 @@
-# Evolution Car на VPS Beget: только статика, своего приёмника заявок нет –
-# заявки уходят в Битрикс24 через его виджет и в Telegram через Cloudflare Worker.
-# Порты наружу не публикуются: общий Caddy ходит к контейнеру по сети proxy.
+# Evolution Car на VPS Beget: статика + приёмник заявок + суточный сбор аналитики.
+# Порты наружу не публикуются: общий Caddy ходит к контейнерам по сети proxy.
 name: evolution-car
 services:
   evolution-car-web:
@@ -16,6 +15,51 @@ services:
     security_opt: [no-new-privileges:true]
     cap_drop: [ALL]
     mem_limit: 96m
+    networks: [proxy]
+
+  # Заявки с форм сайта и отдача отчётов кабинету. Свой системный пользователь:
+  # заявки с персональными данными не читает никто из других сервисов.
+  evolution-car-api:
+    image: node:22-alpine
+    container_name: evolution-car-api
+    restart: unless-stopped
+    user: "10502:10502"
+    working_dir: /app
+    command: ["node", "lead.mjs"]
+    env_file: [/opt/evolution-car/lead.env]
+    volumes:
+      - /opt/evolution-car/server:/app:ro
+      - /opt/evolution-car/data:/data
+      - /opt/evolution-car/analytics-out:/analytics:ro
+    read_only: true
+    tmpfs: [/tmp]
+    security_opt: [no-new-privileges:true]
+    cap_drop: [ALL]
+    mem_limit: 128m
+    networks: [proxy]
+
+  # Сбор отчётов кабинета раз в сутки: Метрика и Search Console → /out.
+  # Контейнер просыпается по таймеру внутри себя и спит между прогонами.
+  evolution-car-analytics:
+    build: ../analytics
+    image: evolution-car-analytics:latest
+    container_name: evolution-car-analytics
+    restart: unless-stopped
+    user: "10502:10502"
+    environment:
+      OUT_DIR: /out
+      SECRETS_DIR: /secrets
+      METRIKA_COUNTER: "98499004"
+      GSC_SITE_URL: "sc-domain:evolutioncar.by"
+    volumes:
+      - /opt/evolution-car/analytics-out:/out
+      - /opt/evolution-car/secrets:/secrets:ro
+    command: ["sh", "-c", "while true; do python3 collect.py daily || true; sleep 86400; done"]
+    read_only: true
+    tmpfs: [/tmp]
+    security_opt: [no-new-privileges:true]
+    cap_drop: [ALL]
+    mem_limit: 256m
     networks: [proxy]
 
 networks:
