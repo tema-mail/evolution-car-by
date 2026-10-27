@@ -60,17 +60,21 @@ const total =
     </div>
 
     <div class="pgroup">Направления <span>{directions.length}</span></div>
-    {directions.map((d) => (
-      <div class="prow">
-        <img class="thumb" src={d.cover ?? '/img/cars/denza-d9.jpg'} alt="" />
-        <div>
-          <a class="pname pcard" href={card(`/${d.slug}/`)}>{d.title ?? d.slug}</a>
-          <div class="muted" style="font-size:12px">{d.lead ?? ''}</div>
+    {directions.map((d) => {
+      // Обложка – первая машина этого направления: так строки различимы на глаз.
+      const first = cars.find((c) => c.country === d.country);
+      return (
+        <div class="prow">
+          <img class="thumb" src={first?.photo ?? '/img/cars/denza-d9.jpg'} alt="" />
+          <div>
+            <a class="pname pcard" href={card(`/${d.slug}/`)}>{d.h1}</a>
+            <div class="muted" style="font-size:12px">{d.heroLead}</div>
+          </div>
+          <a class="purl" href={`/${d.slug}/`} target="_blank">{site(`/${d.slug}/`)}</a>
+          <span class="pkind">Хаб</span>
         </div>
-        <a class="purl" href={`/${d.slug}/`} target="_blank">{site(`/${d.slug}/`)}</a>
-        <span class="pkind">Хаб</span>
-      </div>
-    ))}
+      );
+    })}
 
     <div class="pgroup">Каталоги <span>{1 + sections.length + brands.length} · {cars.length} карточек</span></div>
     <details class="pcat">
@@ -96,17 +100,20 @@ const total =
       ))}
     </details>
 
-    {sections.map((s) => (
-      <div class="prow">
-        <img class="thumb" src="/img/cars/byd-dolphin.jpg" alt="" />
-        <div>
-          <a class="pname pcard" href={card(`/catalog/${s.slug}/`)}>{s.title}</a>
-          <div class="muted" style="font-size:12px">подборка</div>
+    {sections.map((sec) => {
+      const inside = cars.filter(sec.match);
+      return (
+        <div class="prow">
+          <img class="thumb" src={inside[0]?.photo ?? '/img/cars/byd-dolphin.jpg'} alt="" />
+          <div>
+            <a class="pname pcard" href={card(`/catalog/${sec.slug}/`)}>{sec.title}</a>
+            <div class="muted" style="font-size:12px">{inside.length} автомобилей</div>
+          </div>
+          <a class="purl" href={`/catalog/${sec.slug}/`} target="_blank">{site(`/catalog/${sec.slug}/`)}</a>
+          <span class="pkind">Каталог</span>
         </div>
-        <a class="purl" href={`/catalog/${s.slug}/`} target="_blank">{site(`/catalog/${s.slug}/`)}</a>
-        <span class="pkind">Каталог</span>
-      </div>
-    ))}
+      );
+    })}
 
     {brands.map((b) => (
       <div class="prow">
@@ -138,8 +145,8 @@ const total =
       <div class="prow">
         <div class="thumb" style="background:#eef1f5"></div>
         <div>
-          <a class="pname pcard" href={card(`/${c.slug}/`)}>{c.name ?? c.slug}</a>
-          <div class="muted" style="font-size:12px">городская страница</div>
+          <a class="pname pcard" href={card(`/${c.slug}/`)}>Автомобили {c.in}</a>
+          <div class="muted" style="font-size:12px">{c.region}{c.visits ? ` · ${c.visits.toLocaleString('ru-RU')} запросов в месяц` : ''}</div>
         </div>
         <a class="purl" href={`/${c.slug}/`} target="_blank">{site(`/${c.slug}/`)}</a>
         <span class="pkind">Хаб</span>

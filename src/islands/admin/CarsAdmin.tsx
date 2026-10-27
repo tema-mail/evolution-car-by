@@ -72,7 +72,8 @@ export default function CarsAdmin({ items, lists }: { items: CarRow[]; lists: Li
               <td><img src={i.photo} alt="" width="56" height="56" loading="lazy" /></td>
               <td>
                 <a href={`/page/catalog/${i.slug}/`} class="cars__name">{i.title}</a>
-                <div class="muted">{i.brand}{i.note ? ' · данные требуют подтверждения' : ''}</div>
+                <div class="muted">{i.brand}</div>
+                {i.note && <div class="cars__note" title={i.note}>{i.note}</div>}
               </td>
               <td>{i.year}</td>
               <td class={i.priceUsd ? '' : 'cars__warn'}>{usd(i.priceUsd)}</td>
