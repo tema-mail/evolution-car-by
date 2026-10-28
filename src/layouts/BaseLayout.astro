@@ -198,6 +198,26 @@ const b24Url = /^https:\/\/[a-z0-9.-]+\.bitrix24\.[a-z]{2,3}\/[A-Za-z0-9_/.-]+\.
 
     {blocks.map((block) => <script type="application/ld+json" set:html={JSON.stringify(block)} />)}
     {productJson && <script type="application/json" id="product-item" set:html={productJson} />}
+
+<style is:global>
+  /* Поля виджета Битрикс24: выбор страны и подсказка о неполном номере.
+     Стили глобальные – разметку рисует сам виджет, вне наших компонентов. */
+  .b24-form-field-phone .ec-b24-country {
+    display: block;
+    width: 100%;
+    min-height: 40px;
+    margin: 0 0 6px;
+    padding: 8px 10px;
+    box-sizing: border-box;
+    border: 1px solid #c8c8c8;
+    border-radius: 4px;
+    background: #fff;
+    font: inherit;
+    font-size: 14px;
+  }
+  .b24-form-field-phone .ec-b24-country:focus-visible { outline: 2px solid #00aeef; outline-offset: 2px; }
+  .b24-form-field-phone .ec-b24-hint { margin: 6px 0 0; font-size: 13px; line-height: 1.35; color: #c0392b; }
+</style>
   </head>
   <body>
     {
@@ -244,7 +264,11 @@ const b24Url = /^https:\/\/[a-z0-9.-]+\.bitrix24\.[a-z]{2,3}\/[A-Za-z0-9_/.-]+\.
     <script>
       import { initAnalytics } from '../lib/analytics';
       import { initCounter } from '../lib/counter';
+      import { initBitrixPhone } from '../lib/bitrix-phone';
       initAnalytics();
+      // Маска и проверка телефона в форме виджета Битрикс24: своя форма
+      // их имеет давно, а в виджет приходили обрезанные номера.
+      initBitrixPhone();
       // Свой счётчик целевых действий – считает всех, а не только согласившихся
       // на cookie: телефон, мессенджеры, формы сайта и формы виджета Битрикс24.
       initCounter();

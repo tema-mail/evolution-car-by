@@ -13,35 +13,19 @@ export interface Country {
   min?: number;
 }
 
+// Работаем только по Беларуси и России (решение владельца 28.10.2026:
+// «нам интересно только Беларусь и Россия, по умолчанию всегда Беларусь»).
+// Короткий список – меньше шансов, что человек выберет не ту страну
+// и пришлёт номер, по которому до него не дозвонятся.
 export const COUNTRIES: Country[] = [
   { iso: 'BY', name: 'Беларусь', flag: '🇧🇾', dial: '375', mask: '## ###-##-##' },
   { iso: 'RU', name: 'Россия', flag: '🇷🇺', dial: '7', mask: '### ###-##-##' },
-  { iso: 'KZ', name: 'Казахстан', flag: '🇰🇿', dial: '7', mask: '### ###-##-##' },
-  { iso: 'UA', name: 'Украина', flag: '🇺🇦', dial: '380', mask: '## ###-##-##' },
-  { iso: 'PL', name: 'Польша', flag: '🇵🇱', dial: '48', mask: '### ### ###' },
-  { iso: 'LT', name: 'Литва', flag: '🇱🇹', dial: '370', mask: '### #####' },
-  { iso: 'LV', name: 'Латвия', flag: '🇱🇻', dial: '371', mask: '## ### ###' },
-  { iso: 'EE', name: 'Эстония', flag: '🇪🇪', dial: '372', mask: '#### ####', min: 7 },
-  { iso: 'GE', name: 'Грузия', flag: '🇬🇪', dial: '995', mask: '### ## ## ##' },
-  { iso: 'AM', name: 'Армения', flag: '🇦🇲', dial: '374', mask: '## ######' },
-  { iso: 'AZ', name: 'Азербайджан', flag: '🇦🇿', dial: '994', mask: '## ###-##-##' },
-  { iso: 'UZ', name: 'Узбекистан', flag: '🇺🇿', dial: '998', mask: '## ###-##-##' },
-  { iso: 'KG', name: 'Кыргызстан', flag: '🇰🇬', dial: '996', mask: '### ### ###' },
-  { iso: 'MD', name: 'Молдова', flag: '🇲🇩', dial: '373', mask: '### ## ###' },
-  { iso: 'XX', name: 'Другая страна', flag: '🌐', dial: '', mask: '' },
 ];
 
 const byIso = (iso: string) => COUNTRIES.find((c) => c.iso === iso);
 
 /** Часовые пояса, по которым страна определяется однозначно */
-const ZONES: Record<string, string> = {
-  'Europe/Minsk': 'BY', 'Europe/Kiev': 'UA', 'Europe/Kyiv': 'UA', 'Europe/Warsaw': 'PL',
-  'Europe/Vilnius': 'LT', 'Europe/Riga': 'LV', 'Europe/Tallinn': 'EE', 'Asia/Tbilisi': 'GE',
-  'Asia/Yerevan': 'AM', 'Asia/Baku': 'AZ', 'Asia/Tashkent': 'UZ', 'Asia/Samarkand': 'UZ',
-  'Asia/Bishkek': 'KG', 'Europe/Chisinau': 'MD',
-  'Asia/Almaty': 'KZ', 'Asia/Qostanay': 'KZ', 'Asia/Aqtobe': 'KZ', 'Asia/Aqtau': 'KZ',
-  'Asia/Atyrau': 'KZ', 'Asia/Oral': 'KZ', 'Asia/Qyzylorda': 'KZ',
-};
+const ZONES: Record<string, string> = { 'Europe/Minsk': 'BY' };
 const RU_ZONES = /^(Europe\/(Moscow|Samara|Volgograd|Kaliningrad|Astrakhan|Saratov|Ulyanovsk|Kirov)|Asia\/(Yekaterinburg|Omsk|Novosibirsk|Barnaul|Tomsk|Novokuznetsk|Krasnoyarsk|Irkutsk|Chita|Yakutsk|Khandyga|Vladivostok|Ust-Nera|Sakhalin|Magadan|Srednekolymsk|Kamchatka|Anadyr))$/;
 
 /**
@@ -51,14 +35,15 @@ const RU_ZONES = /^(Europe\/(Moscow|Samara|Volgograd|Kaliningrad|Astrakhan|Sarat
  * Ничего не нашли – Беларусь: автосалон в Минске.
  */
 export function detectCountry(): string {
+  // По умолчанию Беларусь – это основной рынок. Россию ставим только если
+  // на устройстве явно российский часовой пояс или язык региона RU.
   try {
     const tz = Intl.DateTimeFormat().resolvedOptions().timeZone ?? '';
-    if (ZONES[tz]) return ZONES[tz];
+    if (ZONES[tz]) return 'BY';
     if (RU_ZONES.test(tz)) return 'RU';
-  } catch { /* старый браузер без Intl – идём дальше */ }
+  } catch { /* старый браузер без Intl – остаёмся на Беларуси */ }
   for (const lang of navigator.languages ?? [navigator.language]) {
-    const region = lang.split('-')[1]?.toUpperCase();
-    if (region && region !== 'XX' && byIso(region)) return region;
+    if (lang.split('-')[1]?.toUpperCase() === 'RU') return 'RU';
   }
   return 'BY';
 }
@@ -115,13 +100,13 @@ export function parsePhoneInput(raw: string, current: string): { iso: string; na
   const hit = cur.dial && d.startsWith(cur.dial)
     ? cur
     : COUNTRIES.filter((c) => c.dial && d.startsWith(c.dial)).sort((a, b) => b.dial.length - a.dial.length)[0];
-  // +7 7xx – Казахстан: в России номер после кода с 7 не начинается.
-  // Пока набрано только +7, страну не выбираем – ждём следующую цифру.
+  // Пока набрано только +7, страну не меняем – ждём следующую цифру.
   if (hit?.dial === '7' && d.length === 1) return { iso: current, national: '+7' };
-  const country = hit?.dial === '7' && d[1] === '7' ? byIso('KZ')! : hit;
-  if (country) return { iso: country.iso, national: maskNational(d.slice(country.dial.length), country) };
+  if (hit) return { iso: hit.iso, national: maskNational(d.slice(hit.dial.length), hit) };
   if (COUNTRIES.some((c) => c.dial.startsWith(d))) return { iso: current, national: '+' + d };
-  return { iso: 'XX', national: d.slice(0, 15) };
+  // Чужой код страны не принимаем: работаем по Беларуси и России, и номер,
+  // по которому не дозвониться, лучше не пропускать в заявку вовсе.
+  return { iso: current, national: maskNational(d, cur) };
 }
 
 /** Номер целиком, в том виде, в каком он уходит в заявку */

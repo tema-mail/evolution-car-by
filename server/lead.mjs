@@ -203,7 +203,16 @@ async function adminApi(req, res) {
   return send(res, 404, { ok: false });
 }
 
-const phoneOk = (v) => String(v || '').replace(/\D/g, '').length >= 10;
+// Работаем по Беларуси и России, поэтому принимаем только их номера целиком:
+// +375 и девять цифр либо +7 и десять. Обрезанный номер до заявки не доходит –
+// звонить по нему всё равно некуда (владелец 28.10.2026).
+const phoneOk = (v) => {
+  const d = String(v || '').replace(/\D/g, '');
+  if (/^375\d{9}$/.test(d)) return true;          // +375 29 111-22-33
+  if (/^7\d{10}$/.test(d)) return true;           // +7 916 111-22-33
+  if (/^8\d{10}$/.test(d)) return true;           // местная запись 8 916…
+  return false;
+};
 const clean = (v) => String(v ?? '').replace(/[\u0000-\u0008\u000b-\u001f]/g, '').trim().slice(0, MAX_FIELD);
 const esc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
