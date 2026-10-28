@@ -29,13 +29,12 @@ jobs:
       - run: npm run build
         env:
           PUBLIC_SITE_URL: https://xn--80agnajes3a.xn--p1ai
-      # Админка собирается из готовых страниц сайта, строго после сборки Astro.
-      - name: Собрать админку из готовых страниц
-        run: python3 admin/build.py dist
-        env:
-          SITE_URL: https://xn--80agnajes3a.xn--p1ai
       - name: Запретить Jekyll обрабатывать сборку
         run: touch dist/.nojekyll
+      # Кабинет на зеркало не выкладываем: он живёт на admin.evolutioncar.by
+      # и закрыт логином, а здесь оказывался бы открытым для всех.
+      - name: Убрать кабинет из публикации
+        run: rm -rf dist/admin
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist

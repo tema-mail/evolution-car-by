@@ -32,15 +32,14 @@ jobs:
       - run: npx astro build
         env:
           PUBLIC_SITE_URL: ${{ env.SITE }}
-      # Админка собирается из готовых страниц строго до префикса подпапки.
-      - name: Собрать админку из готовых страниц
-        run: python3 admin/build.py dist
-        env:
-          SITE_URL: ${{ env.SITE }}
       - name: Дописать префикс подпапки
         run: node scripts/rebase-dist.mjs /${{ github.event.repository.name }}
       - name: Без CNAME и без Jekyll
         run: rm -f dist/CNAME && touch dist/.nojekyll
+      # Кабинет на зеркало не выкладываем: он живёт на admin.evolutioncar.by
+      # и закрыт логином, а здесь оказывался бы открытым для всех.
+      - name: Убрать кабинет из публикации
+        run: rm -rf dist/admin
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist
