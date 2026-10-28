@@ -26,6 +26,10 @@ import { site } from '../../content/site';
 </div>
 
 <style>
+  /* display у класса перебивает скрытие браузером, поэтому прячем явно:
+     без этой строки баннер оставался на экране после «Принимаю». */
+  .cookie[hidden] { display: none; }
+
   .cookie {
     position: fixed;
     left: 50%;
