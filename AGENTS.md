@@ -223,11 +223,15 @@ SU7 Ultra, YU7, N70, N90; Avatr 12; Voyah Dreamer 9.
   сайт, закрыт от поисковиков заголовком. Удобно смотреть правки до прода.
 - Боевая ветка – `prod`: версия из форка Deford2027 (ветка `preview`)
   плюс карточки и счётчики. `main` остался на прежней стилистике.
-- Выкладка руками:
-  `PUBLIC_SITE_URL=https://evolutioncar.by npm run build` →
-  `DEPLOY_KEY=~/.ssh/evcar_deploy_ed25519 zsh deploy/upload.sh`.
-  **Переменную задавать обязательно:** без неё сборка берёт адрес зеркала
-  (`tema-mail.github.io`), и карта сайта с canonical уедут на чужой домен.
+- **Выкладка – одной командой: `zsh deploy/release.sh`.** Она делает сборку
+  с боевым адресом, ставит замок на кабинет и проверяет сборку до заливки.
+  Руками эти шаги не собирать: 28.10.2026 кабинет ушёл на боевой открытым –
+  пропустили `scripts/lock-admin.mjs`, и `admin.evolutioncar.by` отдавал все
+  разделы без пароля. `release.sh` без замка заливку не начинает.
+  Что внутри: `PUBLIC_SITE_URL` (без него карта сайта и canonical уедут на
+  зеркало `tema-mail.github.io`) → `npm run build` → `node scripts/lock-admin.mjs`
+  (логин и пароль – `~/.config/evolution-car/`, они же в `lead.env` на сервере,
+  один вход на кабинет и на приёмник) → `deploy/upload.sh`.
   Кабинет собирается самим Astro из `src/pages/admin/` – отдельный шаг
   `admin/build.py` не нужен, это старый MVP.
   Правилась карта миграции – редиректы отдельной командой:

@@ -42,7 +42,7 @@ try{var a=JSON.parse(sessionStorage.getItem(K)||localStorage.getItem(L)||'null')
 })();`;
 
 const gate = (data) => `<body class="adm"><style>${GATE_CSS}</style>
-<form class="login" id="lock-form" autocomplete="on"><h1>EVOLUTION CAR</h1><p>Личный кабинет магазина газового оборудования</p>
+<form class="login" id="lock-form" autocomplete="on"><h1>EVOLUTION CAR</h1><p>Кабинет автосалона Evolution Car</p>
 <input name="login" placeholder="Логин" autocomplete="username" required autofocus>
 <input name="pass" type="password" placeholder="Пароль" autocomplete="current-password" required>
 <label class="keep"><input type="checkbox" name="keep" checked> Оставаться в системе</label>
