@@ -3,7 +3,10 @@
 // перегенерируем конфиг, руками адреса нигде не дублируются.
 //
 //   node scripts/gen-redirects.mjs nginx  > deploy/redirects.conf
-//   node scripts/gen-redirects.mjs apache > public/.htaccess
+//
+// Прод работает на nginx, поэтому на сайт идёт только этот конфиг. Формат apache
+// скрипт тоже умеет (`apache`), но файл в public/ класть нельзя: Astro скопирует
+// его в сборку, и nginx отдаст карту редиректов наружу по адресу /.htaccess.
 //
 // Старые адреса Тильды идут без слеша в конце (/lixiangl9), новые – со слешем.
 import { readFile } from 'node:fs/promises';
