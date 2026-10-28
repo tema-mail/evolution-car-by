@@ -2,7 +2,7 @@
 // Данные лежат в cars.json, здесь – типы, справочники и выборки.
 import data from './cars.json';
 
-export type Country = 'china' | 'korea' | 'europe' | 'usa';
+export type Country = 'china' | 'korea' | 'europe' | 'usa' | 'japan';
 export type Powertrain = 'ev' | 'hybrid' | 'petrol' | 'diesel';
 export type Availability = 'in-stock' | 'on-order';
 
@@ -39,6 +39,10 @@ export const countries: Record<Country, { label: string; genitive: string; slug:
   korea: { label: 'Южная Корея', genitive: 'из Кореи', slug: 'iz-korei' },
   europe: { label: 'Европа', genitive: 'из Европы', slug: 'iz-evropy' },
   usa: { label: 'США', genitive: 'из США', slug: 'iz-ssha' },
+  // Япония – направление под заказ: готовых позиций в каталоге нет, машину
+  // ищут на аукционах по запросу. Раздела /catalog/iz-yaponii/ поэтому тоже
+  // нет, и ссылку на него страница направления не ставит (см. [direction].astro).
+  japan: { label: 'Япония', genitive: 'из Японии', slug: 'iz-yaponii' },
 };
 
 export const powertrains: Record<Powertrain, string> = {

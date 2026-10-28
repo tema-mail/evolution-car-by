@@ -66,7 +66,12 @@ const crumbs = [
   { name: countries[direction.country].label, href: `/${direction.slug}/` },
 ];
 
-const catalogHref = `/catalog/${countries[direction.country].slug}/`;
+// У Японии своего раздела в каталоге нет: машину ищут на аукционе под запрос,
+// готовых позиций не бывает. Кнопки ведут в общий каталог, иначе отправили бы
+// человека и робота на 404. Пустой раздел (Европа) – не дыра: он сам объясняет,
+// что готовых позиций нет, и предлагает оставить заявку, поэтому его не трогаем.
+const countrySection = getSection(countries[direction.country].slug);
+const catalogHref = countrySection ? `/catalog/${countries[direction.country].slug}/` : '/catalog/';
 ---
 
 <BaseLayout
@@ -172,7 +177,11 @@ const catalogHref = `/catalog/${countries[direction.country].slug}/`;
             <h2 class="choose__title">{direction.chooseTitle}</h2>
             <p class="choose__text">{direction.chooseText}</p>
           </div>
-          <a class="btn choose__cta" href={catalogHref}>Подобрать автомобиль</a>
+          {countrySection ? (
+            <a class="btn choose__cta" href={catalogHref}>Подобрать автомобиль</a>
+          ) : (
+            <button class="btn choose__cta" type="button" data-open="quiz">Подобрать автомобиль</button>
+          )}
         </div>
       </div>
     </section>
