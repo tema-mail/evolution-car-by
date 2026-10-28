@@ -1,0 +1,75 @@
+---
+/**
+ * Согласие на аналитические cookie. Закон Республики Беларусь № 99-З
+ * «О защите персональных данных»: обработка начинается после согласия,
+ * и человек должен знать, что именно собирают.
+ *
+ * Яндекс.Метрика (с вебвизором, то есть записью действий), Google Tag Manager
+ * и Google Analytics запускаются только после «Принимаю». До этого в браузер
+ * ничего не пишется.
+ *
+ * Свой счётчик сайта работает всегда и согласия не требует: он не ставит
+ * cookie, не опознаёт человека и хранит только вид действия и адрес страницы.
+ */
+import { site } from '../../content/site';
+---
+
+<div id="cookie-bar" class="cookie" hidden role="dialog" aria-label="Согласие на аналитические cookie">
+  <p class="cookie__text">
+    Сайт использует cookie для аналитики: мы смотрим, какие страницы открывают и откуда приходят,
+    чтобы сайт был удобнее. Подробнее — в <a href="/policy/">Политике конфиденциальности</a>.
+  </p>
+  <div class="cookie__buttons">
+    <button type="button" class="btn cookie__ok" data-cookie="yes">Принимаю</button>
+    <button type="button" class="btn btn--ghost cookie__no" data-cookie="no">Только необходимое</button>
+  </div>
+</div>
+
+<style>
+  .cookie {
+    position: fixed;
+    left: 50%;
+    bottom: clamp(.75rem, .5rem + 1vw, 1.5rem);
+    transform: translateX(-50%);
+    z-index: 60;
+    width: min(62rem, calc(100vw - 2rem));
+    display: grid;
+    gap: 1rem;
+    align-items: center;
+    padding: clamp(1rem, .8rem + 1vw, 1.25rem) clamp(1rem, .8rem + 1vw, 1.5rem);
+    background: var(--c-surface, #11161d);
+    border: 1px solid var(--c-line, rgba(255, 255, 255, .14));
+    border-radius: var(--r-card, 14px);
+    box-shadow: 0 18px 50px rgba(0, 0, 0, .45);
+  }
+  @media (min-width: 760px) {
+    .cookie { grid-template-columns: minmax(0, 1fr) auto; gap: 1.5rem; }
+  }
+  .cookie__text { font-size: .875rem; line-height: 1.5; color: var(--c-text-2, #c7ccd3); margin: 0; }
+  .cookie__text a { color: var(--c-accent, #ff5102); }
+  .cookie__buttons { display: flex; gap: .625rem; flex-wrap: wrap; }
+  .cookie__buttons .btn { font-size: .8125rem; padding: .625rem 1.125rem; }
+</style>
+
+<script>
+  // Решение помним в localStorage: cookie для этого не нужны.
+  const KEY = 'ec_cookie_consent';
+  const bar = document.getElementById('cookie-bar');
+  if (bar) {
+    let saved = null;
+    try { saved = localStorage.getItem(KEY); } catch { /* приватный режим */ }
+    if (saved === 'yes') {
+      window.dispatchEvent(new Event('ec:analytics-allowed'));
+    } else if (saved !== 'no') {
+      bar.hidden = false;
+    }
+    bar.addEventListener('click', (e) => {
+      const btn = e.target.closest('[data-cookie]');
+      if (!btn) return;
+      const yes = btn.dataset.cookie === 'yes';
+      try { localStorage.setItem(KEY, yes ? 'yes' : 'no'); } catch { /* не страшно */ }
+      bar.hidden = true;
+      if (yes) window.dispatchEvent(new Event('ec:analytics-allowed'));
+    });
+  }
+</script>
