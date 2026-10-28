@@ -9,9 +9,10 @@
 # данных замок падает, и заливка не начинается.
 #
 # Правилась карта миграции – отдельно:
-#   node scripts/gen-pereezd.mjs      (данные страницы «Переезд» в кабинете)
 #   node scripts/gen-redirects.mjs nginx > deploy/redirects.conf
 #   zsh deploy/push-redirects.sh      (редиректы на сервер)
+#   node scripts/gen-pereezd.mjs      (отчёт о переезде – в репо seo-razbory,
+#                                      на боевом домене его не держим)
 set -euo pipefail
 HERE="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$HERE"

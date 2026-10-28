@@ -1,17 +1,27 @@
-// Обновляет данные на странице кабинета «Переезд» (public/admin/pereezd/)
-// из карты миграции. Карта – единственный источник: раньше страница держала
-// свою копию данных от 12.10 и показывала /garanty2 и /avto-iz-yaponii как
-// несозданные уже после того, как страницы появились.
+// Обновляет отчёт о переезде данными из карты миграции. Карта – единственный
+// источник: раньше отчёт держал свою копию данных от 12.10 и показывал
+// /garanty2 и /avto-iz-yaponii как несозданные уже после того, как страницы
+// появились.
 //
-//   node scripts/gen-pereezd.mjs
+//   node scripts/gen-pereezd.mjs [путь к index.html]
+//
+// Отчёт живёт не на боевом домене, а в репозитории разборов (решение владельца
+// 28.10.2026: «такую историю не надо на боевых доменах хранить»):
+// ~/Sites/seo-razbory/evolution-car-by-e1f2ecc0/ – оттуда публичный репо
+// tema-mail/razbory выкладывает его в Pages. После правки:
+//   git -C ~/Sites/seo-razbory commit && git push
+//   gh workflow run pages.yml -R tema-mail/razbory
 //
 // Меняется только строка `const DATA = [...]` и дата в подвале; вёрстка
 // и скрипты страницы остаются как есть.
 import { readFile, writeFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
 
 const CSV = 'docs/seo-migration/karta-migracii.csv';
-const PAGE = 'public/admin/pereezd/index.html';
+const PAGE = process.argv[2]
+  ?? path.join(os.homedir(), 'Sites', 'seo-razbory', 'evolution-car-by-e1f2ecc0', 'index.html');
 
 /** Разбор строки CSV с кавычками: в полях карты есть запятые. */
 function parseLine(line) {
@@ -85,11 +95,12 @@ let out = page.replace(dataRe, `const DATA = ${JSON.stringify(rows)};`);
 
 out = out.replace(
   footerRe,
-  `<footer>Источник: карта миграции docs/seo-migration/karta-migracii.csv – ` +
-    `в ней ${rows.length} старых адресов. Клики и показы – Google Search Console; ` +
+  `<footer>Источник: карта миграции docs/seo-migration/karta-migracii.csv, ` +
+    `старых адресов в ней – ${rows.length}. Клики и показы – Google Search Console; ` +
     `адреса, добавленные из индекса Яндекса, идут с нулевым трафиком. ` +
     `«Своя страница» – адрес сохранён как есть, редиректа у него нет. ` +
-    `Страница собрана ${today} скриптом scripts/gen-pereezd.mjs – руками не править.</footer>`,
+    `Отчёт собран ${today} скриптом scripts/gen-pereezd.mjs в репозитории ` +
+    `evolution-car-by – руками не править.</footer>`,
 );
 
 await writeFile(PAGE, out);
