@@ -5,8 +5,8 @@
 import { useEffect, useState } from 'preact/hooks';
 import { adminAuth } from './auth';
 
-interface Row { page: string; in: number; pv: number; phone: number; msg: number; form: number; b24: number; actions: number }
-interface Summary { days: number; total: Record<string, number>; actions: number; cr: number; pages: Row[] }
+interface Row { page: string; in: number; pv: number; phone: number; msg: number; open: number; quiz: number; form: number; b24: number; actions: number }
+interface Summary { days: number; total: Record<string, number>; actions: number; intents: number; cr: number; done: number; pages: Row[] }
 
 const PERIODS: [string, number][] = [['Неделя', 7], ['Месяц', 30], ['Квартал', 90], ['Год', 365]];
 
@@ -24,14 +24,17 @@ export default function PageStats({ page }: { page: string }) {
   }, [days]);
 
   const row = data?.pages.find((p) => p.page === page);
+  const intents = (row?.open ?? 0) + (row?.quiz ?? 0);
+  const sent = (row?.form ?? 0) + (row?.b24 ?? 0);
   const tiles: [string, number | string, string][] = [
     ['Заходы на сайт', row?.in ?? 0, 'первый заход за визит'],
     ['Просмотры страницы', row?.pv ?? 0, 'сколько раз открывали'],
     ['Нажали телефон', row?.phone ?? 0, 'клик по номеру'],
     ['Нажали мессенджер', row?.msg ?? 0, 'Telegram, WhatsApp, Viber'],
-    ['Форма сайта', row?.form ?? 0, 'отправлена наша форма'],
-    ['Форма Битрикс24', row?.b24 ?? 0, 'отправлена в виджете'],
-    ['Целевых действий', row?.actions ?? 0, 'всё вместе'],
+    ['Открыли заявку', intents, 'нажали кнопку или начали квиз'],
+    ['Отправили форму', sent, 'наша форма и форма Битрикса'],
+    ['Целевых действий', row?.actions ?? 0, 'звонок, мессенджер, форма'],
+    ['Дошли до отправки', intents ? `${(sent / intents * 100).toFixed(0)} %` : '—', 'из тех, кто открыл заявку'],
     ['Конверсия', row && row.pv ? `${(row.actions / row.pv * 100).toFixed(1)} %` : '—', 'действий к просмотрам'],
   ];
 
@@ -57,6 +60,12 @@ export default function PageStats({ page }: { page: string }) {
               </div>
             ))}
           </div>
+          <p class="pstat__note">
+            Это свой счётчик сайта: считает всех, включая тех, кто не дал согласия
+            на cookie. В Яндекс.Метрике те же действия отмечены целями
+            («Заявка отправлена», «Нажали телефон», «Нажали мессенджер») – её цифры
+            будут ниже, и разница показывает, скольких людей Метрика не видит.
+          </p>
           {!row && (
             <p class="muted">
               За выбранный срок по этой странице действий ещё не записано.

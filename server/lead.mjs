@@ -85,7 +85,7 @@ const ANALYTICS = process.env.ANALYTICS_DIR || '/analytics';
 // Владелец 28.10.2026: «по факту от и до всё считаем независимо от куки и метрики».
 // Человека не опознаём: ни cookie, ни идентификатора – только вид действия, страница и час.
 // Поэтому согласие на обработку данных не требуется: персональных данных здесь нет.
-const EVENT_KINDS = new Set(['in', 'pv', 'phone', 'msg', 'form', 'b24']);
+const EVENT_KINDS = new Set(['in', 'pv', 'phone', 'msg', 'open', 'quiz', 'form', 'b24']);
 
 function noteEvent(body) {
   const kind = String(body?.k || '');
@@ -107,7 +107,7 @@ function noteEvent(body) {
 /** Сводка для кабинета: сколько каких действий за период и по страницам. */
 function eventsSummary(days) {
   const since = Date.now() - days * 24 * 3600 * 1000;
-  const total = { in: 0, pv: 0, phone: 0, msg: 0, form: 0, b24: 0 };
+  const total = { in: 0, pv: 0, phone: 0, msg: 0, open: 0, quiz: 0, form: 0, b24: 0 };
   const pages = new Map();
   let text = '';
   try { text = fs.readFileSync(path.join(DATA, 'events.jsonl'), 'utf8'); } catch { return { total, pages: [], days }; }
@@ -117,15 +117,25 @@ function eventsSummary(days) {
     if (Date.parse(e.at) < since) continue;
     if (total[e.k] === undefined) continue;
     total[e.k] += 1;
-    const cur = pages.get(e.p) || { page: e.p, in: 0, pv: 0, phone: 0, msg: 0, form: 0, b24: 0 };
+    const cur = pages.get(e.p) || { page: e.p, in: 0, pv: 0, phone: 0, msg: 0, open: 0, quiz: 0, form: 0, b24: 0 };
     cur[e.k] += 1;
     pages.set(e.p, cur);
   }
   // Целевое действие – любое обращение: телефон, мессенджер, форма сайта, форма Битрикса.
+  // Целевое действие – состоявшееся обращение. Нажатие кнопки и начало
+  // квиза считаем отдельно: это намерение, по нему видно, где люди
+  // передумывают, но обращением оно ещё не стало.
   const actions = total.phone + total.msg + total.form + total.b24;
+  const intents = total.open + total.quiz;
   const rows = [...pages.values()].map((p) => ({ ...p, actions: p.phone + p.msg + p.form + p.b24 }));
   rows.sort((a, b) => b.actions - a.actions || b.pv - a.pv);
-  return { days, total, actions, cr: total.pv ? +(actions / total.pv * 100).toFixed(2) : 0, pages: rows.slice(0, 300) };
+  return {
+    days, total, actions, intents,
+    cr: total.pv ? +((actions / total.pv) * 100).toFixed(2) : 0,
+    // доля тех, кто нажал кнопку и дошёл до отправки
+    done: intents ? +((total.form + total.b24) / intents * 100).toFixed(1) : 0,
+    pages: rows.slice(0, 300),
+  };
 }
 
 const REPORTS = ['metrika', 'positions', 'seo', 'recommendations', 'demand', 'pages'];

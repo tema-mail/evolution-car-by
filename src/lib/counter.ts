@@ -14,13 +14,43 @@
  * Человека не опознаём: ни cookie, ни идентификатора, ни профиля –
  * только факт действия и адрес страницы. Поэтому согласие не требуется.
  */
-export type EventKind = 'in' | 'pv' | 'phone' | 'msg' | 'form' | 'b24';
+export type EventKind =
+  | 'in'      // вход на сайт
+  | 'pv'      // просмотр страницы
+  | 'phone'   // нажали на номер
+  | 'msg'     // нажали на мессенджер
+  | 'open'    // открыли окно заявки – намерение, ещё не заявка
+  | 'quiz'    // начали квиз
+  | 'form'    // отправили нашу форму
+  | 'b24';    // отправили форму в виджете Битрикс24
 
 const ENDPOINT = '/api/ev';
+
+/**
+ * Цели Яндекс.Метрики под те же действия. Метрика считает только тех,
+ * кто согласился на cookie, поэтому источник правды – свой счётчик,
+ * а Метрика нужна, чтобы сравнивать и видеть разницу.
+ */
+const YM_GOAL: Partial<Record<EventKind, string>> = {
+  phone: 'klik_telefon',
+  msg: 'klik_messenger',
+  form: 'zayavka',
+  b24: 'zayavka',
+};
 const MESSENGERS = /^(https?:)?\/\/(t\.me|telegram\.me|web\.telegram\.org|wa\.me|api\.whatsapp\.com|web\.whatsapp\.com|viber\.com|invite\.viber\.com)/i;
 
 /** Отправка «вдогонку»: не задерживает переход по ссылке и не роняет страницу. */
 export function track(kind: EventKind, page = location.pathname): void {
+  // В Метрику шлём параллельно: если человек не дал согласия, счётчика
+  // просто нет, и это ожидаемо – свой счётчик посчитает его всё равно.
+  const goal = YM_GOAL[kind];
+  if (goal) {
+    try {
+      (window as unknown as { ym?: (...a: unknown[]) => void }).ym?.(98499004, 'reachGoal', goal);
+    } catch {
+      /* Метрика не обязана быть на странице */
+    }
+  }
   try {
     const body = JSON.stringify({ k: kind, p: page.slice(0, 300), r: document.referrer.slice(0, 200) });
     if (navigator.sendBeacon) {
@@ -55,6 +85,18 @@ export function initCounter(): void {
       const href = a.getAttribute('href') || '';
       if (href.startsWith('tel:')) track('phone');
       else if (MESSENGERS.test(href)) track('msg');
+    },
+    true,
+  );
+
+  // Нажали кнопку заявки: само намерение, ещё до заполнения формы.
+  // Владелец 28.10.2026: «когда только нажимается, тоже не собирается».
+  document.addEventListener(
+    'click',
+    (e) => {
+      const el = (e.target as Element | null)?.closest?.('[data-open]') as HTMLElement | null;
+      if (el?.dataset.open === 'lead') track('open');
+      else if (el?.dataset.open === 'quiz') track('quiz');
     },
     true,
   );

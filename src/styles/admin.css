@@ -218,3 +218,4 @@ details.pcat[open] .caret{transform:rotate(90deg)}
   .cars__table th:nth-child(7), .cars__table td:nth-child(7) { display: none; }
 }
 .cars__note { font-size: 12px; color: #8a949e; max-width: 46ch; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pstat__note { margin: 12px 0 0; font-size: 12px; line-height: 1.45; color: #8a949e; max-width: 80ch; }
