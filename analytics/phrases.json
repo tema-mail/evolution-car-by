@@ -1,129 +1,610 @@
 {
- "about": "Фразы для снимка выдачи (Позиции): спрос – Вордстат, Новосибирская обл., квартал 07–09.2026 (docs/seo/wordstat-*.json). Отзывы, «или» и инфо со спросом <5 убраны.",
+ "about": "Фразы для снимка выдачи (раздел «Позиции»): реальные запросы сайта из Search Console за квартал (docs/seo-migration/karta-migracii.csv), регион — Беларусь, Минск. Отсортированы по кликам.",
+ "region": {
+  "yandex": 149,
+  "google": "Belarus",
+  "city": "Минск"
+ },
  "rows": [
   {
-   "q": "газовый котел",
-   "nso_quarter": 21528
+   "q": "li 9 характеристики",
+   "page": "/catalog/lixiang/l9/",
+   "clicks": 241
   },
   {
-   "q": "газовый котел купить",
-   "nso_quarter": 2537
+   "q": "ли 9 характеристики",
+   "page": "/catalog/lixiang/l9/",
+   "clicks": 241
   },
   {
-   "q": "газовый котел новосибирск",
-   "nso_quarter": 2620
+   "q": "li9 характеристики",
+   "page": "/catalog/lixiang/l9/",
+   "clicks": 241
   },
   {
-   "q": "газовый котел болотное",
-   "nso_quarter": 0
+   "q": "lixiang l9 характеристики",
+   "page": "/catalog/lixiang/l9/",
+   "clicks": 241
   },
   {
-   "q": "купить газовый котел в новосибирске",
-   "nso_quarter": 1323
+   "q": "l9 характеристики",
+   "page": "/catalog/lixiang/l9/",
+   "clicks": 241
   },
   {
-   "q": "настенный газовый котел",
-   "nso_quarter": 1948
+   "q": "джили префейс купить",
+   "page": "/catalog/geely/preface/",
+   "clicks": 78
   },
   {
-   "q": "двухконтурный газовый котел",
-   "nso_quarter": 1266
+   "q": "джили префейс купить минск",
+   "page": "/catalog/geely/preface/",
+   "clicks": 78
   },
   {
-   "q": "напольный газовый котел",
-   "nso_quarter": 1024
+   "q": "geely preface купить минск",
+   "page": "/catalog/geely/preface/",
+   "clicks": 78
   },
   {
-   "q": "котел hubert",
-   "nso_quarter": 100
+   "q": "джили префейс цена рб",
+   "page": "/catalog/geely/preface/",
+   "clicks": 78
   },
   {
-   "q": "газовый котел hubert",
-   "nso_quarter": 49
+   "q": "geely preface цена минск",
+   "page": "/catalog/geely/preface/",
+   "clicks": 78
   },
   {
-   "q": "котел навьен",
-   "nso_quarter": 2748
+   "q": "evolution car",
+   "page": "/contact/",
+   "clicks": 52
   },
   {
-   "q": "котел очаг",
-   "nso_quarter": 450
+   "q": "lynk & co 08",
+   "page": "/catalog/lynk-co/08/",
+   "clicks": 52
   },
   {
-   "q": "газовая колонка",
-   "nso_quarter": 622
+   "q": "lynk & co",
+   "page": "/catalog/lynk-co/08/",
+   "clicks": 52
   },
   {
-   "q": "котел navien deluxe",
-   "nso_quarter": 360
+   "q": "lynk & co 08 купить минск",
+   "page": "/catalog/lynk-co/08/",
+   "clicks": 52
   },
   {
-   "q": "котел haier",
-   "nso_quarter": 222
+   "q": "линк энд ко 08",
+   "page": "/catalog/lynk-co/08/",
+   "clicks": 52
   },
   {
-   "q": "котел federica bugatti",
-   "nso_quarter": 54
+   "q": "линк и ко 08",
+   "page": "/catalog/lynk-co/08/",
+   "clicks": 52
   },
   {
-   "q": "котел kiturami",
-   "nso_quarter": 94
+   "q": "эволюшн кар",
+   "page": "/contact/",
+   "clicks": 50
   },
   {
-   "q": "котел daesung",
-   "nso_quarter": 111
+   "q": "lynk & co 09",
+   "page": "/catalog/lynk-co/900-lynk-co-09/",
+   "clicks": 39
   },
   {
-   "q": "котел жар",
-   "nso_quarter": 35
+   "q": "линк энд ко 09",
+   "page": "/catalog/lynk-co/900-lynk-co-09/",
+   "clicks": 39
   },
   {
-   "q": "котел мимакс",
-   "nso_quarter": 241
+   "q": "lynk co 09",
+   "page": "/catalog/lynk-co/900-lynk-co-09/",
+   "clicks": 39
   },
   {
-   "q": "какой газовый котел выбрать",
-   "nso_quarter": null
+   "q": "lynk & co 09 купить минск",
+   "page": "/catalog/lynk-co/900-lynk-co-09/",
+   "clicks": 39
   },
   {
-   "q": "какой газовый котел лучше",
-   "nso_quarter": 177
+   "q": "lynk&co 09",
+   "page": "/catalog/lynk-co/900-lynk-co-09/",
+   "clicks": 39
   },
   {
-   "q": "какой двухконтурный котел лучше",
-   "nso_quarter": 14
+   "q": "denza d9 купить минск",
+   "page": "/catalog/denza/d9/",
+   "clicks": 32
   },
   {
-   "q": "настенный или напольный газовый котел",
-   "nso_quarter": 9
+   "q": "denza d9",
+   "page": "/catalog/denza/d9/",
+   "clicks": 32
   },
   {
-   "q": "газовый котел для частного дома",
-   "nso_quarter": null
+   "q": "денза д 9",
+   "page": "/catalog/denza/d9/",
+   "clicks": 32
   },
   {
-   "q": "двухконтурный газовый котел для частного дома",
-   "nso_quarter": 57
+   "q": "denza d9 характеристики",
+   "page": "/catalog/denza/d9/",
+   "clicks": 32
   },
   {
-   "q": "установка газового котла цена",
-   "nso_quarter": 100
+   "q": "denza d9 купить",
+   "page": "/catalog/denza/d9/",
+   "clicks": 32
   },
   {
-   "q": "монтаж газового котла в частном доме",
-   "nso_quarter": 15
+   "q": "купить byd han",
+   "page": "/catalog/byd/han/",
+   "clicks": 31
   },
   {
-   "q": "купить газовый котел с установкой",
-   "nso_quarter": 3
+   "q": "byd han",
+   "page": "/catalog/byd/han/",
+   "clicks": 31
   },
   {
-   "q": "газовый котел под ключ",
-   "nso_quarter": 3
+   "q": "lynk & co 05",
+   "page": "/catalog/lynk-co/05/",
+   "clicks": 31
   },
   {
-   "q": "котел болотное",
-   "nso_quarter": 4
+   "q": "lynk & co купить минск",
+   "page": "/catalog/lynk-co/05/",
+   "clicks": 31
+  },
+  {
+   "q": "lynk & co 05 купить",
+   "page": "/catalog/lynk-co/05/",
+   "clicks": 31
+  },
+  {
+   "q": "линк энд ко",
+   "page": "/catalog/lynk-co/05/",
+   "clicks": 31
+  },
+  {
+   "q": "линк энд ко 05",
+   "page": "/catalog/lynk-co/05/",
+   "clicks": 31
+  },
+  {
+   "q": "byd qin plus",
+   "page": "/catalog/byd/qin-plus-ev/",
+   "clicks": 31
+  },
+  {
+   "q": "evolutioncar",
+   "page": "/contact/",
+   "clicks": 30
+  },
+  {
+   "q": "byd qin plus характеристики",
+   "page": "/catalog/byd/qin-plus-ev/",
+   "clicks": 29
+  },
+  {
+   "q": "byd qin plus ev характеристики",
+   "page": "/catalog/byd/qin-plus-ev/",
+   "clicks": 29
+  },
+  {
+   "q": "byd qin характеристики",
+   "page": "/catalog/byd/qin-plus-ev/",
+   "clicks": 29
+  },
+  {
+   "q": "byd qin plus купить минск",
+   "page": "/catalog/byd/qin-plus-ev/",
+   "clicks": 29
+  },
+  {
+   "q": "ниссан х трейл е пауэр купить",
+   "page": "/catalog/nissan/x-trail-e-power-top/",
+   "clicks": 29
+  },
+  {
+   "q": "byd han купить минск",
+   "page": "/catalog/byd/han/",
+   "clicks": 28
+  },
+  {
+   "q": "byd han цена",
+   "page": "/catalog/byd/han/",
+   "clicks": 28
+  },
+  {
+   "q": "byd han купить",
+   "page": "/catalog/byd/han/",
+   "clicks": 28
+  },
+  {
+   "q": "nissan x-trail e-power купить минск",
+   "page": "/catalog/nissan/x-trail-e-power-top/",
+   "clicks": 28
+  },
+  {
+   "q": "ниссан е повер купить",
+   "page": "/catalog/nissan/x-trail-e-power-top/",
+   "clicks": 28
+  },
+  {
+   "q": "купить nissan x-trail e-power",
+   "page": "/catalog/nissan/x-trail-e-power-top/",
+   "clicks": 28
+  },
+  {
+   "q": "nissan x-trail e-power купить",
+   "page": "/catalog/nissan/x-trail-e-power-top/",
+   "clicks": 28
+  },
+  {
+   "q": "denza z9 gt",
+   "page": "/catalog/denza/z9-gt/",
+   "clicks": 28
+  },
+  {
+   "q": "denza z9 gt купить минск",
+   "page": "/catalog/denza/z9-gt/",
+   "clicks": 28
+  },
+  {
+   "q": "denza z9",
+   "page": "/catalog/denza/z9-gt/",
+   "clicks": 28
+  },
+  {
+   "q": "denza z9 gt купить",
+   "page": "/catalog/denza/z9-gt/",
+   "clicks": 28
+  },
+  {
+   "q": "denza z9 gt цена",
+   "page": "/catalog/denza/z9-gt/",
+   "clicks": 28
+  },
+  {
+   "q": "hiphi z",
+   "page": "/catalog/hiphi/z/",
+   "clicks": 23
+  },
+  {
+   "q": "hiphi",
+   "page": "/catalog/hiphi/z/",
+   "clicks": 23
+  },
+  {
+   "q": "hiphi z характеристики",
+   "page": "/catalog/hiphi/z/",
+   "clicks": 22
+  },
+  {
+   "q": "машина hiphi z",
+   "page": "/catalog/hiphi/z/",
+   "clicks": 22
+  },
+  {
+   "q": "hiphi купить",
+   "page": "/catalog/hiphi/z/",
+   "clicks": 22
+  },
+  {
+   "q": "gac aion y купить минск",
+   "page": "/catalog/gac/aion-y/",
+   "clicks": 20
+  },
+  {
+   "q": "aion машина",
+   "page": "/catalog/gac/aion-y/",
+   "clicks": 20
+  },
+  {
+   "q": "aion электромобиль",
+   "page": "/catalog/gac/aion-y/",
+   "clicks": 20
+  },
+  {
+   "q": "gac aion",
+   "page": "/catalog/gac/aion-y/",
+   "clicks": 20
+  },
+  {
+   "q": "aion машина цена",
+   "page": "/catalog/gac/aion-y/",
+   "clicks": 20
+  },
+  {
+   "q": "evolution cars",
+   "page": "/contact/",
+   "clicks": 20
+  },
+  {
+   "q": "changan dipole",
+   "page": "/catalog/deepal/s07/",
+   "clicks": 19
+  },
+  {
+   "q": "changan deepal s07 характеристики",
+   "page": "/catalog/deepal/s07/",
+   "clicks": 19
+  },
+  {
+   "q": "deepal s7 характеристики",
+   "page": "/catalog/deepal/s07/",
+   "clicks": 19
+  },
+  {
+   "q": "дипал с07 характеристики",
+   "page": "/catalog/deepal/s07/",
+   "clicks": 19
+  },
+  {
+   "q": "deepal s07 характеристики",
+   "page": "/catalog/deepal/s07/",
+   "clicks": 19
+  },
+  {
+   "q": "zeekr 009 характеристики",
+   "page": "/catalog/zeekr/009/",
+   "clicks": 19
+  },
+  {
+   "q": "зикр 009 характеристики",
+   "page": "/catalog/zeekr/009/",
+   "clicks": 19
+  },
+  {
+   "q": "zeekr 009",
+   "page": "/catalog/zeekr/009/",
+   "clicks": 19
+  },
+  {
+   "q": "zeekr 009 купить минск",
+   "page": "/catalog/zeekr/009/",
+   "clicks": 19
+  },
+  {
+   "q": "zeekr 009 цена",
+   "page": "/catalog/zeekr/009/",
+   "clicks": 19
+  },
+  {
+   "q": "хендай элантра купить минск",
+   "page": "/catalog/hyundai/elantra/",
+   "clicks": 19
+  },
+  {
+   "q": "хендай элантра 2024",
+   "page": "/catalog/hyundai/elantra/",
+   "clicks": 19
+  },
+  {
+   "q": "hyundai elantra купить",
+   "page": "/catalog/hyundai/elantra/",
+   "clicks": 19
+  },
+  {
+   "q": "купить хендай элантра",
+   "page": "/catalog/hyundai/elantra/",
+   "clicks": 19
+  },
+  {
+   "q": "hyundai elantra 2024",
+   "page": "/catalog/hyundai/elantra/",
+   "clicks": 19
+  },
+  {
+   "q": "byd dolphin характеристики",
+   "page": "/catalog/byd/dolphin/",
+   "clicks": 18
+  },
+  {
+   "q": "byd dolphin",
+   "page": "/catalog/byd/dolphin/",
+   "clicks": 18
+  },
+  {
+   "q": "byd dolphin купить в минске",
+   "page": "/catalog/byd/dolphin/",
+   "clicks": 18
+  },
+  {
+   "q": "byd характеристики",
+   "page": "/catalog/byd/dolphin/",
+   "clicks": 18
+  },
+  {
+   "q": "машина долфин",
+   "page": "/catalog/byd/dolphin/",
+   "clicks": 18
+  },
+  {
+   "q": "voyah",
+   "page": "/catalog/voyah/free/",
+   "clicks": 18
+  },
+  {
+   "q": "voyah free",
+   "page": "/catalog/voyah/free/",
+   "clicks": 17
+  },
+  {
+   "q": "воях фри",
+   "page": "/catalog/voyah/free/",
+   "clicks": 17
+  },
+  {
+   "q": "voyah free характеристики",
+   "page": "/catalog/voyah/free/",
+   "clicks": 17
+  },
+  {
+   "q": "voyah free 2024 цена",
+   "page": "/catalog/voyah/free/",
+   "clicks": 17
+  },
+  {
+   "q": "avatr 11",
+   "page": "/catalog/avatr/11/",
+   "clicks": 16
+  },
+  {
+   "q": "avatr 11 купить минск",
+   "page": "/catalog/avatr/11/",
+   "clicks": 16
+  },
+  {
+   "q": "avatr 11 цена",
+   "page": "/catalog/avatr/11/",
+   "clicks": 16
+  },
+  {
+   "q": "аватр 11 купить",
+   "page": "/catalog/avatr/11/",
+   "clicks": 16
+  },
+  {
+   "q": "аватр 11 характеристики",
+   "page": "/catalog/avatr/11/",
+   "clicks": 16
+  },
+  {
+   "q": "voyah passion",
+   "page": "/catalog/voyah/passion/",
+   "clicks": 16
+  },
+  {
+   "q": "voyah passion цена",
+   "page": "/catalog/voyah/passion/",
+   "clicks": 15
+  },
+  {
+   "q": "voyah passion купить",
+   "page": "/catalog/voyah/passion/",
+   "clicks": 15
+  },
+  {
+   "q": "воях пассион",
+   "page": "/catalog/voyah/passion/",
+   "clicks": 15
+  },
+  {
+   "q": "voyah passion купить минск",
+   "page": "/catalog/voyah/passion/",
+   "clicks": 15
+  },
+  {
+   "q": "джили радар",
+   "page": "/catalog/geely/radar-rd6/",
+   "clicks": 15
+  },
+  {
+   "q": "geely radar",
+   "page": "/catalog/geely/radar-rd6/",
+   "clicks": 15
+  },
+  {
+   "q": "джили пикап",
+   "page": "/catalog/geely/radar-rd6/",
+   "clicks": 15
+  },
+  {
+   "q": "geely radar rd6",
+   "page": "/catalog/geely/radar-rd6/",
+   "clicks": 15
+  },
+  {
+   "q": "geely radar rd6 купить",
+   "page": "/catalog/geely/radar-rd6/",
+   "clicks": 15
+  },
+  {
+   "q": "эволюшн кар сервис",
+   "page": "/catalog/",
+   "clicks": 13
+  },
+  {
+   "q": "changan uni-v купить минск",
+   "page": "/catalog/changan/uni-v/",
+   "clicks": 13
+  },
+  {
+   "q": "changan uni-v",
+   "page": "/catalog/changan/uni-v/",
+   "clicks": 13
+  },
+  {
+   "q": "uni-v",
+   "page": "/catalog/changan/uni-v/",
+   "clicks": 13
+  },
+  {
+   "q": "купить changan uni-v",
+   "page": "/catalog/changan/uni-v/",
+   "clicks": 13
+  },
+  {
+   "q": "купить changan uni v",
+   "page": "/catalog/changan/uni-v/",
+   "clicks": 13
+  },
+  {
+   "q": "ниссан ария купить минск",
+   "page": "/catalog/nissan/aryia/",
+   "clicks": 12
+  },
+  {
+   "q": "nissan ariya",
+   "page": "/catalog/nissan/aryia/",
+   "clicks": 12
+  },
+  {
+   "q": "nissan ariya купить",
+   "page": "/catalog/nissan/aryia/",
+   "clicks": 12
+  },
+  {
+   "q": "ниссан ария",
+   "page": "/catalog/nissan/aryia/",
+   "clicks": 12
+  },
+  {
+   "q": "nissan ariya купить минск",
+   "page": "/catalog/nissan/aryia/",
+   "clicks": 12
+  },
+  {
+   "q": "купить geely coolray",
+   "page": "/catalog/geely/coolray/",
+   "clicks": 11
+  },
+  {
+   "q": "geely coolray цена",
+   "page": "/catalog/geely/coolray/",
+   "clicks": 11
+  },
+  {
+   "q": "geely coolray",
+   "page": "/catalog/geely/coolray/",
+   "clicks": 11
+  },
+  {
+   "q": "geely coolray цена в беларуси",
+   "page": "/catalog/geely/coolray/",
+   "clicks": 11
+  },
+  {
+   "q": "джили кулрей",
+   "page": "/catalog/geely/coolray/",
+   "clicks": 11
   }
  ]
 }

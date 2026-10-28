@@ -12,7 +12,7 @@ import { allBrands, popularBrands } from '../../../content/brands';
 import type { Brand } from '../../../content/brands';
 import { countries, powertrains, formatUsd, carPath, brandPath } from '../../../content/cars';
 import type { Car } from '../../../content/cars';
-import { breadcrumbsLd, abs } from '../../../lib/seo';
+import { brandKeywords, breadcrumbsLd, abs } from '../../../lib/seo';
 import { configurators, cny } from '../../../content/configurators';
 import { quiz, finalOffer } from '../../../content/home';
 
@@ -86,6 +86,7 @@ const others = popularBrands().filter((b) => b.slug !== brand.slug).slice(0, 8);
   theme="v1"
   title={title}
   description={description}
+  keywords={brandKeywords(brand.name, brand.cars.map((c) => c.title))}
   canonical={abs(brandPath(brand.name))}
   ogImage={list[0]?.photo}
   jsonLd={[breadcrumbsLd(crumbs), faqLd]}

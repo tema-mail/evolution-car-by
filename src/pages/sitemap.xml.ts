@@ -17,6 +17,10 @@ const paths = [
   ...directions.map((d) => `/${d.slug}/`),
     '/dostavka-i-rastamozhka/',
   ...cities.map((c) => `/${c.slug}/`),
+  // Сохранённый адрес самой сильной страницы сайта: 1 207 кликов
+  // и позиция 7,8. В карту сайта не попадал, потому что собирается
+  // из списков машин и разделов, а эта страница стоит отдельно.
+  '/lixiangl9/',
   '/catalog/',
   '/konfiguratory/',
   '/catalog/lixiang/l9/konfigurator/',

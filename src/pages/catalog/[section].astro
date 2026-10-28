@@ -31,12 +31,21 @@ const crumbs = [
 const prices = list.map((c) => c.priceUsd ?? Infinity).filter(Number.isFinite);
 const minPrice = prices.length ? Math.min(...prices) : null;
 
-// признак, по которому раздел уже отобран, в фильтре не показываем
-const hide: ('country' | 'powertrain' | 'availability')[] = section.slug.startsWith('from_')
-  ? ['country']
-  : section.slug === 'electro_car' || section.slug === 'hybrid'
-    ? ['powertrain']
-    : ['availability'];
+// Признак, по которому раздел уже отобран, в фильтре не показываем.
+// Слаги здесь были старые, тильдовские (from_*, electro_car, hybrid) –
+// ни одно условие не срабатывало, и со всех подборок пропадала строка
+// «Наличие», а в разделе «Из США» наоборот предлагался фильтр «Китай».
+const HIDE_BY_SECTION: Record<string, ('country' | 'powertrain' | 'availability')[]> = {
+  'iz-kitaya': ['country'],
+  'iz-korei': ['country'],
+  'iz-evropy': ['country'],
+  'iz-ssha': ['country'],
+  elektromobili: ['powertrain'],
+  gibridy: ['powertrain'],
+  'v-nalichii': ['availability'],
+  'pod-zakaz': ['availability'],
+};
+const hide: ('country' | 'powertrain' | 'availability')[] = HIDE_BY_SECTION[section.slug] ?? [];
 
 // у раздела электромобилей – расширенный текст: это главный коммерческий кластер
 const ev = section.slug === 'elektromobili' ? evLanding : null;

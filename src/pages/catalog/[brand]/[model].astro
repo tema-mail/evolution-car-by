@@ -13,7 +13,7 @@ import {
   slugify, modelSlug, carPath, brandPath, noteRows,
 } from '../../../content/cars';
 import type { Car } from '../../../content/cars';
-import { carMeta, carLd, breadcrumbsLd } from '../../../lib/seo';
+import { carMeta, carKeywords, carLd, breadcrumbsLd } from '../../../lib/seo';
 
 import { quiz, finalOffer, benefits, steps } from '../../../content/home';
 
@@ -77,6 +77,7 @@ const gallery = extra ? [{ src: car.photo, thumb: car.photo, alt }, ...extra] : 
   theme="v1"
   title={meta.title}
   description={meta.description}
+  keywords={carKeywords(car)}
   canonical={meta.canonical}
   ogImage={car.photo}
   jsonLd={[breadcrumbsLd(crumbs), carLd(car)]}
@@ -235,6 +236,8 @@ const gallery = extra ? [{ src: car.photo, thumb: car.photo, alt }, ...extra] : 
               consent={finalOffer.consent}
               success={finalOffer.success}
               source={`Карточка: ${car.title}`}
+              car={car.title}
+              brand={car.brand}
             />
           </div>
         </div>

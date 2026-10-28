@@ -13,6 +13,8 @@ interface Props {
   ogImage?: string;
   /** пока сайт не запущен, страницы закрыты от индексации */
   noindex?: boolean;
+  /** Русские написания марки и модели для поиска: видимые тексты не меняем */
+  keywords?: string;
   /** блоки schema.org; по умолчанию – карточка организации */
   jsonLd?: unknown[];
 }
@@ -24,6 +26,7 @@ const {
   canonical,
   ogImage = '/img/hero-evolution-hd-v2.jpg',
   noindex = false,
+  keywords,
   jsonLd,
 } = Astro.props;
 
@@ -52,7 +55,10 @@ const organizationLd = {
   openingHours: 'Mo-Su 09:00-18:00',
 };
 
-const blocks = jsonLd ?? [organizationLd];
+// Организация нужна на каждой странице, а не только там, где нет своей
+// разметки: было `jsonLd ?? [organizationLd]`, и собственные блоки
+// (крошки, Car, FAQ) её вытесняли с 215 страниц из 225.
+const blocks = [organizationLd, ...(jsonLd ?? [])];
 
 // Карточка товара определяется по адресу страницы – сами страницы карточек
 // не правятся. Данные товара встраиваются в HTML для событий Google (analytics.ts).
@@ -67,6 +73,33 @@ const productJson = product ? pageProductJson(product) : null;
 // перекрывает: так тестовый стенд собирается без счётчиков, а прод – с ними.
 // Обращение к import.meta.env только по явному имени: Vite подставляет их
 // при сборке, динамический ключ вернёт undefined.
+// Как компанию ищут по-русски: по Search Console брендовых запросов
+// кириллицей больше трёхсот кликов, а на сайте только латинское написание.
+// Эти слова нужны на каждой странице, а не только в каталоге.
+const BASE_KEYWORDS = [
+  'Эволюшн Кар',
+  'Эволюшн Кар Минск',
+  'Evolution Car',
+  'Evolution Cars',
+  'эволюшн кар сервис',
+  'авто из Китая в Минске',
+  'автомобили из Китая Беларусь',
+  'купить авто под заказ Минск',
+  'электромобиль',
+  'электромобили',
+  'электромобилей',
+  'гибрид',
+  'машина',
+  'автомобиль',
+  'автомобилей',
+  'китайских',
+  'китайские',
+  'Телеграм',
+  '2024',
+  '2025',
+  '2026',
+].join(', ');
+
 const pick = (fromEnv: unknown, fallback: string) => {
   const value = String(fromEnv ?? '').trim();
   return value !== '' ? value : fallback;
@@ -177,6 +210,7 @@ const b24Url = /^https:\/\/[a-z0-9.-]+\.bitrix24\.[a-z]{2,3}\/[A-Za-z0-9_/.-]+\.
     }
     <title>{title}</title>
     <meta name="description" content={description} />
+    <meta name="keywords" content={keywords ? `${keywords}, ${BASE_KEYWORDS}` : BASE_KEYWORDS} />
     {noindex && <meta name="robots" content="noindex, nofollow" />}
     <link rel="canonical" href={canonicalUrl} />
 

@@ -18,9 +18,14 @@ interface Props {
   /** compact – поля в столбец (карточка шага), wide – в строку (финальный оффер) */
   layout?: 'compact' | 'wide';
   source: string;
+  /** Марка машины – в кабинете это категория заявки */
+  car?: string;
+  brand?: string;
 }
 
 export default function LeadForm({
+  car,
+  brand,
   namePlaceholder,
   phonePlaceholder,
   cta,
@@ -59,6 +64,8 @@ export default function LeadForm({
       name,
       phone: fullPhone(phone, country),
       source,
+      car,
+      brand,
       consent: agreed,
       company,
     });

@@ -364,7 +364,18 @@ createServer(async (req, res) => {
   // Автомобиль из карточки – позицией заявки: кабинет показывает его как товар,
   // а марка идёт в категорию, чтобы работал фильтр «по категориям».
   const items = cleanItems(
-    body.items || (body.car ? [{ title: body.car, qty: 1, price: 0, category: String(body.car).split(' ')[0] }] : []),
+    body.items ||
+      (body.car
+        ? [{
+            title: body.car,
+            qty: 1,
+            price: 0,
+            // Марку берём из данных карточки. Раньше резали первое слово названия,
+            // и «Lynk & Co 08» попадал в категорию «Lynk», а «Lynk&CO 900» –
+            // в «Lynk&CO»: одна марка разъезжалась на две категории кабинета.
+            category: clean(body.brand) || String(body.car).split(' ')[0],
+          }]
+        : []),
   );
   const page = fields.Page || '';
   const category = items[0]?.category || (page.split('/')[1] || '');

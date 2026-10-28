@@ -1,4 +1,5 @@
 import type { Car } from '../content/cars';
+import { BRAND_RU, COMMON_RU, MODEL_RU } from '../content/translit';
 import { countries, powertrains, availabilities, carPath } from '../content/cars';
 import { site } from '../content/site';
 
@@ -25,6 +26,49 @@ export function carMeta(car: Car) {
       `Доставка, страхование, таможенное оформление и документы для постановки на учёт – на нас.`,
     canonical: abs(carPath(car)),
   };
+}
+
+/**
+ * Ключевые слова страницы: русские написания марки и модели плюс слова,
+ * с которыми их ищут. Нужны потому, что по Search Console заметная часть
+ * запросов приходит кириллицей («джили префейс», «зикр», «воях фри»),
+ * а на страницах только латиница. Видимые тексты при этом не меняем.
+ */
+export function carKeywords(car: Car): string {
+  const words = new Set<string>();
+  words.add(car.title);
+  words.add(car.brand);
+  for (const ru of BRAND_RU[car.brand] ?? []) {
+    words.add(ru);
+    words.add(`${ru} купить`);
+    words.add(`${ru} Минск`);
+  }
+  for (const ru of MODEL_RU[car.slug] ?? []) {
+    words.add(ru);
+    words.add(`${ru} купить`);
+    words.add(`${ru} цена`);
+    words.add(`${ru} характеристики`);
+  }
+  words.add(`${car.title} купить`);
+  words.add(`${car.title} купить в Минске`);
+  words.add(`${car.title} цена`);
+  words.add(`${car.title} характеристики`);
+  for (const w of COMMON_RU) words.add(w);
+  return [...words].join(', ');
+}
+
+/** Ключевые слова страницы марки */
+export function brandKeywords(name: string, models: string[]): string {
+  const words = new Set<string>([name, `${name} купить`, `${name} Минск`]);
+  for (const ru of BRAND_RU[name] ?? []) {
+    words.add(ru);
+    words.add(`${ru} купить`);
+    words.add(`${ru} купить в Минске`);
+    words.add(`${ru} цена`);
+  }
+  for (const m of models.slice(0, 12)) words.add(m);
+  for (const w of COMMON_RU) words.add(w);
+  return [...words].join(', ');
 }
 
 export function breadcrumbsLd(crumbs: Crumb[]) {
