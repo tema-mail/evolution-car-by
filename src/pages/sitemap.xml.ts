@@ -16,6 +16,7 @@ const paths = [
   '/partneram/',
   ...directions.map((d) => `/${d.slug}/`),
     '/dostavka-i-rastamozhka/',
+  '/servis/',
   ...cities.map((c) => `/${c.slug}/`),
   // Сохранённый адрес самой сильной страницы сайта: 1 207 кликов
   // и позиция 7,8. В карту сайта не попадал, потому что собирается

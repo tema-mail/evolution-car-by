@@ -181,11 +181,13 @@ export const footer = {
       { label: 'Из Южной Кореи', href: '/korea/' },
       { label: 'Из Европы', href: '/europa/' },
       { label: 'Из США', href: '/usa/' },
+      { label: 'Из Японии', href: '/japan/' },
     ] },
     { title: 'Услуги', links: [
       { label: 'Рассчитать стоимость', href: '/#cost' },
       { label: 'Подобрать автомобиль', href: '/#final' },
       { label: 'Доставка и растаможка', href: '/dostavka-i-rastamozhka/' },
+      { label: 'Сервис и гарантия', href: '/servis/' },
       { label: 'Для бизнеса', href: '/dlya-biznesa/' },
       { label: 'Для таксопарков', href: '/dlya-taksoparkov/' },
     ] },

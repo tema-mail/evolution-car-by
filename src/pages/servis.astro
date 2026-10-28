@@ -1,0 +1,271 @@
+---
+import '../styles/theme-v1.css';
+import '../styles/islands.css';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/v1/Header.astro';
+import Footer from '../components/v1/Footer.astro';
+import Breadcrumbs from '../components/v1/Breadcrumbs.astro';
+import ModalHost from '../components/islands/ModalHost';
+import LeadForm from '../components/islands/LeadForm';
+import { serviceLanding as t } from '../content/landing';
+import { site } from '../content/site';
+import { breadcrumbsLd, abs } from '../lib/seo';
+import { quiz, finalOffer } from '../content/home';
+
+const crumbs = [
+  { name: 'Главная', href: '/' },
+  { name: 'Сервис', href: '/servis/' },
+];
+
+const faqLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: t.faq.map((item) => ({
+    '@type': 'Question',
+    name: item.q,
+    acceptedAnswer: { '@type': 'Answer', text: item.a },
+  })),
+};
+
+// AutoRepair, а не Organization: это страница сервиса по конкретному адресу
+// с собственным графиком, он отличается от графика автосалона.
+const serviceLd = {
+  '@context': 'https://schema.org',
+  '@type': 'AutoRepair',
+  '@id': `${abs('/servis/')}#service`,
+  name: `Сервис ${site.brand}`,
+  telephone: site.phone,
+  email: site.email,
+  url: abs('/servis/'),
+  address: {
+    '@type': 'PostalAddress',
+    addressCountry: 'BY',
+    addressLocality: site.city,
+    streetAddress: site.showroom,
+  },
+  openingHoursSpecification: [
+    {
+      '@type': 'OpeningHoursSpecification',
+      dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+      opens: '09:00',
+      closes: '19:00',
+    },
+  ],
+  parentOrganization: {
+    '@type': 'AutoDealer',
+    name: site.brand,
+    legalName: site.company,
+    url: abs('/'),
+  },
+  makesOffer: t.services.map((s) => ({
+    '@type': 'Offer',
+    itemOffered: { '@type': 'Service', name: s.title, description: s.text },
+  })),
+};
+---
+
+<BaseLayout
+  theme="v1"
+  title={t.seoTitle}
+  description={t.seoDescription}
+  canonical={abs('/servis/')}
+  jsonLd={[breadcrumbsLd(crumbs), faqLd, serviceLd]}
+>
+  <Header />
+  <Breadcrumbs crumbs={crumbs} />
+
+  <main>
+    <section class="section section--top">
+      <div class="container">
+        <div class="head">
+          <div>
+            <p class="kicker">[ Сервис ]</p>
+            <h1>{t.h1}</h1>
+            <p class="head__lead">{t.lead}</p>
+            <div class="head__actions">
+              <a class="btn" href="#request">Записаться в сервис</a>
+              <a class="btn btn--ghost" href={site.phoneHref}>{site.phone}</a>
+            </div>
+          </div>
+
+          <div class="card answer">
+            <p class="answer__label">Коротко</p>
+            <p class="answer__text">{t.answer}</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--tight">
+      <div class="container">
+        <h2 class="block__title">{t.servicesTitle}</h2>
+        <ul class="cards">
+          {t.services.map((s) => (
+            <li class="card item">
+              <h3 class="item__title">{s.title}</h3>
+              <p class="item__text">{s.text}</p>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+
+    <section class="section section--tight">
+      <div class="container">
+        <h2 class="block__title">{t.warrantyTitle}</h2>
+        <div class="card warranty">
+          <p class="warranty__lead">{t.warrantyLead}</p>
+          <ul class="warranty__list">
+            {t.warranty.map((item) => (
+              <li>
+                <span class="dot" aria-hidden="true"></span>
+                <h3 class="warranty__title">{item.title}</h3>
+                <p class="warranty__text">{item.text}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--tight">
+      <div class="container">
+        <h2 class="block__title">Где находится сервис</h2>
+        <dl class="where card">
+          <div>
+            <dt>Адрес</dt>
+            <dd>{site.address}</dd>
+          </div>
+          <div>
+            <dt>Сервис</dt>
+            <dd>Ежедневно, 09:00 – 19:00</dd>
+          </div>
+          <div>
+            <dt>Автосалон</dt>
+            <dd>Ежедневно, 09:00 – 18:00</dd>
+          </div>
+          <div>
+            <dt>Телефон</dt>
+            <dd><a href={site.phoneHref}>{site.phone}</a></dd>
+          </div>
+        </dl>
+      </div>
+    </section>
+
+    <section class="section section--tight">
+      <div class="container">
+        <h2 class="block__title">{t.faqTitle}</h2>
+        <div class="faq">
+          {t.faq.map((item, i) => (
+            <details class="faq__item" name="service-faq" open={i === 0}>
+              <summary class="faq__q">
+                <span>{item.q}</span>
+                <span class="faq__mark" aria-hidden="true">↗</span>
+              </summary>
+              <p class="faq__a">{item.a}</p>
+            </details>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="request">
+      <div class="container">
+        <div class="card request">
+          <div>
+            <h2 class="request__title">{t.requestTitle}</h2>
+            <p class="request__text">{t.requestText}</p>
+          </div>
+          <LeadForm
+            client:visible
+            namePlaceholder={finalOffer.namePlaceholder}
+            phonePlaceholder={finalOffer.phonePlaceholder}
+            cta={finalOffer.cta}
+            consent={finalOffer.consent}
+            success={finalOffer.success}
+            source="Посадочная: сервис"
+          />
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+  <ModalHost
+    client:idle
+    quizTitle={quiz.title}
+    quizSteps={quiz.steps}
+    contactQuestion={quiz.contactStep.q}
+    channels={quiz.contactStep.channels}
+    consent={finalOffer.consent}
+    success={finalOffer.success}
+    videoPoster="/img/unsplash/service.jpg"
+  />
+</BaseLayout>
+
+<style>
+  .section--top { padding-block: clamp(1.5rem, 1rem + 2vw, 2.5rem); }
+  .section--tight { padding-block: clamp(2rem, 1.2rem + 3vw, 3rem); }
+  .block__title { margin-bottom: clamp(1.25rem, 1rem + 1vw, 2rem); }
+
+  .head { display: grid; gap: clamp(1.5rem, 1rem + 2vw, 3rem); }
+  @media (min-width: 1024px) { .head { grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); align-items: start; } }
+  .head h1 { margin-top: .875rem; }
+  .head__lead { color: var(--c-text-2); margin-top: 1.25rem; font-size: 1.0625rem; max-width: 54ch; }
+  .head__actions { display: flex; flex-wrap: wrap; gap: .75rem; margin-top: 1.75rem; }
+
+  .answer { padding: clamp(1.5rem, 1rem + 2vw, 2rem); background: var(--c-bg-alt); display: grid; gap: 1rem; }
+  .answer__label { font-size: .75rem; text-transform: uppercase; letter-spacing: .08em; color: var(--c-accent); }
+  .answer__text { color: var(--c-text-2); line-height: 1.6; }
+
+  .cards { display: grid; gap: var(--gap); }
+  @media (min-width: 640px) { .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (min-width: 1024px) { .cards { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  .item { padding: clamp(1.25rem, 1rem + 1vw, 1.75rem); display: grid; gap: .625rem; align-content: start; }
+  .item__title { font-family: var(--font-body); font-weight: 400; text-transform: none; font-size: 1.125rem; line-height: 1.25; }
+  .item__text { color: var(--c-text-3); font-size: .875rem; line-height: 1.5; }
+
+  .warranty { padding: clamp(1.5rem, 1rem + 2vw, 2.5rem); display: grid; gap: clamp(1.5rem, 1rem + 1.5vw, 2.5rem); }
+  .warranty__lead { color: var(--c-text-2); line-height: 1.6; max-width: 80ch; }
+  .warranty__list { display: grid; gap: var(--gap); }
+  @media (min-width: 900px) { .warranty__list { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  .warranty__list li { display: grid; gap: .5rem; align-content: start; }
+  .dot { width: .5rem; height: .5rem; border-radius: 50%; background: var(--c-accent); }
+  .warranty__title { font-family: var(--font-body); font-weight: 400; text-transform: none; font-size: 1rem; }
+  .warranty__text { color: var(--c-text-3); font-size: .875rem; line-height: 1.5; }
+
+  .where { padding: clamp(1.5rem, 1rem + 2vw, 2rem); display: grid; gap: 1.5rem; }
+  @media (min-width: 720px) { .where { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (min-width: 1024px) { .where { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+  .where dt { font-size: .75rem; text-transform: uppercase; letter-spacing: .06em; color: var(--c-text-3); }
+  .where dd { margin-top: .5rem; color: var(--c-text-2); font-size: .9375rem; line-height: 1.5; }
+  .where a { color: inherit; }
+
+  .faq { display: grid; gap: var(--gap); }
+  .faq__item { background: var(--c-surface); border: 1px solid var(--c-line); border-radius: var(--r-card); padding: clamp(1.25rem, 1rem + 1vw, 1.75rem); }
+  .faq__q {
+    display: flex; align-items: start; justify-content: space-between; gap: 1.5rem;
+    cursor: pointer; list-style: none;
+    font-family: var(--font-display); font-weight: 700; text-transform: uppercase;
+    font-size: clamp(1rem, .95rem + .4vw, 1.1875rem); line-height: 1.25;
+  }
+  .faq__q::-webkit-details-marker { display: none; }
+  .faq__mark {
+    flex: none; width: 2.5rem; height: 2.5rem;
+    display: grid; place-items: center;
+    border: 1px solid var(--c-line-strong); border-radius: 8px;
+    color: var(--c-text-2);
+    transition: background .25s var(--ease), color .25s var(--ease), rotate .25s var(--ease);
+  }
+  .faq__item[open] .faq__mark { background: var(--c-accent); border-color: var(--c-accent); color: #fff; rotate: 90deg; }
+  .faq__a { color: var(--c-text-3); margin-top: 1.25rem; line-height: 1.6; max-width: 80ch; }
+
+  .request {
+    padding: clamp(1.75rem, 1rem + 2.5vw, 3rem);
+    background: var(--c-bg-alt);
+    display: grid; gap: 2rem; align-items: center;
+  }
+  @media (min-width: 1024px) { .request { grid-template-columns: minmax(0, 1fr) minmax(0, 27rem); gap: 3.5rem; } }
+  .request__title { font-size: clamp(1.5rem, 1.2rem + 1.4vw, 2.25rem); }
+  .request__text { color: var(--c-text-3); font-size: .9375rem; margin-top: 1rem; max-width: 56ch; }
+</style>
