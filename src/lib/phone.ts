@@ -94,7 +94,21 @@ export function maskNational(raw: string, c: Country): string {
  */
 export function parsePhoneInput(raw: string, current: string): { iso: string; national: string } {
   const cur = byIso(current) ?? COUNTRIES[0];
-  if (!raw.trim().startsWith('+')) return { iso: current, national: maskNational(raw, cur) };
+  if (!raw.trim().startsWith('+')) {
+    const d = raw.replace(/\D/g, '');
+    // Номер часто вставляют целиком в местной записи, без плюса: 8 029…,
+    // 8 913…. Без этой проверки поле оставалось на выбранной стране и
+    // российский номер уезжал в белорусскую маску: 89131234567 превращался
+    // в +375 91 312-34-56, и дозвониться по нему было нельзя.
+    // Отличить страны можно надёжно: в Беларуси после кода выхода 8 всегда
+    // идёт 0 (8 029…, 8 017…), в России – никогда (8 913…, 8 495…).
+    const guess = d.length >= 11 && /^[78]/.test(d) ? (d[1] === '0' ? 'BY' : 'RU') : null;
+    if (guess && guess !== current) {
+      const c = byIso(guess)!;
+      return { iso: guess, national: maskNational(d, c) };
+    }
+    return { iso: current, national: maskNational(raw, cur) };
+  }
   const d = raw.replace(/\D/g, '');
   if (!d) return { iso: current, national: '+' };
   const hit = cur.dial && d.startsWith(cur.dial)
