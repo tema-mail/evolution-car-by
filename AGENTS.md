@@ -223,9 +223,17 @@ SU7 Ultra, YU7, N70, N90; Avatr 12; Voyah Dreamer 9.
   сайт, закрыт от поисковиков заголовком. Удобно смотреть правки до прода.
 - Боевая ветка – `prod`: версия из форка Deford2027 (ветка `preview`)
   плюс карточки и счётчики. `main` остался на прежней стилистике.
-- Выкладка руками: `npm run build` → `python3 admin/build.py dist` →
+- Выкладка руками:
+  `PUBLIC_SITE_URL=https://evolutioncar.by npm run build` →
   `DEPLOY_KEY=~/.ssh/evcar_deploy_ed25519 zsh deploy/upload.sh`.
-  Установка сервера (повторный запуск безопасен):
+  **Переменную задавать обязательно:** без неё сборка берёт адрес зеркала
+  (`tema-mail.github.io`), и карта сайта с canonical уедут на чужой домен.
+  Кабинет собирается самим Astro из `src/pages/admin/` – отдельный шаг
+  `admin/build.py` не нужен, это старый MVP.
+  Правилась карта миграции – редиректы отдельной командой:
+  `SSH_KEY=~/.ssh/seo_factory_tunnel_ed25519 zsh deploy/push-redirects.sh`
+  (`upload.sh` заливает только `dist/`).
+  Установка сервера с нуля (повторный запуск безопасен):
   `DEPLOY_PUB=~/.ssh/evcar_deploy_ed25519.pub zsh deploy/install.sh`.
 - DNS домена – в кабинете hoster.by (ООО «Тренд Экспресс Авто»):
   A `@` и A `www` → `45.12.72.227`. Не трогать: TXT-верификации Google
