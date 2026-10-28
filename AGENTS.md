@@ -244,6 +244,12 @@ SU7 Ultra, YU7, N70, N90; Avatr 12; Voyah Dreamer 9.
   и Яндекса, поддомены `dashboard`, `social` и CNAME `catalog` (Railway).
   Прежний IP Тильды, если понадобится откат: `45.155.60.8`.
 - **Домен истекает 13.11.2026** – продлить в кабинете hoster.by.
+- Отчёт о переезде (карта 283 адресов) на боевом домене не держим – решение
+  владельца 28.10.2026: «такую историю не надо на боевых доменах хранить,
+  отдавай на Гитхабе». Он живёт в разборах и обновляется из той же карты:
+  `node scripts/gen-pereezd.mjs` → `~/Sites/seo-razbory/evolution-car-by-e1f2ecc0/`,
+  оттуда копия в публичный репо `tema-mail/razbory` (он сам в приватный не
+  ходит, см. его README) → https://tema-mail.github.io/razbory/evolution-car-by-e1f2ecc0/
 - Редиректы со старых адресов Тильды: `deploy/redirects.conf`,
   генерируется `node scripts/gen-redirects.mjs nginx` из карты миграции
   `docs/seo-migration/karta-migracii.csv`. Карта – единственный источник.
