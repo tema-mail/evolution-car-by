@@ -14,7 +14,7 @@ import ModalHost from '../components/islands/ModalHost';
 import LeadForm from '../components/islands/LeadForm';
 import { directions, protection, processSteps, noBrand } from '../content/directions';
 import type { Direction } from '../content/directions';
-import { cars, countries, getSection } from '../content/cars';
+import { cars, countries, getSection, isUsed } from '../content/cars';
 import type { Car } from '../content/cars';
 import { breadcrumbsLd, abs } from '../lib/seo';
 import { quiz, finalOffer } from '../content/home';
@@ -28,24 +28,37 @@ export function getStaticPaths() {
 
 const { direction, list } = Astro.props as { direction: Direction; list: Car[] };
 
-// Кнопка типа ведёт в каталог уже с фильтром по стране направления:
-// раздел типа + ?country=…, либо раздел самой страны + ?powertrain=….
-// Если таких машин в каталоге нет – раздел страны целиком, а если нет и
-// его – кнопка открывает заявку (пустой каталог показывать незачем).
+// Плашки типов: показываем только те, под которые в каталоге есть машины
+// этого направления. Пустая плашка вела в каталог, где ничего нет, –
+// в Корее так висели «Электромобили» и «Гибриды», которых у нас нет вовсе.
+// Ссылка открывает каталог с уже выбранным фильтром: страна плюс тип.
 const countrySlug = countries[direction.country].slug;
 const ownCars = cars.filter((c) => c.country === direction.country);
-const typeLink = (type: Direction['types'][number]) => {
-  if (!ownCars.length) return { href: '#final', label: 'Оставить заявку', lead: true };
-  const section = type.section === 'country' ? null : getSection(type.section);
-  const hit = ownCars.some(
-    (c) => (!section || section.match(c)) && (!type.powertrain || c.powertrain === type.powertrain),
-  );
-  const href = !hit
-    ? `/catalog/${countrySlug}/`
-    : section
+
+const typeCards = direction.types
+  .map((type) => {
+    const section = type.section === 'country' ? null : getSection(type.section);
+    const matched = ownCars.filter(
+      (c) =>
+        (!section || section.match(c)) &&
+        (!type.powertrain || c.powertrain === type.powertrain) &&
+        (type.condition !== 'new' || !isUsed(c)),
+    );
+    if (!matched.length) return null;
+    // Раздел страны уже сам по себе фильтр по стране – второй раз её не передаём.
+    const href = section
       ? `/catalog/${section.slug}/?country=${direction.country}`
       : `/catalog/${countrySlug}/${type.powertrain ? `?powertrain=${type.powertrain}` : ''}`;
-  return { href, label: 'Смотреть в каталоге', lead: false };
+    return { ...type, href, count: matched.length };
+  })
+  .filter((t): t is NonNullable<typeof t> => t !== null);
+
+// Склонение для подписи на кнопке: «7 автомобилей», «1 автомобиль».
+const carWord = (n: number) => {
+  const t = n % 100;
+  if (t > 10 && t < 20) return 'автомобилей';
+  const o = n % 10;
+  return o === 1 ? 'автомобиль' : o >= 2 && o <= 4 ? 'автомобиля' : 'автомобилей';
 };
 
 const crumbs = [
@@ -114,26 +127,27 @@ const catalogHref = `/catalog/${countries[direction.country].slug}/`;
 
     <Cost />
 
-    <section class="section">
-      <div class="container">
-        <div class="sec-head">
-          <p class="kicker">[ Автомобили ]</p>
-          <h2 class="sec-head__title">{direction.typesTitle}</h2>
+    {typeCards.length > 0 && (
+      <section class="section">
+        <div class="container">
+          <div class="sec-head">
+            <p class="kicker">[ Автомобили ]</p>
+            <h2 class="sec-head__title">{direction.typesTitle}</h2>
+          </div>
+          <ul class="types">
+            {typeCards.map((type) => (
+              <li class="card type">
+                <h3 class="type__title">{type.title}</h3>
+                <p class="type__text">{type.text}</p>
+                <a class="btn btn--block type__cta" href={type.href}>
+                  Смотреть {type.count} {carWord(type.count)}
+                </a>
+              </li>
+            ))}
+          </ul>
         </div>
-        <ul class="types">
-          {direction.types.map((type) => (
-            <li class="card type">
-              <h3 class="type__title">{type.title}</h3>
-              <p class="type__text">{type.text}</p>
-              {(() => {
-                const link = typeLink(type);
-                return <a class="btn btn--block type__cta" href={link.href} data-open={link.lead ? 'lead' : undefined}>{link.label}</a>;
-              })()}
-            </li>
-          ))}
-        </ul>
-      </div>
-    </section>
+      </section>
+    )}
 
     <section class="section">
       <div class="container">

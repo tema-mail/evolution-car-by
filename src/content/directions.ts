@@ -10,6 +10,9 @@ export interface CarType {
   section: string;
   /** фильтр по двигателю внутри раздела страны */
   powertrain?: string;
+  /** 'new' – только автомобили без пробега: иначе плашка «Новые автомобили»
+      считала все машины страны и висела там, где новых нет (Корея) */
+  condition?: 'new';
 }
 
 export interface Direction {
@@ -57,6 +60,7 @@ const USED_TYPES: CarType[] = [
     title: 'Новые автомобили',
     text: 'Модели текущего и прошлого годов выпуска без пробега по дорогам общего пользования.',
     section: 'country',
+    condition: 'new',
   },
   {
     title: 'Автомобили с пробегом',
