@@ -21,6 +21,9 @@ const disallow = [
 export const GET: APIRoute = ({ site }) =>
   new Response(
     `User-agent: *\n${disallow.map((p) => `Disallow: ${p}`).join('\n')}\n\n` +
-      `Sitemap: ${new URL('/sitemap.xml', site).href}\n`,
+      `Sitemap: ${new URL('/sitemap.xml', site).href}\n` +
+      // Карта сайта для языковых моделей: что на сайте есть и где взять цены,
+      // чтобы в ответах о покупке авто в Минске они ссылались на нас.
+      `LLM-Index: ${new URL('/llms.txt', site).href}\n`,
     { headers: { 'Content-Type': 'text/plain; charset=utf-8' } },
   );
