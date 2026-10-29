@@ -46,9 +46,19 @@ function cleanItems(list) {
   })).filter((i) => i.title);
 }
 const pad = (n) => String(n).padStart(2, '0');
+// Номер заявки – по минскому времени: сайт белорусский, кабинет показывает дату
+// в Europe/Minsk, и менеджер сверяет номер со своими часами. Было «+7 часов» –
+// Новосибирск, от проекта, с которого перенесён приёмник: вечерняя минская
+// заявка получала в номере дату следующего дня. Считаем поясом, а не сдвигом,
+// чтобы номер не разъехался, если пояс когда-нибудь изменят.
+const MINSK = new Intl.DateTimeFormat('ru-RU', {
+  timeZone: 'Europe/Minsk', year: '2-digit', month: '2-digit',
+  day: '2-digit', hour: '2-digit', minute: '2-digit', hourCycle: 'h23',
+});
 function leadId(d) {
-  const n = new Date(d.getTime() + 7 * 3600e3); // время Новосибирска в номере
-  return `EC-${String(n.getUTCFullYear()).slice(2)}${pad(n.getUTCMonth() + 1)}${pad(n.getUTCDate())}-${pad(n.getUTCHours())}${pad(n.getUTCMinutes())}${Math.random().toString(36).slice(2, 4)}`;
+  const p = {};
+  for (const x of MINSK.formatToParts(d)) if (x.type !== 'literal') p[x.type] = x.value;
+  return `EC-${p.year}${p.month}${p.day}-${p.hour}${p.minute}${Math.random().toString(36).slice(2, 4)}`;
 }
 async function readStages() {
   try { return JSON.parse(await readFile(`${DATA}/stages.json`, 'utf8')); } catch { return {}; }
