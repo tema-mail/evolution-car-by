@@ -1,5 +1,6 @@
-"""Сбор разделов кабинета gaz-mag.ru (владелец 21.10.2026: «открыть ЛК все пункты, собрать актуальную информацию,
-сделать все срезы кроме нейросетей»). Модули сбора – копии TEYES (providers/, без правок); здесь только подмена
+"""Сбор разделов кабинета evolutioncar.by (владелец 21.10.2026: «открыть ЛК все пункты, собрать актуальную
+информацию, сделать все срезы кроме нейросетей»). Регион продвижения – Минск, Беларусь (src/content/site.ts,
+searchRegion): позиции снимаются для человека в этом городе, а не в городе проекта, с которого перенесён код. Модули сбора – копии TEYES (providers/, без правок); здесь только подмена
 констант сайта и выкладка файлов, которые отдаёт кабинету приёмник (server/lead.mjs, GET /api/admin/report/<раздел>).
 
 Режимы (python3 collect.py <режим>):
@@ -33,17 +34,34 @@ SECRETS = pathlib.Path(os.environ.get("SECRETS_DIR", HERE / "secrets"))
 # Ресурс Search Console. У Evolution Car подтверждён домен целиком (sc-domain:),
 # а не адрес с префиксом – у сервисного аккаунта на него siteFullUser.
 SITE_URL = os.environ.get("GSC_SITE_URL", "sc-domain:evolutioncar.by")
-DOMAIN = "gaz-mag.ru"
+# Наш домен: по нему снимок выдачи (xmlriver) ищет сайт в результатах поиска.
+# Был "gaz-mag.ru" – сборщик перенесли с того проекта и домен не поменяли.
+# Снимок выдачи ни разу не запускали (serp запускается руками, в daily его нет),
+# поэтому замеров чужого сайта в данных не осталось – проверено 29.10.2026.
+DOMAIN = "evolutioncar.by"
 # Счётчик Evolution Car «Эволюшн Привоз» (сайт evolutioncar.by, часовой пояс Europe/Minsk).
 mk.COUNTER = int(os.environ.get("METRIKA_COUNTER", "98499004"))
 # JS-цели сайта (src/lib/metrika.ts) → роли отчёта TEYES; номера целей берутся из счётчика по идентификатору
 GOAL_ROLES = [("lead", "Отправка формы", "lead"), ("phone", "Клик по телефону", "phone_click"),
               ("messenger", "Переход в мессенджер", "messenger_click"), ("purchase", "Заказ из корзины", "order")]
 gsc_mod.DOMAIN = xr_mod.DOMAIN = DOMAIN
-REGIONS = {0: "Все", 65: "Новосибирск"}
-BRAND = re.compile(r"газ[- ]?маг|gaz[- ]?mag|забабонова", re.I)
-DIRECTIONS = [("Установка и монтаж", r"установ|монтаж|подключ|под ключ"), ("Котлы", r"котел|котёл|котл|навьен|navien|hubert|очаг"),
-              ("Колонки, водонагреватели, бойлеры", r"колонк|водонагрев|бойлер"), ("Датчики, счётчики, дымоходы", r"счетчик|счётчик|датчик|дымоход")]
+# Подписи регионов в кабинете. 149 – Беларусь (analytics/phrases.json, регион
+# замера этого сайта); 0 – «Все», так Search Console отдаёт месяц: он не делит
+# запросы по городам. Код Минска отдельной строкой появится, когда подтвердим
+# его в кабинете Вебмастера – выдумывать номер нельзя, замер уйдёт в чужой город.
+REGIONS = {0: "Все страны и города", 149: "Беларусь"}
+BRAND = re.compile(r"эволюш[еи]?н[- ]?кар|evolution[- ]?car|эволюшнкар|evolutioncar", re.I)
+DIRECTIONS = [
+    ("Авто из Китая", r"кита|chery|chery|lixiang|li ?auto|ли ?авто|zeekr|зикр|voyah|вояж|avatr|аватр|xiaomi|сяоми|byd|бид|denza|дэнза|tank|танк|exeed|эксид|jetour|джетур|haval|хавал|geely|джили|lynk"),
+    ("Авто из Кореи", r"коре|kia|киа|hyundai|хюндай|хундай|genesis|генезис"),
+    ("Авто из Европы", r"европ|герман|bmw|бмв|audi|ауди|mercedes|мерседес|volkswagen|фольксваген|porsche|порше|skoda|шкода|volvo|вольво"),
+    ("Авто из США", r"сша|америк|tesla|тесла|ford|форд|chevrolet|шевроле|dodge|додж|jeep|джип"),
+    ("Авто из Японии", r"япон|toyota|тойот|lexus|лексус|nissan|ниссан|honda|хонда|mazda|мазда|subaru|субару|mitsubishi|мицубиси"),
+    ("Электромобили и гибриды", r"электро|электрокар|гибрид|ev\b|phev"),
+    ("Доставка и растаможка", r"растаможк|таможн|пошлин|доставк|привоз|пригон|под заказ|из[- ]за границ"),
+    ("Сервис после покупки", r"сервис|то\b|ремонт|обслуживан|гаранти|запчаст"),
+    ("Цена и подбор", r"цен|стоимост|купить|подбор|подобрат|в наличии|рассрочк|кредит|лизинг"),
+]
 MONTH_GAP = dt.timedelta(days=28)
 MAX_PAGES = 2  # топ-20, как в эталоне TEYES (экран «Позиции» считает топ-20)
 
@@ -218,10 +236,13 @@ def positions() -> None:
     groups: dict = {}
     for f in glob.glob(str(OUT / "months" / "*.json")):
         m = read(pathlib.Path(f))
-        if m and m["region"] in REGIONS:
+        if m:
             groups.setdefault((m["engine"], m["region"]), []).append(m)
+    # Регионы без подписи в REGIONS тоже показываем – month_view подпишет их
+    # как «регион N», и владелец увидит замер, а не пустой раздел.
     order = list(REGIONS)
-    months = [month_view(groups[k]) for k in sorted(groups, key=lambda k: (order.index(k[1]), k[0]))]
+    rank = lambda r: order.index(r) if r in order else len(order) + r
+    months = [month_view(groups[k]) for k in sorted(groups, key=lambda k: (rank(k[1]), k[0]))]
     write(OUT / "positions.json", {"nsk": region_view(), "months": months, "google": None, "yandex": None, "ai": None, "built_at": now()})
     print("positions: месяцев", len(months))
 

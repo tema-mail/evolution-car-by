@@ -1,11 +1,16 @@
 // «Позиции» кабинета Evolution Car – экран перенесён с TEYES Sibir (src/islands/admin/Positions.tsx, вид EV SIBIR) без вкладки
 // «Нейросети» (владелец 21.10.2026: «все срезы кроме нейросетей»). Данные – /api/admin/report/positions (analytics/collect.py):
-// за месяц (WmMonth.tsx) – Яндекс Вебмастер и Google Search Console; Яндекс и Google в Новосибирске – снимок выдачи XMLRiver.
+// за месяц (WmMonth.tsx) – Яндекс Вебмастер и Google Search Console; Яндекс и Google по городу проекта – снимок выдачи XMLRiver.
 import { useEffect, useMemo, useState } from 'preact/hooks';
 import WmMonth, { RARE, type View, type Wm } from './WmMonth';
 import { cls, dm, inTop, num, pos } from './posUtil';
 
 import { adminAuth } from './auth';
+// Город и страна продвижения – из данных проекта: экран перенесён с новосибирских
+// кабинетов, и город был вписан в тексты прямо. Белорусскому сайту подписывали
+// замер Новосибирском, хотя сайт работает в другой стране (владелец 29.10.2026).
+// Теперь подпись идёт из site.searchRegion, и город задаётся один раз на проект.
+import { searchRegion as reg } from '../../content/site';
 
 const API = '/api/admin/report/positions';
 type Engine = unknown; // поля google / yandex ответа (окна Search Console и архив Вебмастера) кабинет не читает – месяцы из months
@@ -25,7 +30,7 @@ const TOP3 = (CTR[1] + CTR[2] + CTR[3]) / 3; // цель – войти в то�
 const now = (r: NskRow, e: Eng) => Math.round((r.demand || 0) * ctr(r[e]?.position ?? null));
 const gain = (r: NskRow, e: Eng) => Math.max(0, Math.round((r.demand || 0) * TOP3) - now(r, e));
 
-/** Плашки по Новосибирску: только запросы, по которым есть замер. */
+/** Плашки по городу продвижения: только запросы, по которым есть замер. */
 function nskTiles(rows: NskRow[], e: Eng) {
   const got = rows.filter((r) => r[e]);
   const pos = got.map((r) => r[e]!.position).filter((p): p is number => p != null);
@@ -34,7 +39,7 @@ function nskTiles(rows: NskRow[], e: Eng) {
     demandTop3: got.filter((r) => r[e]!.position != null && r[e]!.position! <= 3).reduce((s, r) => s + (r.demand || 0), 0) };
 }
 
-/** Яндекс + Google вместе по Новосибирску – над переключателем «Яндекс / Google» (владелец 17.10). */
+/** Яндекс + Google вместе по городу продвижения – над переключателем «Яндекс / Google» (владелец 17.10). */
 function NskTotal({ n }: { n: Nsk }) {
   const y = nskTiles(n.rows, 'yandex'), g = nskTiles(n.rows, 'google');
   const sp = (a: string | number, b: string | number) => `Яндекс ${a} · Google ${b}`;
@@ -44,18 +49,18 @@ function NskTotal({ n }: { n: Nsk }) {
     ['В топ-3', num(y.top3 + g.top3), sp(num(y.top3), num(g.top3))],
     ['В топ-10', num(y.top10 + g.top10), sp(num(y.top10), num(g.top10))],
     ['Средняя позиция', pos(all.length ? all.reduce((a, b) => a + b, 0) / all.length : null), `по найденным в топ-20 · ${sp(pos(y.avg), pos(g.avg))}`],
-    ['Спрос по запросам из топ-3', num(y.demandTop3 + g.demandTop3), `в месяц в Новосибирске · ${sp(num(y.demandTop3), num(g.demandTop3))}`],
+    ['Спрос по запросам из топ-3', num(y.demandTop3 + g.demandTop3), `в месяц ${reg.locative} · ${sp(num(y.demandTop3), num(g.demandTop3))}`],
   ];
   return (
     <>
-      <p class="ps-muted" style="margin:0"><b>Новосибирск, Яндекс + Google вместе – снимок выдачи XMLRiver.</b> {n.measured_to ? `Замер ${dm(n.measured_from!)}${n.measured_from!.slice(0, 10) !== n.measured_to.slice(0, 10) ? ` – ${dm(n.measured_to)}` : ''}` : 'Замера ещё нет'} · выдача как у человека в Новосибирске, компьютер, топ-20.</p>
+      <p class="ps-muted" style="margin:0"><b>{reg.label}, Яндекс + Google вместе – снимок выдачи XMLRiver.</b> {n.measured_to ? `Замер ${dm(n.measured_from!)}${n.measured_from!.slice(0, 10) !== n.measured_to.slice(0, 10) ? ` – ${dm(n.measured_to)}` : ''}` : 'Замера ещё нет'} · выдача как у человека {reg.locative}, компьютер, топ-20.</p>
       <section class="ps-kpis">{kpi.map(([t, v, d]) => <div class="ps-kpi"><span class="ps-muted">{t}</span><b>{v}</b><span class="ps-d">{d}</span></div>)}</section>
     </>
   );
 }
 
 /** Главный счётчик: Яндекс + Google за месяц по региону; «Все» – первым, все запросы без фильтра по месту
- *  (владелец 18.10: «не вся Россия, просто все… Новосибирск будет считать их Новосибирск»). */
+ *  (владелец 18.10: «не вся страна, просто все… город будет считать их своими»). */
 function MonthTotal({ months }: { months: Month[] }) {
   const regions = [...new Map(months.map((m) => [m.region, m.name])).entries()];
   const [region, setRegion] = useState(regions[0]?.[0]);
@@ -102,7 +107,7 @@ function NskView({ n, e }: { n: Nsk; e: Eng }) {
   });
   const filters: [typeof only, string][] = [['all', 'Все'], ['near', 'Рядом с топом – подтянуть'], ['none', 'Спрос есть – нас нет'], ['top', 'Уже в топе – держать']];
   const HINT: Record<typeof only, string> = {
-    all: 'Все запросы со спросом в Новосибирске, по которым есть замер.',
+    all: `Все запросы со спросом ${reg.locative}, по которым есть замер.`,
     near: 'Места 4–20: страница уже в выдаче – подтянуть её до топ-3 быстрее всего. Сортировка – по прибавке людей.',
     none: 'Нас нет в топ-20: нужна своя страница под запрос или серьёзная доработка существующей.',
     top: 'Уже в топ-3: удерживать – не ломать страницу, обновлять цены и фото.',
@@ -160,7 +165,7 @@ export default function Positions() {
   }, []);
   return (
     <div class="ps">
-      <div class="ps-bar"><h1>Позиции в Новосибирске</h1></div>
+      <div class="ps-bar"><h1>Позиции {reg.locative}</h1></div>
       {err && <div class="ps-err">{err}</div>}
       {!d && !err && <p class="ps-muted">Загружаю…</p>}
       {d && (
@@ -171,7 +176,7 @@ export default function Positions() {
             {(['yandex', 'google'] as const).map((x) => <a href="#" class={eng === x ? 'on' : ''} onClick={(ev) => { ev.preventDefault(); setEng(x); }}>{ENG[x]}</a>)}
           </nav>
           <WmMonth key={eng} views={engineViews(d, eng)} />
-          <div class="ps-note">Снимок выдачи XMLRiver – в моменте, не за месяц. Место в выдаче {ENG[eng]} для человека в Новосибирске (XMLRiver, компьютер, первые 20 результатов) по запросам со спросом в Новосибирске. Цвет: синий – топ-3, зелёный – топ-10, светлый – 11–20. «Было» – замер не ближе месяца назад, недельные замеры не сравниваем. Маленькая цифра – сколько мест прибавили. Прогноз: спрос × доля кликов места (1-е – 28%, 3-е – 11%, 10-е – 2%, средние данные по рунету) – оценка, а не обещание.</div>
+          <div class="ps-note">Снимок выдачи XMLRiver – в моменте, не за месяц. Место в выдаче {ENG[eng]} для человека {reg.locative} (XMLRiver, компьютер, первые 20 результатов) по запросам со спросом {reg.locative}. Цвет: синий – топ-3, зелёный – топ-10, светлый – 11–20. «Было» – замер не ближе месяца назад, недельные замеры не сравниваем. Маленькая цифра – сколько мест прибавили. Прогноз: спрос × доля кликов места (1-е – 28%, 3-е – 11%, 10-е – 2%, средние данные по рунету) – оценка, а не обещание.</div>
           <NskView n={d.nsk} e={eng} />
         </>
       )}
