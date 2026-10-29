@@ -17,7 +17,10 @@ export interface Lead {
 const STAGES: Lead['stage'][] = ['новая', 'в работе', 'выполнена', 'отказ'];
 const STAGE_TITLE: Record<Lead['stage'], string> = { 'новая': 'Новые', 'в работе': 'В работе', 'выполнена': 'Выполнена', 'отказ': 'Отказ' };
 const dt = (s: string) => new Date(s).toLocaleString('ru-RU', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Minsk' });
-const rub = (n: number) => n.toLocaleString('ru-RU').replace(/[  ]/g, ' ') + ' ₽';
+// Цены сайта – в долларах (cars.priceUsd, formatUsd), вторая цена – BYN.
+// Рубля РФ здесь быть не может: сайт белорусский, а подпись «₽» у суммы
+// заявки выдавала доллары за рубли – цена машины расходилась в разы.
+const usd = (n: number) => n.toLocaleString('ru-RU').replace(/[  ]/g, ' ') + ' $';
 const goods = (l: Lead) => l.items.map((i) => `${i.title}${i.variant ? ` (${i.variant})` : ''}${i.qty > 1 ? ` × ${i.qty}` : ''}`).join(', ');
 const sum = (l: Lead) => l.items.reduce((s, i) => s + i.price * i.qty, 0);
 const STD = new Set(['Name', 'Phone', 'Email', 'Comment', 'Order', 'Total', 'Page']);
@@ -36,7 +39,7 @@ const auth = adminAuth;
 
 const leadsCsv = (rows: Lead[], cat: (s: string) => string) => {
   const q = (v: unknown) => `"${String(v ?? '').replace(/"/g, '""')}"`;
-  const head = ['номер', 'дата', 'имя', 'телефон', 'почта', 'форма', 'товары', 'категория', 'сумма', 'страница', 'этап', 'источник', 'комментарий'];
+  const head = ['номер', 'дата', 'имя', 'телефон', 'почта', 'форма', 'товары', 'категория', 'сумма, $', 'страница', 'этап', 'источник', 'комментарий'];
   const body = rows.map((l) => [l.id, dt(l.createdAt), l.name, l.phone, l.email ?? '', l.form, goods(l), cat(l.category), sum(l) || '', l.page, STAGE_TITLE[l.stage], l.source, l.message ?? ''].map(q).join(';'));
   return 'data:text/csv;charset=utf-8,' + encodeURIComponent('﻿' + [head.join(';'), ...body].join('\r\n'));
 };
@@ -89,7 +92,7 @@ function LeadsView({ leads, example, cats: catNames, onStage }: {
                 <article class={`kb__card${drag === l.id ? ' is-drag' : ''}`} draggable onDragStart={(e) => { e.dataTransfer?.setData('text/plain', l.id); setDrag(l.id); }} onDragEnd={() => setDrag(null)} onClick={() => setOpen(l)}>
                   <p class="kb__top"><b>№ {l.id}</b><span class="chip">{l.form}</span></p>
                   <p class="kb__who">{l.name} · {l.phone}</p>
-                  {l.items.length > 0 && <p class="kb__goods">{goods(l)}{sum(l) > 0 && <> · <b>{rub(sum(l))}</b></>}</p>}
+                  {l.items.length > 0 && <p class="kb__goods">{goods(l)}{sum(l) > 0 && <> · <b>{usd(sum(l))}</b></>}</p>}
                   {l.category && <p class="muted" style="font-size:12px">Категория: {catTitle(l.category)}</p>}
                   {l.message && <p>{l.message}</p>}
                   <p class="kb__meta"><span>{dt(l.createdAt)}</span><span class="muted">{l.source}</span></p>
@@ -120,7 +123,7 @@ function LeadsView({ leads, example, cats: catNames, onStage }: {
                 <tr><th>Имя</th><td>{open.name}</td></tr>
                 <tr><th>Телефон</th><td><a href={`tel:${open.phone.replace(/[^\d+]/g, '')}`}>{open.phone}</a></td></tr>
                 {open.email && <tr><th>Почта</th><td>{open.email}</td></tr>}
-                <tr><th>Товары</th><td>{goods(open) || 'без товара'}{sum(open) > 0 && ` · ${rub(sum(open))}`}</td></tr>
+                <tr><th>Товары</th><td>{goods(open) || 'без товара'}{sum(open) > 0 && ` · ${usd(sum(open))}`}</td></tr>
                 <tr><th>Категория</th><td>{catTitle(open.category) || '–'}</td></tr>
                 {open.message && <tr><th>Комментарий</th><td>{open.message}</td></tr>}
                 {(open.extra || []).map(([k, v]) => <tr><th>{k}</th><td>{v}</td></tr>)}
