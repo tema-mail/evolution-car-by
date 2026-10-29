@@ -1,10 +1,24 @@
 ---
-/** Кабинет → «Позиции в поиске». Данные живые: отчёт собирается на сервере
-    (analytics/collect.py) и приходит по /api/admin/report/positions после входа. */
+/** Кабинет → «Позиции в поиске». Раздел закрыт (владелец 29.10.2026): замеры
+    по региону проекта ещё не подключены, а показывать позиции, снятые для
+    другого города, – врать владельцу. Экран раздела готов и лежит рядом
+    (islands/admin/Positions.tsx): как только сборщик начнёт снимать выдачу
+    по городу из site.searchRegion, страница вернёт его вместо замка. */
 import Admin from '../../layouts/Admin.astro';
-import Positions from '../../islands/admin/Positions';
+import Locked from '../../components/admin/Locked.astro';
+import { searchRegion } from '../../content/site';
 ---
 
 <Admin title="Позиции в поиске" active="positions">
-  <Positions client:load />
+  <Locked
+    title={`Позиции в поиске (${searchRegion.label})`}
+    lead={`Замеры по городу проекта – ${searchRegion.city} – пока не подключены. Раздел собираем.`}
+    about={`Регион продвижения: ${searchRegion.city}, ${searchRegion.country}. При необходимости расширим на ${searchRegion.wider} – скажите, и поменяем. Что будет в разделе:`}
+    items={[
+      `Место сайта в Яндексе и Google по ключевым запросам – так, как видит человек ${searchRegion.locative}`,
+      'Сравнение с прошлым замером: где поднялись, где просели, на сколько мест',
+      'Спрос по каждому запросу и прогноз переходов с первых мест',
+      'Данные за месяц из Яндекс.Вебмастера и Google Search Console – показы, клики, средняя позиция',
+    ]}
+  />
 </Admin>
