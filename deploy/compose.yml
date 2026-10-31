@@ -27,6 +27,15 @@ services:
     working_dir: /app
     command: ["node", "lead.mjs"]
     env_file: [/opt/evolution-car/lead.env]
+    # Уведомления о заявках в Telegram молча не доходили: DNS отдаёт для
+    # api.telegram.org адреса IPv4 и IPv6, в сети контейнеров IPv6 не
+    # маршрутизируется, и fetch висел на нём до таймаута (ETIMEDOUT), хотя
+    # по IPv4 TLS проходит нормально. Одного порядка ipv4first не хватает:
+    # happy-eyeballs всё равно пробует IPv6 параллельно – поэтому его и
+    # отключаем. Проверено на сервере 01.11.2026: с одним флагом ETIMEDOUT,
+    # с двумя – ответ 200.
+    environment:
+      NODE_OPTIONS: "--dns-result-order=ipv4first --no-network-family-autoselection"
     volumes:
       - /opt/evolution-car/server:/app:ro
       - /opt/evolution-car/data:/data
