@@ -265,7 +265,10 @@ function message(lead) {
   lines[0] += ` · № ${lead.id}`;
   for (const k of Object.keys(LABELS)) if (f[k]) lines.push(`<b>${LABELS[k]}:</b> ${k === 'Order' ? '\n' : ''}${esc(f[k])}`);
   for (const [k, v] of Object.entries(f)) if (!LABELS[k] && v) lines.push(`<b>${esc(k)}:</b> ${esc(v)}`);
-  lines.push(`<i>${new Date(lead.at).toLocaleString('ru-RU', { timeZone: 'Asia/Novosibirsk' })} НСК</i>`);
+  // Время – минское: заявку читает менеджер в Минске, и подпись «НСК» с
+  // новосибирским часовым поясом врала на четыре часа вперёд. Номер заявки
+  // уже считается по Europe/Minsk (leadId), текст теперь тоже.
+  lines.push(`<i>${new Date(lead.at).toLocaleString('ru-RU', { timeZone: 'Europe/Minsk' })} Минск</i>`);
   return lines.join('\n');
 }
 
