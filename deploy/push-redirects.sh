@@ -14,7 +14,9 @@ SSH=(ssh -i "$KEY" -o BatchMode=yes "$HOST")
 
 [[ -f "$HERE/redirects.conf" ]] || { echo "нет $HERE/redirects.conf" >&2; exit 1; }
 
-echo "правил в файле: $(grep -c '^  ~\^' "$HERE/redirects.conf")"
+# Шаблоны стали регистронезависимыми (~*^), поэтому считаем по '~' без якоря:
+# прежний счётчик искал '~^' и после смены шаблона показывал ноль правил.
+echo "правил в файле: $(grep -c '^  ~' "$HERE/redirects.conf")"
 scp -i "$KEY" "$HERE/redirects.conf" "$HOST:/opt/evolution-car/deploy/redirects.conf"
 
 # Сначала проверка конфига, потом перечитывание: битый файл не должен
