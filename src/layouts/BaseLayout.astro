@@ -215,6 +215,9 @@ const b24Url = /^https:\/\/[a-z0-9.-]+\.bitrix24\.[a-z]{2,3}\/[A-Za-z0-9_/.-]+\.
     <meta name="keywords" content={keywords ? `${keywords}, ${BASE_KEYWORDS}` : BASE_KEYWORDS} />
     {noindex && <meta name="robots" content="noindex, nofollow" />}
     <link rel="canonical" href={canonicalUrl} />
+    {analytics.yandexVerification && (
+      <meta name="yandex-verification" content={analytics.yandexVerification} />
+    )}
 
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={site.brand} />
