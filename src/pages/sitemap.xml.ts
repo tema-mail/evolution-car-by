@@ -4,6 +4,7 @@ import { directions } from '../content/directions';
 import { legalPages } from '../content/pages';
 import { cities } from '../content/cities';
 import { allBrands } from '../content/brands';
+import { articles } from '../content/blog';
 
 const paths = [
   '/',
@@ -23,6 +24,10 @@ const paths = [
   // из списков машин и разделов, а эта страница стоит отдельно.
   '/lixiangl9/',
   '/catalog/',
+  // Блог: хаб и статьи. Без этого новые страницы попадут в индекс
+  // только случайным обходом – как было со всем новым сайтом.
+  '/blog/',
+  ...articles.map((a) => `/blog/${a.slug}/`),
   '/konfiguratory/',
   '/catalog/lixiang/l9/konfigurator/',
   '/catalog/lixiang/l8/konfigurator/',

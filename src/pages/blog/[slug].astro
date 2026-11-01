@@ -1,0 +1,336 @@
+---
+/** Страница статьи блога. Структура – стандарт владельца от 18.10.2026:
+    на десктопе справа содержание по H2 и призыв под ним, оба прилипают;
+    на телефоне содержание раскрывается, кнопка заявки закреплена внизу.
+    Ответ на главный вопрос – в первых предложениях: его забирают ИИ-ответы.
+    Разметка Article + FAQPage + BreadcrumbList. Дизайн – этого сайта. */
+import '../../styles/theme-v1.css';
+import '../../styles/islands.css';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/v1/Header.astro';
+import Footer from '../../components/v1/Footer.astro';
+import Breadcrumbs from '../../components/v1/Breadcrumbs.astro';
+import ModalHost from '../../components/islands/ModalHost';
+import { articles, readingTime, type BlogArticle } from '../../content/blog';
+import { site } from '../../content/site';
+import { abs } from '../../lib/seo';
+
+export function getStaticPaths() {
+  return articles.map((a) => ({ params: { slug: a.slug }, props: { a } }));
+}
+
+const { a } = Astro.props as { a: BlogArticle };
+const url = abs(`/blog/${a.slug}/`);
+const mins = readingTime(a);
+
+const crumbs = [
+  { name: 'Главная', href: '/' },
+  { name: 'Блог', href: '/blog/' },
+  { name: a.h1, href: `/blog/${a.slug}/` },
+];
+
+const dateRu = (iso: string) =>
+  new Date(iso).toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
+
+const articleLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: a.h1,
+  description: a.description,
+  datePublished: a.published,
+  dateModified: a.updated ?? a.published,
+  inLanguage: 'ru-BY',
+  mainEntityOfPage: { '@type': 'WebPage', '@id': url },
+  author: { '@type': 'Organization', name: site.brand, url: abs('/') },
+  publisher: {
+    '@type': 'Organization',
+    name: site.brand,
+    url: abs('/'),
+    logo: { '@type': 'ImageObject', url: abs('/favicon-512.png') },
+  },
+};
+
+const faqLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: a.faq.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+};
+
+const crumbsLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: crumbs.map((c, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    name: c.name,
+    item: abs(c.href),
+  })),
+};
+---
+
+<BaseLayout
+  theme="v1"
+  title={a.title}
+  description={a.description}
+  canonical={url}
+  jsonLd={[articleLd, faqLd, crumbsLd]}
+>
+  <Header />
+  <main class="art">
+    <div class="art__wrap">
+      <Breadcrumbs crumbs={crumbs} />
+
+      <div class="art__grid">
+        <article class="art__body">
+          <h1>{a.h1}</h1>
+          <p class="art__meta">
+            {dateRu(a.published)}
+            {a.updated && <> · обновлено {dateRu(a.updated)}</>}
+            {' · '}{mins} мин чтения
+          </p>
+
+          {/* Ответ на главный вопрос – сразу, до всего остального */}
+          <p class="art__answer">{a.answer}</p>
+
+          {/* Содержание на телефоне: раскрывается, у образца этого нет */}
+          <details class="art__toc-m">
+            <summary>Содержание статьи</summary>
+            <ol>
+              {a.sections.map((s) => <li><a href={`#${s.id}`}>{s.h2}</a></li>)}
+            </ol>
+          </details>
+
+          {/* Ранний призыв: человек с горячим вопросом не должен искать кнопку */}
+          <aside class="art__early">
+            <p>{a.cta.text}</p>
+            <button type="button" data-open="lead">
+              {a.cta.button}
+            </button>
+          </aside>
+
+          {a.sections.map((s) => (
+            <section class="art__sec" id={s.id}>
+              <h2>{s.h2}</h2>
+              {s.blocks.map((b) => {
+                if (b.t === 'p') return <p set:html={b.text} />;
+                if (b.t === 'h3') return <h3>{b.text}</h3>;
+                if (b.t === 'list')
+                  return <ul>{b.items.map((i) => <li set:html={i} />)}</ul>;
+                if (b.t === 'ol')
+                  return <ol class="art__steps">{b.items.map((i) => <li set:html={i} />)}</ol>;
+                if (b.t === 'note') return <p class="art__note" set:html={b.text} />;
+                if (b.t === 'facts')
+                  return (
+                    <div class="art__facts">
+                      {b.items.map((i) => (
+                        <div><b>{i.value}</b><span>{i.label}</span></div>
+                      ))}
+                    </div>
+                  );
+                return (
+                  <div class="art__tablewrap">
+                    <table>
+                      <thead><tr>{b.head.map((h) => <th set:html={h} />)}</tr></thead>
+                      <tbody>
+                        {b.rows.map((r) => <tr>{r.map((c) => <td set:html={c} />)}</tr>)}
+                      </tbody>
+                    </table>
+                    {b.caption && <p class="art__cap" set:html={b.caption} />}
+                  </div>
+                );
+              })}
+            </section>
+          ))}
+
+          <section class="art__sec" id="faq">
+            <h2>Частые вопросы</h2>
+            {a.faq.map((f) => (
+              <details class="art__faq">
+                <summary>{f.q}</summary>
+                <p set:html={f.a} />
+              </details>
+            ))}
+          </section>
+
+          <section class="art__sec" id="next">
+            <h2>Следующий шаг</h2>
+            <div class="art__cta-b">
+              <p><b>{a.cta.title}</b></p>
+              <p>{a.cta.text}</p>
+              <button type="button" data-open="lead">
+                {a.cta.button}
+              </button>
+              <p class="art__phone">
+                Или позвоните: <a href={site.phoneHref}>{site.phone}</a>, {site.hoursShort.toLowerCase()}
+              </p>
+            </div>
+          </section>
+
+          <section class="art__sec" id="links">
+            <h2>Что посмотреть дальше</h2>
+            <ul class="art__links">
+              {a.links.map((l) => (
+                <li>
+                  <a href={l.href}>{l.label}</a>
+                  {l.note && <span> – {l.note}</span>}
+                </li>
+              ))}
+            </ul>
+          </section>
+
+          {a.sources && a.sources.length > 0 && (
+            <section class="art__sec" id="sources">
+              <h2>Источники</h2>
+              <p class="art__cap">
+                Цифры в статье – из официальных документов и сообщений ведомств.
+                Правила меняются: перед сделкой мы сверяем ставки заново.
+              </p>
+              <ul class="art__links">
+                {a.sources.map((s) => (
+                  <li>
+                    <a href={s.href} target="_blank" rel="noopener nofollow">{s.label}</a>
+                    <span> – проверено {s.checked}</span>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
+        </article>
+
+        {/* Колонка справа: содержание и призыв, прилипают при прокрутке */}
+        <aside class="art__side">
+          <div class="art__sticky">
+            <nav class="art__toc" aria-label="Содержание статьи">
+              <p class="art__toc-t">Содержание</p>
+              <ol>
+                {a.sections.map((s) => <li><a href={`#${s.id}`}>{s.h2}</a></li>)}
+                <li><a href="#faq">Частые вопросы</a></li>
+              </ol>
+            </nav>
+            <div class="art__cta">
+              <p class="art__cta-t">{a.cta.title}</p>
+              <p>{a.cta.text}</p>
+              <button type="button" data-open="lead">
+                {a.cta.button}
+              </button>
+              <a class="art__cta-tel" href={site.phoneHref}>{site.phone}</a>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </div>
+
+    {/* Телефон: кнопка заявки закреплена внизу экрана */}
+    <div class="art__bar">
+      <button type="button" data-open="lead">
+        {a.cta.button}
+      </button>
+      <a href={site.phoneHref} aria-label="Позвонить">Позвонить</a>
+    </div>
+  </main>
+  <Footer />
+  <ModalHost client:load />
+</BaseLayout>
+
+<style>
+  .art__wrap { max-width: 1180px; margin: 0 auto; padding: 0 16px 64px; }
+  .art__grid { display: grid; gap: 40px; grid-template-columns: minmax(0, 1fr); }
+  .art__body { min-width: 0; }
+  .art__body h1 { font-size: clamp(26px, 4vw, 42px); line-height: 1.15; margin: 8px 0 12px; }
+  .art__meta { color: var(--muted, #8b8f98); font-size: 14px; margin: 0 0 20px; }
+
+  /* Ответ на главный вопрос: его читает и человек, и ИИ-ответ */
+  .art__answer {
+    font-size: clamp(17px, 2vw, 20px); line-height: 1.55; font-weight: 500;
+    border-left: 3px solid var(--accent, #c9a227); padding: 2px 0 2px 16px; margin: 0 0 24px;
+  }
+
+  .art__sec { margin: 36px 0 0; scroll-margin-top: 90px; }
+  .art__sec h2 { font-size: clamp(21px, 2.6vw, 28px); line-height: 1.25; margin: 0 0 14px; }
+  .art__sec h3 { font-size: clamp(17px, 2vw, 20px); margin: 22px 0 8px; }
+  .art__sec p { line-height: 1.7; margin: 0 0 14px; }
+  .art__sec ul, .art__sec ol { line-height: 1.7; padding-left: 22px; margin: 0 0 14px; }
+  .art__sec li { margin: 0 0 8px; }
+  .art__steps li { margin: 0 0 12px; }
+
+  .art__note {
+    background: rgba(201, 162, 39, .08); border: 1px solid rgba(201, 162, 39, .3);
+    border-radius: 10px; padding: 12px 14px; font-size: 15px;
+  }
+
+  .art__facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin: 0 0 18px; }
+  .art__facts div { background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.08); border-radius: 12px; padding: 14px; }
+  .art__facts b { display: block; font-size: 22px; line-height: 1.1; margin-bottom: 4px; }
+  .art__facts span { font-size: 13px; color: var(--muted, #8b8f98); }
+
+  .art__tablewrap { overflow-x: auto; margin: 0 0 16px; }
+  .art__tablewrap table { width: 100%; border-collapse: collapse; font-size: 15px; min-width: 420px; }
+  .art__tablewrap th, .art__tablewrap td { text-align: left; padding: 10px 12px; border-bottom: 1px solid rgba(255,255,255,.1); }
+  .art__tablewrap th { font-weight: 600; white-space: nowrap; }
+  .art__cap { font-size: 13px; color: var(--muted, #8b8f98); }
+
+  .art__faq { border-bottom: 1px solid rgba(255,255,255,.1); padding: 12px 0; }
+  .art__faq summary { cursor: pointer; font-weight: 500; font-size: 17px; }
+  .art__faq p { margin: 10px 0 0; }
+
+  .art__links { list-style: none; padding: 0; }
+  .art__links li { margin: 0 0 10px; }
+  .art__links a { font-weight: 500; }
+  .art__links span { color: var(--muted, #8b8f98); font-size: 15px; }
+
+  /* Ранний призыв и блок внизу текста */
+  .art__early, .art__cta-b {
+    background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.1);
+    border-radius: 14px; padding: 16px 18px; margin: 0 0 8px;
+  }
+  .art__early p, .art__cta-b p { margin: 0 0 12px; line-height: 1.6; }
+  .art__early button, .art__cta-b button, .art__cta button, .art__bar button {
+    background: var(--accent, #c9a227); color: #11131a; border: 0; border-radius: 10px;
+    padding: 12px 18px; font: inherit; font-weight: 600; cursor: pointer;
+  }
+  .art__phone { font-size: 15px; margin: 12px 0 0 !important; }
+
+  /* Содержание на телефоне */
+  .art__toc-m { margin: 0 0 20px; border: 1px solid rgba(255,255,255,.1); border-radius: 12px; padding: 12px 14px; }
+  .art__toc-m summary { cursor: pointer; font-weight: 500; }
+  .art__toc-m ol { margin: 12px 0 0; padding-left: 20px; line-height: 1.6; }
+
+  /* Липкая панель на телефоне */
+  .art__bar {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 40;
+    display: flex; gap: 10px; align-items: center; justify-content: center;
+    padding: 10px 14px calc(10px + env(safe-area-inset-bottom));
+    background: rgba(17,19,26,.92); backdrop-filter: blur(8px);
+    border-top: 1px solid rgba(255,255,255,.12);
+  }
+  .art__bar button { flex: 1 1 auto; max-width: 320px; }
+  .art__bar a { font-size: 15px; white-space: nowrap; padding: 0 6px; }
+
+  .art__side { display: none; }
+
+  @media (min-width: 1000px) {
+    .art__grid { grid-template-columns: minmax(0, 1fr) 320px; }
+    .art__side { display: block; }
+    .art__sticky { position: sticky; top: 24px; display: grid; gap: 16px; }
+    .art__toc, .art__cta { border: 1px solid rgba(255,255,255,.1); border-radius: 14px; padding: 16px; }
+    .art__toc-t, .art__cta-t { font-weight: 600; margin: 0 0 10px; }
+    .art__toc ol { margin: 0; padding-left: 20px; font-size: 15px; line-height: 1.5; }
+    .art__toc li { margin: 0 0 8px; }
+    .art__cta { background: rgba(255,255,255,.04); }
+    .art__cta p { font-size: 15px; line-height: 1.6; margin: 0 0 12px; }
+    .art__cta button { width: 100%; }
+    .art__cta-tel { display: block; text-align: center; margin-top: 10px; font-weight: 500; }
+    .art__toc-m, .art__bar { display: none; }
+    /* Липкой панели нет – внизу страницы остаётся только отступ под контент */
+    .art__wrap { padding-bottom: 64px; }
+  }
+
+  @media (max-width: 999px) {
+    /* чтобы липкая панель не закрывала последние строки */
+    .art__wrap { padding-bottom: 96px; }
+  }
+</style>

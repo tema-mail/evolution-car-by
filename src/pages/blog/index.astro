@@ -1,0 +1,126 @@
+---
+/** Хаб блога: список статей. Из него ведут ссылки на статьи, обратно –
+    хлебные крошки каждой статьи. Разметка Blog + BreadcrumbList. */
+import '../../styles/theme-v1.css';
+import '../../styles/islands.css';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/v1/Header.astro';
+import Footer from '../../components/v1/Footer.astro';
+import Breadcrumbs from '../../components/v1/Breadcrumbs.astro';
+import ModalHost from '../../components/islands/ModalHost';
+import { articles, blogHub, readingTime } from '../../content/blog';
+import { site } from '../../content/site';
+import { abs } from '../../lib/seo';
+
+const crumbs = [
+  { name: 'Главная', href: '/' },
+  { name: 'Блог', href: '/blog/' },
+];
+
+const dateRu = (iso: string) =>
+  new Date(iso).toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
+
+const blogLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Blog',
+  name: blogHub.h1,
+  description: blogHub.description,
+  url: abs('/blog/'),
+  inLanguage: 'ru-BY',
+  publisher: { '@type': 'Organization', name: site.brand, url: abs('/') },
+  blogPost: articles.map((a) => ({
+    '@type': 'BlogPosting',
+    headline: a.h1,
+    description: a.description,
+    datePublished: a.published,
+    url: abs(`/blog/${a.slug}/`),
+  })),
+};
+
+const crumbsLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: crumbs.map((c, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    name: c.name,
+    item: abs(c.href),
+  })),
+};
+---
+
+<BaseLayout
+  theme="v1"
+  title={blogHub.title}
+  description={blogHub.description}
+  canonical={abs('/blog/')}
+  jsonLd={[blogLd, crumbsLd]}
+>
+  <Header />
+  <main class="hub">
+    <div class="hub__wrap">
+      <Breadcrumbs crumbs={crumbs} />
+      <h1>{blogHub.h1}</h1>
+      <p class="hub__lead">{blogHub.lead}</p>
+
+      <ul class="hub__list">
+        {
+          articles.map((a) => (
+            <li class="hub__item">
+              <a class="hub__link" href={`/blog/${a.slug}/`}>
+                <h2>{a.h1}</h2>
+                <p class="hub__ans">{a.answer}</p>
+                <p class="hub__meta">
+                  {dateRu(a.published)} · {readingTime(a)} мин чтения
+                </p>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+
+      <section class="hub__cta">
+        <p><b>Не нашли ответ на свой вопрос?</b></p>
+        <p>
+          Спросите напрямую – ответим по вашей ситуации и посчитаем конкретную машину.
+          Расчёт бесплатный.
+        </p>
+        <button type="button" data-open="lead">Задать вопрос</button>
+        <p class="hub__phone">
+          Или позвоните: <a href={site.phoneHref}>{site.phone}</a>, {site.hoursShort.toLowerCase()}
+        </p>
+      </section>
+    </div>
+  </main>
+  <Footer />
+  <ModalHost client:load />
+</BaseLayout>
+
+<style>
+  .hub__wrap { max-width: 900px; margin: 0 auto; padding: 0 16px 64px; }
+  .hub__wrap h1 { font-size: clamp(26px, 4vw, 42px); line-height: 1.15; margin: 8px 0 12px; }
+  .hub__lead { font-size: clamp(16px, 2vw, 19px); line-height: 1.6; color: var(--muted, #8b8f98); margin: 0 0 32px; }
+
+  .hub__list { list-style: none; padding: 0; margin: 0; display: grid; gap: 16px; }
+  .hub__item { margin: 0; }
+  .hub__link {
+    display: block; text-decoration: none; color: inherit;
+    border: 1px solid rgba(255,255,255,.1); border-radius: 14px; padding: 18px 20px;
+    transition: border-color .15s ease, background .15s ease;
+  }
+  .hub__link:hover { border-color: rgba(201,162,39,.5); background: rgba(255,255,255,.03); }
+  .hub__link h2 { font-size: clamp(18px, 2.4vw, 23px); line-height: 1.3; margin: 0 0 10px; }
+  .hub__ans { line-height: 1.6; margin: 0 0 10px; font-size: 15px; }
+  .hub__meta { font-size: 13px; color: var(--muted, #8b8f98); margin: 0; }
+
+  .hub__cta {
+    margin: 32px 0 0; background: rgba(255,255,255,.04);
+    border: 1px solid rgba(255,255,255,.1); border-radius: 14px; padding: 20px;
+  }
+  .hub__cta p { margin: 0 0 12px; line-height: 1.6; }
+  .hub__cta button {
+    background: var(--accent, #c9a227); color: #11131a; border: 0; border-radius: 10px;
+    padding: 12px 18px; font: inherit; font-weight: 600; cursor: pointer;
+  }
+  .hub__phone { font-size: 15px; margin: 14px 0 0 !important; }
+</style>

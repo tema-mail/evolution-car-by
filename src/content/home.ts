@@ -193,6 +193,7 @@ export const footer = {
     ] },
     { title: 'Компания', links: [
       { label: 'О компании', href: '/about/' },
+      { label: 'Блог', href: '/blog/' },
       { label: 'Пригнанные авто', href: '/portfolio/' },
       { label: 'Отзывы', href: '/rew/' },
       { label: 'Партнёрам', href: '/partneram/' },
