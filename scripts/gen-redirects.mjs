@@ -88,12 +88,19 @@ if (format === 'nginx') {
     .join('\n');
   process.stdout.write(`${head1}map $uri $redirect_target {\n  default "";\n${body}\n}\n`);
 } else {
-  // (?i) – то же, что ~* у nginx: без учёта регистра. В индексе Яндекса
-  // остались адреса старого сайта в разном написании (/BYD и /byd), и
-  // 01.11.2026 одиннадцать таких адресов отдавали 404 вместо 301, пока
-  // правила были регистрозависимыми.
+  // Правила через mod_rewrite, а не RedirectMatch: цель задаём абсолютным
+  // адресом со схемой https. Проверено на хостинге 02.11.2026 – RedirectMatch
+  // строит адрес по схеме запроса, а Apache за терминацией SSL видит http,
+  // и /byd уводил на http://evolutioncar.by/catalog/byd/, то есть добавлял
+  // лишний переход http → https на каждом старом адресе.
+  // NC – без учёта регистра: в индексе Яндекса остались адреса старого сайта
+  // в разном написании (/BYD и /byd), и 01.11.2026 одиннадцать таких адресов
+  // отдавали 404 вместо 301, пока правила были регистрозависимыми.
   const body = rules
-    .map(([from, to]) => `RedirectMatch 301 (?i)^${from.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}/?$ ${to}`)
+    .map(([from, to]) => {
+      const path = from.replace(/^\//, '').replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      return `  RewriteRule ^${path}/?$ https://evolutioncar.by${to} [R=301,L,NC]`;
+    })
     .join('\n');
 
   // Остальное – перенос deploy/nginx.conf на Apache. На виртуальном хостинге
@@ -134,13 +141,19 @@ DirectoryIndex index.html
   # Смотрим исходный запрос, а не текущий путь: DirectoryIndex сам подставляет
   # index.html внутри сервера, и по пути правило зациклилось бы.
   RewriteCond %{THE_REQUEST} \\s/+(.*/)?index\\.html[\\s?] [NC]
-  RewriteRule ^ /%1 [R=301,L]
-</IfModule>
+  RewriteRule ^ https://evolutioncar.by/%1 [R=301,L]
 
-# Старые адреса Тильды – 301 на новый. Длинные правила раньше коротких:
-# /byd_han_l_ev не должен перехватываться коротким /byd.
-<IfModule mod_alias.c>
+  # Старые адреса Тильды – 301 на новый. Длинные правила раньше коротких:
+  # /byd_han_l_ev не должен перехватываться коротким /byd.
 ${body}
+
+  # Каталог без слеша на конце – 301 на адрес со слешем, как в canonical.
+  # Своим правилом, а не встроенным DirectorySlash: тот строит адрес по схеме
+  # запроса, и за терминацией SSL /lixiangl9 уводил на http. Стоит последним:
+  # сначала должны отработать правила старых адресов выше.
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteCond %{REQUEST_URI} !/$
+  RewriteRule ^(.+)$ https://evolutioncar.by/$1/ [R=301,L]
 </IfModule>
 
 ErrorDocument 404 /404.html
