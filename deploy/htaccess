@@ -17,6 +17,17 @@ DirectoryIndex index.html
 <IfModule mod_rewrite.c>
   RewriteEngine On
 
+  # Проверка Let's Encrypt идёт по http на /.well-known/acme-challenge/ и
+  # должна отдаваться как есть: ниже стоит редирект на https, а пока
+  # сертификата нет, он уводил бы проверку на недоверенное соединение.
+  RewriteRule ^\.well-known/acme-challenge/ - [L]
+
+  # Приём заявок: оба адреса ведёт один скрипт server/lead.php, залитый в
+  # api/lead.php. На Бегете это был сервис на Node, но на виртуальном хостинге
+  # Node в системе нет, поэтому приёмник переписан на PHP. Правило стоит выше
+  # редиректов, иначе /api/lead попал бы под общие правила.
+  RewriteRule ^api/(lead|ev|health)/?$ /api/lead.php [L,QSA]
+
   # http → https кодом 301, и www → без www: canonical у всех страниц без www.
   # Именно 301, не 308: Caddy на прежнем VPS отдавал 308, и Яндекс не склеивал
   # зеркала – проверено на 19 сайтах 30.10.2026. На хостинге за прокси сам
