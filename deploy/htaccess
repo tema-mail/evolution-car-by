@@ -1,0 +1,349 @@
+# Сгенерировано scripts/gen-redirects.mjs из docs/seo-migration/karta-migracii.csv (2026-11-02).
+# Правил: 282. Руками не править – правь карту и перегенерируй.
+# Повторяет deploy/nginx.conf: зеркала, редиректы, чистые адреса, 404,
+# кэш и сжатие. Генерируется – руками не править.
+
+Options -Indexes
+DirectoryIndex index.html
+
+# Сам этот файл наружу не отдаём. Проверено 02.11.2026 на Apache 2.4: без
+# этого правила /.htaccess открывается кодом 200, то есть карта всех старых
+# адресов сайта и адрес кабинета доступны любому. Хостинг закрывает это в
+# своём конфиге, но полагаться на чужую настройку нельзя.
+<FilesMatch "^\.ht">
+  Require all denied
+</FilesMatch>
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # http → https кодом 301, и www → без www: canonical у всех страниц без www.
+  # Именно 301, не 308: Caddy на прежнем VPS отдавал 308, и Яндекс не склеивал
+  # зеркала – проверено на 19 сайтах 30.10.2026. На хостинге за прокси сам
+  # запрос приходит по http, поэтому смотрим ещё и X-Forwarded-Proto.
+  RewriteCond %{HTTPS} !=on
+  RewriteCond %{HTTP:X-Forwarded-Proto} !https
+  RewriteRule ^ https://evolutioncar.by%{REQUEST_URI} [R=301,L]
+  RewriteCond %{HTTP_HOST} ^www\. [NC]
+  RewriteRule ^ https://evolutioncar.by%{REQUEST_URI} [R=301,L]
+
+  # Кабинет переехал на свой поддомен (правило владельца 28.10.2026).
+  # Запрос с самого поддомена не трогаем – там этот же каталог, иначе петля.
+  RewriteCond %{HTTP_HOST} !^admin\. [NC]
+  RewriteRule ^admin(/.*)?$ https://admin.evolutioncar.by$1 [R=301,L]
+
+  # …/index.html → чистый адрес: иначе в индексе два адреса одной страницы.
+  # Смотрим исходный запрос, а не текущий путь: DirectoryIndex сам подставляет
+  # index.html внутри сервера, и по пути правило зациклилось бы.
+  RewriteCond %{THE_REQUEST} \s/+(.*/)?index\.html[\s?] [NC]
+  RewriteRule ^ /%1 [R=301,L]
+</IfModule>
+
+# Старые адреса Тильды – 301 на новый. Длинные правила раньше коротких:
+# /byd_han_l_ev не должен перехватываться коротким /byd.
+<IfModule mod_alias.c>
+RedirectMatch 301 (?i)^/tproduct/493318634052-byd-qin-plus-honor-edition-2024/?$ /catalog/
+RedirectMatch 301 (?i)^/tproduct/266577502752-byd-yuan-plus-champion-edition/?$ /catalog/
+RedirectMatch 301 (?i)^/tproduct/989543793572-nissan-x-trail-e-power/?$ /catalog/nissan/x-trail-e-power-top/
+RedirectMatch 301 (?i)^/tproduct/545239578402-zeekr-001-2024-model/?$ /catalog/
+RedirectMatch 301 (?i)^/tproduct/275550866292-volkswagen-id4-crozz/?$ /catalog/volkswagen/id-4-crozz/
+RedirectMatch 301 (?i)^/tproduct/403044306182-volkswagen-id6-crozz/?$ /catalog/volkswagen/id6-crozz/
+RedirectMatch 301 (?i)^/tproduct/848301847172-changan-deepal-s7/?$ /catalog/
+RedirectMatch 301 (?i)^/tproduct/273409752432-byd-sea-lion-2024/?$ /catalog/byd/
+RedirectMatch 301 (?i)^/tproduct/590468505212-lynkampco-09-2024/?$ /catalog/lynk-co/900-lynk-co-09/
+RedirectMatch 301 (?i)^/tproduct/983990031842-byd-yuan-up-2024/?$ /catalog/
+RedirectMatch 301 (?i)^/tproduct/209875847302-lixiang-l6-2024/?$ /catalog/
+RedirectMatch 301 (?i)^/tproduct/318864275912-lixiang-l8-2024/?$ /catalog/lixiang/l8/
+RedirectMatch 301 (?i)^/tproduct/366733435472-geely-galaxy-l7/?$ /catalog/geely/galaxy-l7/
+RedirectMatch 301 (?i)^/tproduct/526507563202-voyah-free-2024/?$ /catalog/voyah/free/
+RedirectMatch 301 (?i)^/tproduct/679829534452-lixiang-l9-2024/?$ /catalog/lixiang/l9/
+RedirectMatch 301 (?i)^/tproduct/746988093342-lixiang-l7-2024/?$ /catalog/lixiang/l7/
+RedirectMatch 301 (?i)^/tproduct/849601316292-hyndai-elantra/?$ /catalog/hyundai/elantra/
+RedirectMatch 301 (?i)^/tproduct/867288600372-geely-boyue-l/?$ /catalog/
+RedirectMatch 301 (?i)^/tproduct/188547184072-byd-song-plus/?$ /catalog/
+RedirectMatch 301 (?i)^/tproduct/132573848502-voyah-dreamer/?$ /catalog/voyah/dreamer/
+RedirectMatch 301 (?i)^/tproduct/159258327962-geely-monjaro/?$ /catalog/geely/monjaro/
+RedirectMatch 301 (?i)^/tproduct/408674741982-changan-uni-k/?$ /catalog/changan/
+RedirectMatch 301 (?i)^/tproduct/497531116562-tesla-model-y/?$ /catalog/tesla/model-y/
+RedirectMatch 301 (?i)^/tproduct/518903446192-avatr-12-2025/?$ /catalog/avatr/12/
+RedirectMatch 301 (?i)^/tproduct/695297582222-voyah-passion/?$ /catalog/voyah/passion/
+RedirectMatch 301 (?i)^/tproduct/745101738802-leapmotor-c11/?$ /catalog/leapmotor/c11/
+RedirectMatch 301 (?i)^/tproduct/832568805222-changan-uni-t/?$ /catalog/changan/
+RedirectMatch 301 (?i)^/tproduct/863984906132-changan-uni-v/?$ /catalog/changan/uni-v/
+RedirectMatch 301 (?i)^/tproduct/864880578862-tesla-model-3/?$ /catalog/tesla/model-3/
+RedirectMatch 301 (?i)^/tproduct/672738793842-byd-tang-ev/?$ /catalog/
+RedirectMatch 301 (?i)^/avto-s-probegom-iz-kitaya-katalog/?$ /catalog/
+RedirectMatch 301 (?i)^/tproduct/700044617732-denza-z9-gt/?$ /catalog/
+RedirectMatch 301 (?i)^/tproduct/414682521672-yangwang-u8/?$ /catalog/yangwang/u8/
+RedirectMatch 301 (?i)^/tproduct/530822021362-toyota-bz4x/?$ /catalog/toyota/bz4x/
+RedirectMatch 301 (?i)^/tproduct/572630727352-lixiang-l7/?$ /catalog/
+RedirectMatch 301 (?i)^/tproduct/994294163322-xiaomi-su7/?$ /catalog/
+RedirectMatch 301 (?i)^/tproduct/803353547692-lixiang-l9/?$ /catalog/
+RedirectMatch 301 (?i)^/tproduct/389184842182-polestar-4/?$ /catalog/
+RedirectMatch 301 (?i)^/bydyuanpluschampionedition-33787/?$ /catalog/byd/yuan-plus-chapmion-edition/
+RedirectMatch 301 (?i)^/jetourdashengplug-inhibrid-18027/?$ /catalog/jetour/dashing-phev/
+RedirectMatch 301 (?i)^/tproduct/222178120412-geely-cool/?$ /catalog/geely/coolray/
+RedirectMatch 301 (?i)^/tproduct/482866331632-lixiang-l8/?$ /catalog/lixiang/l8/
+RedirectMatch 301 (?i)^/tproduct/728215292112-byd-song-l/?$ /catalog/byd/song-l/
+RedirectMatch 301 (?i)^/tproduct/324708093212-zeekr-007/?$ /catalog/zeekr/007/
+RedirectMatch 301 (?i)^/tproduct/379663522022-zeekr-001/?$ /catalog/zeekr/001/
+RedirectMatch 301 (?i)^/tproduct/430712166332-zeekr-009/?$ /catalog/zeekr/009/
+RedirectMatch 301 (?i)^/tproduct/739377043182-zeekr-7x/?$ /catalog/
+RedirectMatch 301 (?i)^/tproduct/244350360162-avatr-11/?$ /catalog/avatr/11/
+RedirectMatch 301 (?i)^/tproduct/451578769202-avatr-12/?$ /catalog/avatr/12/
+RedirectMatch 301 (?i)^/tproduct/915752496692-byd-seal/?$ /catalog/byd/seal/
+RedirectMatch 301 (?i)^/tproduct/713015369652-kia-ev5/?$ /catalog/
+RedirectMatch 301 (?i)^/nissanx-traile-powertop-50895/?$ /catalog/nissan/x-trail-e-power-top/
+RedirectMatch 301 (?i)^/tproduct/336729518832-byd-han/?$ /catalog/byd/han/
+RedirectMatch 301 (?i)^/tproduct/824715941572-zeekr-x/?$ /catalog/zeekr/x/
+RedirectMatch 301 (?i)^/tproduct/963459563622-aito-m9/?$ /catalog/aito/m9/
+RedirectMatch 301 (?i)^/evolutioncar\.by/geelycoolray/?$ /catalog/
+RedirectMatch 301 (?i)^/kupit-elektromobil-v-minske/?$ /catalog/elektromobili/
+RedirectMatch 301 (?i)^/bydyuanpluschampionedition/?$ /catalog/byd/yuan-plus-chapmion-edition/
+RedirectMatch 301 (?i)^/jetourdashengplug-inhibrid/?$ /catalog/jetour/dashing-phev/
+RedirectMatch 301 (?i)^/avto-iz-kitaya-s-probegom/?$ /catalog/
+RedirectMatch 301 (?i)^/bydsealion07ev2024-62927/?$ /catalog/byd/sea-lion-07/
+RedirectMatch 301 (?i)^/lixiangl62024model-29184/?$ /catalog/lixiang/l6/
+RedirectMatch 301 (?i)^/nissanx-traile-powertop/?$ /catalog/nissan/x-trail-e-power-top/
+RedirectMatch 301 (?i)^/hyndaielantra2024-17796/?$ /catalog/hyundai/elantra/
+RedirectMatch 301 (?i)^/zeekr0012024model-84773/?$ /catalog/zeekr/001/
+RedirectMatch 301 (?i)^/changanuni-k2024-79967/?$ /catalog/changan/
+RedirectMatch 301 (?i)^/changanuni-t2024-12175/?$ /catalog/changan/
+RedirectMatch 301 (?i)^/changandeepals7-95028/?$ /catalog/deepal/s07/
+RedirectMatch 301 (?i)^/geelygeometrye-31522/?$ /catalog/geely/
+RedirectMatch 301 (?i)^/geelygeometryc-10231/?$ /catalog/geely/geometry-c/
+RedirectMatch 301 (?i)^/bydqinplushono-78212/?$ /catalog/byd/qin-plus-ev/
+RedirectMatch 301 (?i)^/novye-avto-iz-kitaya/?$ /catalog/
+RedirectMatch 301 (?i)^/fawbestunenat-85658/?$ /catalog/faw/bestune-nat/
+RedirectMatch 301 (?i)^/geelygalaxyl7-76256/?$ /catalog/geely/galaxy-l7/
+RedirectMatch 301 (?i)^/geelyradarrd6-21854/?$ /catalog/geely/radar-rd6/
+RedirectMatch 301 (?i)^/lixiangl62024model/?$ /catalog/lixiang/l6/
+RedirectMatch 301 (?i)^/bydsealion07ev2024/?$ /catalog/byd/sea-lion-07/
+RedirectMatch 301 (?i)^/lixiangl72024model/?$ /catalog/lixiang/l7/
+RedirectMatch 301 (?i)^/geelypreface-24182/?$ /catalog/geely/preface/
+RedirectMatch 301 (?i)^/lixiangl92024model/?$ /catalog/lixiang/l9/
+RedirectMatch 301 (?i)^/lixiangl82024model/?$ /catalog/lixiang/l8/
+RedirectMatch 301 (?i)^/geelymonjaro-25139/?$ /catalog/geely/monjaro/
+RedirectMatch 301 (?i)^/geelycoolray-48570/?$ /catalog/geely/coolray/
+RedirectMatch 301 (?i)^/voyahdreamer-55631/?$ /catalog/voyah/dreamer/
+RedirectMatch 301 (?i)^/leapmotorc11-87898/?$ /catalog/leapmotor/c11/
+RedirectMatch 301 (?i)^/changanuni-v-50187/?$ /catalog/changan/uni-v/
+RedirectMatch 301 (?i)^/hyndaielantra2024/?$ /catalog/hyundai/elantra/
+RedirectMatch 301 (?i)^/zeekr0012024model/?$ /catalog/zeekr/001/
+RedirectMatch 301 (?i)^/geelyboyuel-82268/?$ /catalog/geely/boyue-l/
+RedirectMatch 301 (?i)^/hongqih9top-78252/?$ /catalog/hongqi/h9/
+RedirectMatch 301 (?i)^/page60563519\.html/?$ /
+RedirectMatch 301 (?i)^/kiaev5light-62519/?$ /catalog/kia/ev5-light/
+RedirectMatch 301 (?i)^/teslamodel3-82329/?$ /catalog/tesla/model-3/
+RedirectMatch 301 (?i)^/mercedeseqb-83428/?$ /catalog/mercedes-benz/eqb/
+RedirectMatch 301 (?i)^/teslamodely-50680/?$ /catalog/tesla/model-y/
+RedirectMatch 301 (?i)^/nissanariya-96597/?$ /catalog/nissan/aryia/
+RedirectMatch 301 (?i)^/lotuseletre-55537/?$ /catalog/lotus/eletre/
+RedirectMatch 301 (?i)^/lynkampco09-47771/?$ /catalog/lynk-co/900-lynk-co-09/
+RedirectMatch 301 (?i)^/lixiangmega-34631/?$ /catalog/lixiang/mega/
+RedirectMatch 301 (?i)^/zeekr7x2024-75276/?$ /catalog/
+RedirectMatch 301 (?i)^/lynkampco05-39108/?$ /catalog/lynk-co/05/
+RedirectMatch 301 (?i)^/lynkampco08-20838/?$ /catalog/lynk-co/08/
+RedirectMatch 301 (?i)^/HyndaiElantra2024/?$ /catalog/hyundai/elantra/
+RedirectMatch 301 (?i)^/toyotabz4x-98955/?$ /catalog/toyota/bz4x/
+RedirectMatch 301 (?i)^/vwid4cross-35607/?$ /catalog/volkswagen/id-4-crozz/
+RedirectMatch 301 (?i)^/yangwangu8-12790/?$ /catalog/yangwang/u8/
+RedirectMatch 301 (?i)^/changanuni-k2024/?$ /catalog/changan/
+RedirectMatch 301 (?i)^/vwid6cross-33023/?$ /catalog/volkswagen/id6-crozz/
+RedirectMatch 301 (?i)^/changanuni-t2024/?$ /catalog/changan/
+RedirectMatch 301 (?i)^/bydqinplus-90956/?$ /catalog/byd/qin-plus-ev/
+RedirectMatch 301 (?i)^/byddolphin-32627/?$ /catalog/byd/dolphin/
+RedirectMatch 301 (?i)^/volkswagen-36222/?$ /catalog/volkswagen/
+RedirectMatch 301 (?i)^/changandeepals7/?$ /catalog/deepal/s07/
+RedirectMatch 301 (?i)^/avto-iz-yaponii/?$ /japan/
+RedirectMatch 301 (?i)^/geelyboyuel2024/?$ /catalog/geely/boyue-l/
+RedirectMatch 301 (?i)^/lixiang_l6_2025/?$ /catalog/lixiang/l6/
+RedirectMatch 301 (?i)^/geelygeometryee/?$ /catalog/geely/
+RedirectMatch 301 (?i)^/xiaomisu7-35718/?$ /catalog/xiaomi/su7/
+RedirectMatch 301 (?i)^/fawnatpro-14532/?$ /catalog/faw/nat-pro/
+RedirectMatch 301 (?i)^/voyahfree-48706/?$ /catalog/voyah/free/
+RedirectMatch 301 (?i)^/lixiangl7-26553/?$ /catalog/lixiang/l7/
+RedirectMatch 301 (?i)^/lixiangl9-81727/?$ /catalog/lixiang/l9/
+RedirectMatch 301 (?i)^/polestar4-71069/?$ /catalog/polestar/4/
+RedirectMatch 301 (?i)^/geelygeometrye2/?$ /catalog/geely/geometry-e/
+RedirectMatch 301 (?i)^/hondaenp1-45566/?$ /catalog/honda/enp1/
+RedirectMatch 301 (?i)^/geelycool-37808/?$ /catalog/geely/coolray/
+RedirectMatch 301 (?i)^/lixiangl8-26770/?$ /catalog/lixiang/l8/
+RedirectMatch 301 (?i)^/geelygeometrye/?$ /catalog/geely/geometry-e/
+RedirectMatch 301 (?i)^/geelygeometryc/?$ /catalog/geely/geometry-c/
+RedirectMatch 301 (?i)^/bydqinplushono/?$ /catalog/byd/qin-plus-ev/
+RedirectMatch 301 (?i)^/avto-iz-evropy/?$ /europa/
+RedirectMatch 301 (?i)^/zeekr001-70334/?$ /catalog/zeekr/001/
+RedirectMatch 301 (?i)^/bydsongl-47466/?$ /catalog/byd/song-l/
+RedirectMatch 301 (?i)^/zeekr007-67311/?$ /catalog/zeekr/007/
+RedirectMatch 301 (?i)^/gacaiony-26112/?$ /catalog/gac/aion-y/
+RedirectMatch 301 (?i)^/zeekr009-46313/?$ /catalog/zeekr/009/
+RedirectMatch 301 (?i)^/business-22740/?$ /dlya-biznesa/
+RedirectMatch 301 (?i)^/mercedes-91454/?$ /catalog/mercedes-benz/
+RedirectMatch 301 (?i)^/geelyradarrd6/?$ /catalog/geely/radar-rd6/
+RedirectMatch 301 (?i)^/fawbestunenat/?$ /catalog/faw/bestune-nat/
+RedirectMatch 301 (?i)^/geelygalaxyl7/?$ /catalog/geely/galaxy-l7/
+RedirectMatch 301 (?i)^/bydsong-24162/?$ /catalog/byd/song-plus-ev/
+RedirectMatch 301 (?i)^/avto-iz-korei/?$ /korea/
+RedirectMatch 301 (?i)^/catalog-70849/?$ /catalog/
+RedirectMatch 301 (?i)^/denzad9-65661/?$ /catalog/denza/d9/
+RedirectMatch 301 (?i)^/bydyuanup2024/?$ /catalog/byd/yuan-up/
+RedirectMatch 301 (?i)^/avatr_12_2025/?$ /catalog/avatr/12/
+RedirectMatch 301 (?i)^/cookie_policy/?$ /catalog/
+RedirectMatch 301 (?i)^/bydtang-28315/?$ /catalog/byd/tang/
+RedirectMatch 301 (?i)^/byd_tang_l_ev/?$ /catalog/byd/tang/
+RedirectMatch 301 (?i)^/avatr12-85092/?$ /catalog/avatr/12/
+RedirectMatch 301 (?i)^/bydseal-64238/?$ /catalog/byd/seal/
+RedirectMatch 301 (?i)^/avatr11-95187/?$ /catalog/avatr/11/
+RedirectMatch 301 (?i)^/garanty-41296/?$ /servis/
+RedirectMatch 301 (?i)^/lixiang-13850/?$ /catalog/lixiang/
+RedirectMatch 301 (?i)^/changan-31104/?$ /catalog/changan/
+RedirectMatch 301 (?i)^/geelypreface/?$ /catalog/geely/preface/
+RedirectMatch 301 (?i)^/voyahpassion/?$ /catalog/voyah/passion/
+RedirectMatch 301 (?i)^/changanuni-v/?$ /catalog/changan/uni-v/
+RedirectMatch 301 (?i)^/geelycoolray/?$ /catalog/geely/coolray/
+RedirectMatch 301 (?i)^/voyahdreamer/?$ /catalog/voyah/dreamer/
+RedirectMatch 301 (?i)^/geelymonjaro/?$ /catalog/geely/monjaro/
+RedirectMatch 301 (?i)^/byd_han_l_ev/?$ /catalog/byd/han-l-ev/
+RedirectMatch 301 (?i)^/leapmotorc11/?$ /catalog/leapmotor/c11/
+RedirectMatch 301 (?i)^/hiphiz-35526/?$ /catalog/hiphi/z/
+RedirectMatch 301 (?i)^/aitom9-60551/?$ /catalog/aito/m9/
+RedirectMatch 301 (?i)^/zeekrx-38037/?$ /catalog/zeekr/x/
+RedirectMatch 301 (?i)^/avto-iz-ssha/?$ /usa/
+RedirectMatch 301 (?i)^/bydhan-78862/?$ /catalog/byd/han/
+RedirectMatch 301 (?i)^/hiphiy-79836/?$ /catalog/
+RedirectMatch 301 (?i)^/invite-31027/?$ /
+RedirectMatch 301 (?i)^/nissan-17943/?$ /catalog/nissan/
+RedirectMatch 301 (?i)^/toyota-68939/?$ /catalog/toyota/
+RedirectMatch 301 (?i)^/lynkampco08/?$ /catalog/lynk-co/08/
+RedirectMatch 301 (?i)^/lynkampco09/?$ /catalog/lynk-co/900-lynk-co-09/
+RedirectMatch 301 (?i)^/lynkampco05/?$ /catalog/lynk-co/05/
+RedirectMatch 301 (?i)^/nissanariya/?$ /catalog/nissan/aryia/
+RedirectMatch 301 (?i)^/teslamodel3/?$ /catalog/tesla/model-3/
+RedirectMatch 301 (?i)^/geelyboyuel/?$ /catalog/geely/boyue-l/
+RedirectMatch 301 (?i)^/kiaev5light/?$ /catalog/kia/ev5-light/
+RedirectMatch 301 (?i)^/teslamodely/?$ /catalog/tesla/model-y/
+RedirectMatch 301 (?i)^/zeekr7x2024/?$ /catalog/zeekr/7x/
+RedirectMatch 301 (?i)^/lotuseletre/?$ /catalog/lotus/eletre/
+RedirectMatch 301 (?i)^/hongqih9top/?$ /catalog/hongqi/h9/
+RedirectMatch 301 (?i)^/lixiangmega/?$ /catalog/lixiang/mega/
+RedirectMatch 301 (?i)^/about-87984/?$ /about/
+RedirectMatch 301 (?i)^/mercedeseqb/?$ /catalog/mercedes-benz/eqb/
+RedirectMatch 301 (?i)^/LixiangMega/?$ /catalog/lixiang/mega/
+RedirectMatch 301 (?i)^/avatr-44042/?$ /catalog/avatr/
+RedirectMatch 301 (?i)^/denza-17668/?$ /catalog/denza/
+RedirectMatch 301 (?i)^/geely-68237/?$ /catalog/geely/
+RedirectMatch 301 (?i)^/lotus-62064/?$ /catalog/lotus/
+RedirectMatch 301 (?i)^/tesla-98479/?$ /catalog/tesla/
+RedirectMatch 301 (?i)^/voyah-61368/?$ /catalog/voyah/
+RedirectMatch 301 (?i)^/zeekr-58249/?$ /catalog/zeekr/
+RedirectMatch 301 (?i)^/hiphi-52655/?$ /catalog/hiphi/
+RedirectMatch 301 (?i)^/honda-84039/?$ /catalog/honda/
+RedirectMatch 301 (?i)^/bydqinplus/?$ /catalog/byd/qin-plus-ev/
+RedirectMatch 301 (?i)^/byddolphin/?$ /catalog/byd/dolphin/
+RedirectMatch 301 (?i)^/toyotabz4x/?$ /catalog/toyota/bz4x/
+RedirectMatch 301 (?i)^/yangwangu8/?$ /catalog/yangwang/u8/
+RedirectMatch 301 (?i)^/vwid6cross/?$ /catalog/volkswagen/id6-crozz/
+RedirectMatch 301 (?i)^/vwid4cross/?$ /catalog/volkswagen/id-4-crozz/
+RedirectMatch 301 (?i)^/volkswagen/?$ /catalog/volkswagen/
+RedirectMatch 301 (?i)^/VOLKSWAGEN/?$ /catalog/volkswagen/
+RedirectMatch 301 (?i)^/lynk-89883/?$ /catalog/lynk-co/
+RedirectMatch 301 (?i)^/denzaz9gt/?$ /catalog/denza/z9-gt/
+RedirectMatch 301 (?i)^/voyahfree/?$ /catalog/voyah/free/
+RedirectMatch 301 (?i)^/lixiangl8/?$ /catalog/lixiang/l8/
+RedirectMatch 301 (?i)^/polestar4/?$ /catalog/polestar/4/
+RedirectMatch 301 (?i)^/xiaomisu7/?$ /catalog/xiaomi/su7/
+RedirectMatch 301 (?i)^/xiaomiyu7/?$ /catalog/xiaomi/yu7/
+RedirectMatch 301 (?i)^/hondaenp1/?$ /catalog/honda/enp1/
+RedirectMatch 301 (?i)^/fawnatpro/?$ /catalog/faw/nat-pro/
+RedirectMatch 301 (?i)^/lixiangl7/?$ /catalog/lixiang/l7/
+RedirectMatch 301 (?i)^/leapmotor/?$ /catalog/leapmotor/
+RedirectMatch 301 (?i)^/geelycool/?$ /catalog/geely/coolray/
+RedirectMatch 301 (?i)^/pay-30376/?$ /catalog/
+RedirectMatch 301 (?i)^/byd-16334/?$ /catalog/byd/
+RedirectMatch 301 (?i)^/faw-66578/?$ /catalog/faw/
+RedirectMatch 301 (?i)^/gacaiony/?$ /catalog/gac/aion-y/
+RedirectMatch 301 (?i)^/zeekr009/?$ /catalog/zeekr/009/
+RedirectMatch 301 (?i)^/contact2/?$ /contact/
+RedirectMatch 301 (?i)^/garanty2/?$ /servis/
+RedirectMatch 301 (?i)^/catalog2/?$ /catalog/
+RedirectMatch 301 (?i)^/zeekr001/?$ /catalog/zeekr/001/
+RedirectMatch 301 (?i)^/zeekr007/?$ /catalog/zeekr/007/
+RedirectMatch 301 (?i)^/bydsongl/?$ /catalog/byd/song-l/
+RedirectMatch 301 (?i)^/polestar/?$ /catalog/polestar/
+RedirectMatch 301 (?i)^/mercedes/?$ /catalog/mercedes-benz/
+RedirectMatch 301 (?i)^/business/?$ /catalog/
+RedirectMatch 301 (?i)^/denzad9/?$ /catalog/denza/d9/
+RedirectMatch 301 (?i)^/avatr11/?$ /catalog/avatr/11/
+RedirectMatch 301 (?i)^/avatr12/?$ /catalog/avatr/12/
+RedirectMatch 301 (?i)^/malanka/?$ /dlya-biznesa/
+RedirectMatch 301 (?i)^/zeekr9x/?$ /catalog/zeekr/9x/
+RedirectMatch 301 (?i)^/garanty/?$ /servis/
+RedirectMatch 301 (?i)^/bydseal/?$ /catalog/byd/seal/
+RedirectMatch 301 (?i)^/bydtang/?$ /catalog/byd/tang/
+RedirectMatch 301 (?i)^/bydsong/?$ /catalog/byd/song-plus-ev/
+RedirectMatch 301 (?i)^/invite2/?$ /
+RedirectMatch 301 (?i)^/lixiang/?$ /catalog/lixiang/
+RedirectMatch 301 (?i)^/changan/?$ /catalog/changan/
+RedirectMatch 301 (?i)^/CHANGAN/?$ /catalog/changan/
+RedirectMatch 301 (?i)^/bydhan/?$ /catalog/byd/han/
+RedirectMatch 301 (?i)^/hiphiz/?$ /catalog/hiphi/z/
+RedirectMatch 301 (?i)^/zeekrx/?$ /catalog/zeekr/x/
+RedirectMatch 301 (?i)^/aitom9/?$ /catalog/aito/m9/
+RedirectMatch 301 (?i)^/invite/?$ /
+RedirectMatch 301 (?i)^/xiaomi/?$ /catalog/xiaomi/
+RedirectMatch 301 (?i)^/about2/?$ /about/
+RedirectMatch 301 (?i)^/hiphiy/?$ /catalog/
+RedirectMatch 301 (?i)^/hongqi/?$ /catalog/hongqi/
+RedirectMatch 301 (?i)^/hyndai/?$ /catalog/hyundai/
+RedirectMatch 301 (?i)^/Hyndai/?$ /catalog/hyundai/
+RedirectMatch 301 (?i)^/jetour/?$ /catalog/
+RedirectMatch 301 (?i)^/nissan/?$ /catalog/nissan/
+RedirectMatch 301 (?i)^/toyota/?$ /catalog/toyota/
+RedirectMatch 301 (?i)^/NISSAN/?$ /catalog/nissan/
+RedirectMatch 301 (?i)^/TOYOTA/?$ /catalog/toyota/
+RedirectMatch 301 (?i)^/zeekr/?$ /catalog/zeekr/
+RedirectMatch 301 (?i)^/voyah/?$ /catalog/voyah/
+RedirectMatch 301 (?i)^/denza/?$ /catalog/denza/
+RedirectMatch 301 (?i)^/hiphi/?$ /catalog/
+RedirectMatch 301 (?i)^/tesla/?$ /catalog/tesla/
+RedirectMatch 301 (?i)^/DENZA/?$ /catalog/denza/
+RedirectMatch 301 (?i)^/geely/?$ /catalog/geely/
+RedirectMatch 301 (?i)^/honda/?$ /catalog/honda/
+RedirectMatch 301 (?i)^/avatr/?$ /catalog/avatr/
+RedirectMatch 301 (?i)^/lotus/?$ /catalog/lotus/
+RedirectMatch 301 (?i)^/LOTUS/?$ /catalog/lotus/
+RedirectMatch 301 (?i)^/TESLA/?$ /catalog/tesla/
+RedirectMatch 301 (?i)^/taxi/?$ /
+RedirectMatch 301 (?i)^/pay2/?$ /catalog/
+RedirectMatch 301 (?i)^/aito/?$ /catalog/aito/
+RedirectMatch 301 (?i)^/lynk/?$ /catalog/
+RedirectMatch 301 (?i)^/AITO/?$ /catalog/aito/
+RedirectMatch 301 (?i)^/faw/?$ /catalog/faw/
+RedirectMatch 301 (?i)^/byd/?$ /catalog/byd/
+RedirectMatch 301 (?i)^/Kia/?$ /catalog/kia/
+RedirectMatch 301 (?i)^/pay/?$ /catalog/
+RedirectMatch 301 (?i)^/kia/?$ /catalog/kia/
+</IfModule>
+
+ErrorDocument 404 /404.html
+
+# Сборка Astro: css и js лежат только в /_astro/ и содержат хеш в имени,
+# поэтому кэшируются навсегда. Проверено: вне /_astro/ их в сборке нет.
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType text/css               "access plus 1 year"
+  ExpiresByType application/javascript "access plus 1 year"
+  ExpiresByType font/woff2             "access plus 1 year"
+  ExpiresByType image/jpeg             "access plus 30 days"
+  ExpiresByType image/png              "access plus 30 days"
+  ExpiresByType image/webp             "access plus 30 days"
+  ExpiresByType image/avif             "access plus 30 days"
+  ExpiresByType image/svg+xml          "access plus 30 days"
+  ExpiresByType image/x-icon           "access plus 30 days"
+  ExpiresByType text/html              "access plus 0 seconds"
+</IfModule>
+
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css text/plain application/javascript application/json image/svg+xml application/xml
+</IfModule>
