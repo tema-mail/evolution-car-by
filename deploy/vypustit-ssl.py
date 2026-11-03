@@ -38,7 +38,7 @@ import time
 import urllib.error
 import urllib.request
 
-DOMAINS = ['evolutioncar.by', 'www.evolutioncar.by']
+DOMAINS = ['evolutioncar.by', 'www.evolutioncar.by', 'admin.evolutioncar.by']
 ZONE = 'evolutioncar.by'
 ACME = 'https://acme-v02.api.letsencrypt.org/directory'
 # Боевой каталог Let's Encrypt. Для отладки ставить тестовый – у него нет
@@ -247,25 +247,61 @@ def wait_dns(name, values):
 
 # ------------------------------------------------------------------- панель
 
-def panel_install(cert_pem, key_path):
-    """Меняем содержимое сертификата, который уже привязан к сайту."""
+def panel_post(sid, fields):
+    """Запрос к панели. Возвращает doc; ошибку поднимает исключением."""
+    import urllib.parse
+    fields = dict(fields, auth=sid, sok='ok', out='json')
+    _, body, _ = http(f'{PANEL}/ispmgr', data=urllib.parse.urlencode(fields).encode(),
+                      ctx=NOVERIFY)
+    doc = json.loads(body).get('doc', {})
+    if 'error' in doc:
+        raise RuntimeError('панель: ' + json.dumps(doc['error'], ensure_ascii=False)[:300])
+    return doc
+
+
+def panel_install(cert_pem, key_path, chain_path, name='evolutioncar-le-dns'):
+    """Заводим в панели новый сертификат и привязываем его к сайту.
+
+    Менять тело уже существующего сертификата (sslcert.edit) бесполезно:
+    панель запрос принимает и отвечает без ошибки, но ни тип, ни содержимое
+    не меняются – проверено 03.11.2026 чтением обратно и живым сайтом.
+    Работает только создание нового: func=sslcert.add, crttype=existing,
+    и поля называются crt, key, ca (не crtkey/cacrt, как в форме правки),
+    иначе панель отвечает «Invalid key». Привязка – отдельным шагом,
+    полем ssl_cert у сайта: сам по себе загруженный сертификат не
+    применяется, в списке он стоит без сайта.
+    """
     import urllib.parse
     pwd = env('SSH_PASS')
     auth = urllib.parse.urlencode({'func': 'auth', 'username': 'h221108',
                                    'password': pwd, 'sok': 'ok', 'out': 'json'}).encode()
     _, body, _ = http(f'{PANEL}/ispmgr', data=auth, ctx=NOVERIFY)
     sid = json.loads(body)['doc']['auth']['$id']
-    key_pem = open(key_path, encoding='utf-8').read()
-    form = urllib.parse.urlencode({'auth': sid, 'func': 'sslcert.edit',
-                                   'elid': 'evolutioncar.by_le1',
-                                   'name': 'evolutioncar.by_le1',
-                                   'crt': cert_pem, 'crtkey': key_pem,
-                                   'sok': 'ok', 'out': 'json'}).encode()
-    _, body, _ = http(f'{PANEL}/ispmgr', data=form, ctx=NOVERIFY)
-    doc = json.loads(body).get('doc', {})
-    if 'error' in doc:
-        raise RuntimeError(f'панель не приняла сертификат: {json.dumps(doc["error"], ensure_ascii=False)[:300]}')
-    print('  сертификат установлен в панели')
+
+    panel_post(sid, {'func': 'sslcert.add', 'crttype': 'existing', 'name': name,
+                     'crt': cert_pem,
+                     'key': open(key_path, encoding='utf-8').read(),
+                     'ca': open(chain_path, encoding='utf-8').read()})
+    # имя в списке панель даёт сама, по домену и счётчику
+    lst = panel_post(sid, {'func': 'sslcert'}).get('elem', [])
+    if isinstance(lst, dict):
+        lst = [lst]
+    added = [e['name']['$'] for e in lst
+             if e.get('type', {}).get('$orig') == 'ssl_existing']
+    if not added:
+        raise RuntimeError('сертификат загружен, но в списке панели его нет')
+    elid = sorted(added)[-1]
+    print(f'  сертификат заведён в панели: {elid}')
+
+    for site in ('evolutioncar.by', 'admin.evolutioncar.by'):
+        form = panel_post(sid, {'func': 'webdomain.edit', 'elid': site})
+        fields = {k: v['$'] for k, v in form.items()
+                  if not k.startswith('$') and isinstance(v, dict) and '$' in v
+                  and k not in ('tips', 'tparams', 'saved_filters', 'metadata', 'messages')}
+        fields.update({'func': 'webdomain.edit', 'elid': site,
+                       'secure': 'on', 'ssl_cert': elid})
+        panel_post(sid, fields)
+        print(f'  привязан к сайту {site}')
 
 
 # --------------------------------------------------------------------- ход
@@ -337,7 +373,7 @@ def main():
         path = os.path.join(WORK, 'fullchain.pem')
         open(path, 'w', encoding='utf-8').write(cert_pem)
         print(f'  сертификат получен: {path}')
-        panel_install(cert_pem, dom_key)
+        panel_install(cert_pem, dom_key, os.path.join(WORK, 'chain.pem'))
     finally:
         for rec in placed:
             dns.drop_txt(rec)
