@@ -9,3 +9,4 @@ __pycache__/
 # Отчёты кабинета и ключи сборщика – коммерческие данные, в публичный репозиторий не кладём
 analytics/out/
 analytics/secrets/
+.claude/settings.local.json

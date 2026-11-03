@@ -1,5 +1,5 @@
-# Сгенерировано scripts/gen-redirects.mjs из docs/seo-migration/karta-migracii.csv (2026-11-02).
-# Правил: 282. Руками не править – правь карту и перегенерируй.
+# Сгенерировано scripts/gen-redirects.mjs из docs/seo-migration/karta-migracii.csv (2026-11-03).
+# Правил: 284. Руками не править – правь карту и перегенерируй.
 # Повторяет deploy/nginx.conf: зеркала, редиректы, чистые адреса, 404,
 # кэш и сжатие. Генерируется – руками не править.
 
@@ -178,6 +178,7 @@ DirectoryIndex index.html
   RewriteRule ^hondaenp1-45566/?$ https://evolutioncar.by/catalog/honda/enp1/ [R=301,L,NC]
   RewriteRule ^geelycool-37808/?$ https://evolutioncar.by/catalog/geely/coolray/ [R=301,L,NC]
   RewriteRule ^lixiangl8-26770/?$ https://evolutioncar.by/catalog/lixiang/l8/ [R=301,L,NC]
+  RewriteRule ^catalog/hiphi/z/?$ https://evolutioncar.by/catalog/elektromobili/ [R=301,L,NC]
   RewriteRule ^geelygeometrye/?$ https://evolutioncar.by/catalog/geely/geometry-e/ [R=301,L,NC]
   RewriteRule ^geelygeometryc/?$ https://evolutioncar.by/catalog/geely/geometry-c/ [R=301,L,NC]
   RewriteRule ^bydqinplushono/?$ https://evolutioncar.by/catalog/byd/qin-plus-ev/ [R=301,L,NC]
@@ -207,6 +208,7 @@ DirectoryIndex index.html
   RewriteRule ^garanty-41296/?$ https://evolutioncar.by/servis/ [R=301,L,NC]
   RewriteRule ^lixiang-13850/?$ https://evolutioncar.by/catalog/lixiang/ [R=301,L,NC]
   RewriteRule ^changan-31104/?$ https://evolutioncar.by/catalog/changan/ [R=301,L,NC]
+  RewriteRule ^catalog/hiphi/?$ https://evolutioncar.by/catalog/elektromobili/ [R=301,L,NC]
   RewriteRule ^geelypreface/?$ https://evolutioncar.by/catalog/geely/preface/ [R=301,L,NC]
   RewriteRule ^voyahpassion/?$ https://evolutioncar.by/catalog/voyah/passion/ [R=301,L,NC]
   RewriteRule ^changanuni-v/?$ https://evolutioncar.by/catalog/changan/uni-v/ [R=301,L,NC]
@@ -215,7 +217,7 @@ DirectoryIndex index.html
   RewriteRule ^geelymonjaro/?$ https://evolutioncar.by/catalog/geely/monjaro/ [R=301,L,NC]
   RewriteRule ^byd_han_l_ev/?$ https://evolutioncar.by/catalog/byd/han-l-ev/ [R=301,L,NC]
   RewriteRule ^leapmotorc11/?$ https://evolutioncar.by/catalog/leapmotor/c11/ [R=301,L,NC]
-  RewriteRule ^hiphiz-35526/?$ https://evolutioncar.by/catalog/hiphi/z/ [R=301,L,NC]
+  RewriteRule ^hiphiz-35526/?$ https://evolutioncar.by/catalog/elektromobili/ [R=301,L,NC]
   RewriteRule ^aitom9-60551/?$ https://evolutioncar.by/catalog/aito/m9/ [R=301,L,NC]
   RewriteRule ^zeekrx-38037/?$ https://evolutioncar.by/catalog/zeekr/x/ [R=301,L,NC]
   RewriteRule ^avto-iz-ssha/?$ https://evolutioncar.by/usa/ [R=301,L,NC]
@@ -246,7 +248,7 @@ DirectoryIndex index.html
   RewriteRule ^tesla-98479/?$ https://evolutioncar.by/catalog/tesla/ [R=301,L,NC]
   RewriteRule ^voyah-61368/?$ https://evolutioncar.by/catalog/voyah/ [R=301,L,NC]
   RewriteRule ^zeekr-58249/?$ https://evolutioncar.by/catalog/zeekr/ [R=301,L,NC]
-  RewriteRule ^hiphi-52655/?$ https://evolutioncar.by/catalog/hiphi/ [R=301,L,NC]
+  RewriteRule ^hiphi-52655/?$ https://evolutioncar.by/catalog/elektromobili/ [R=301,L,NC]
   RewriteRule ^honda-84039/?$ https://evolutioncar.by/catalog/honda/ [R=301,L,NC]
   RewriteRule ^bydqinplus/?$ https://evolutioncar.by/catalog/byd/qin-plus-ev/ [R=301,L,NC]
   RewriteRule ^byddolphin/?$ https://evolutioncar.by/catalog/byd/dolphin/ [R=301,L,NC]
@@ -296,7 +298,7 @@ DirectoryIndex index.html
   RewriteRule ^changan/?$ https://evolutioncar.by/catalog/changan/ [R=301,L,NC]
   RewriteRule ^CHANGAN/?$ https://evolutioncar.by/catalog/changan/ [R=301,L,NC]
   RewriteRule ^bydhan/?$ https://evolutioncar.by/catalog/byd/han/ [R=301,L,NC]
-  RewriteRule ^hiphiz/?$ https://evolutioncar.by/catalog/hiphi/z/ [R=301,L,NC]
+  RewriteRule ^hiphiz/?$ https://evolutioncar.by/catalog/elektromobili/ [R=301,L,NC]
   RewriteRule ^zeekrx/?$ https://evolutioncar.by/catalog/zeekr/x/ [R=301,L,NC]
   RewriteRule ^aitom9/?$ https://evolutioncar.by/catalog/aito/m9/ [R=301,L,NC]
   RewriteRule ^invite/?$ https://evolutioncar.by/ [R=301,L,NC]

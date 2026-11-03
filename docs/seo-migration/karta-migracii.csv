@@ -9,7 +9,7 @@ old,status,clicks,impressions,position,action,target,why,top_queries,tilda_redir
 /bydhan,200,141,9475,10.6,301,/catalog/byd/han/,есть такая же карточка товара,byd han купить минск; купить byd han; byd han; byd han цена; byd han купить,
 /nissanx-traile-powertop,200,140,8831,12.1,301,/catalog/nissan/x-trail-e-power-top/,есть такая же карточка товара,nissan x-trail e-power купить минск; ниссан е повер купить; купить nissan x-trail e-power; nissan x-trail e-power купить; ниссан х трейл е пауэр купить,
 /denzaz9gt,200,139,5366,9.1,301,/catalog/denza/z9-gt/,карточка создана из страницы старого сайта,denza z9 gt; denza z9 gt купить минск; denza z9; denza z9 gt купить; denza z9 gt цена,
-/hiphiz,200,112,7738,9.6,301,/catalog/hiphi/z/,карточка создана из страницы старого сайта,hiphi z; hiphi z характеристики; hiphi; машина hiphi z; hiphi купить,
+/hiphiz,200,112,7738,9.6,301,/catalog/elektromobili/,карточка создана из страницы старого сайта,hiphi z; hiphi z характеристики; hiphi; машина hiphi z; hiphi купить,
 /gacaiony,200,100,3358,8.5,301,/catalog/gac/aion-y/,карточка создана из страницы старого сайта,gac aion y купить минск; aion машина; aion электромобиль; gac aion; aion машина цена,
 /changandeepals7,200,96,8997,12.7,301,/catalog/deepal/s07/,есть такая же карточка товара,changan dipole; changan deepal s07 характеристики; deepal s7 характеристики; дипал с07 характеристики; deepal s07 характеристики,
 /zeekr009,200,96,5873,8.6,301,/catalog/zeekr/009/,есть такая же карточка товара,zeekr 009 характеристики; зикр 009 характеристики; zeekr 009; zeekr 009 купить минск; zeekr 009 цена,
@@ -116,7 +116,7 @@ old,status,clicks,impressions,position,action,target,why,top_queries,tilda_redir
 /geelymonjaro-25139,301,1,39,34.8,склеить дубль,/catalog/geely/monjaro/,дубль Tilda /geelymonjaro-25139 → /geelymonjaro; есть такая же карточка товара,geely monjaro; monjaro geely; автомобиль geely monjaro; джили монджаро; manjaro geely,/geelymonjaro
 /xiaomisu7-35718,301,1,34,13.2,склеить дубль,/catalog/xiaomi/su7/,дубль Tilda /xiaomisu7-35718 → /xiaomisu7; есть такая же карточка товара,xiaomi su7; машина сяоми су 7; xiaomi su7 клиренс,/xiaomisu7
 /zeekr001-70334,301,1,34,12.2,склеить дубль,/catalog/zeekr/001/,дубль Tilda /zeekr001-70334 → /zeekr001; есть такая же карточка товара,zeekr; zeekr автомобиль цена; zeekr из китая; зекарь; машина zeekr цена,/zeekr001
-/hiphiz-35526,301,1,30,11.2,склеить дубль,/catalog/hiphi/z/,"дубль страницы /hiphiz на Тильде, склеиваем с её карточкой",hiphi z,/hiphiz
+/hiphiz-35526,301,1,30,11.2,склеить дубль,/catalog/elektromobili/,"дубль страницы /hiphiz на Тильде, склеиваем с её карточкой",hiphi z,/hiphiz
 /denza,200,1,29,47.0,301,/catalog/denza/,каталог марки,денза; denza; evolution car; denza z; denza z9s,
 /kiaev5light-62519,301,1,29,8.2,склеить дубль,/catalog/kia/ev5-light/,дубль Tilda /kiaev5light-62519 → /kiaev5light; есть такая же карточка товара,kia ev5; kia v5; mia ev5; киа ev5,/kiaev5light
 /teslamodel3-82329,301,1,26,12.1,склеить дубль,/catalog/tesla/model-3/,дубль Tilda /teslamodel3-82329 → /teslamodel3; есть такая же карточка товара,тесла модель 3; tesla model 3; тесла модел3,/teslamodel3
@@ -284,5 +284,7 @@ old,status,clicks,impressions,position,action,target,why,top_queries,tilda_redir
 /zeekr-58249,404,0,0,,301,/catalog/zeekr/,дубль Tilda страницы марки,,
 /changan-31104,404,0,0,,301,/catalog/changan/,"раздел бренда на Тильде с её числовым хвостом, пропущен в карте – отдавал 404",,
 /faw-66578,404,0,0,,301,/catalog/faw/,"раздел бренда на Тильде с её числовым хвостом, пропущен в карте – отдавал 404",,
-/hiphi-52655,404,0,0,,301,/catalog/hiphi/,"раздел бренда на Тильде с её числовым хвостом, пропущен в карте – отдавал 404",,
+/hiphi-52655,404,0,0,,301,/catalog/elektromobili/,"раздел бренда на Тильде с её числовым хвостом, пропущен в карте – отдавал 404",,
 /honda-84039,404,0,0,,301,/catalog/honda/,"раздел бренда на Тильде с её числовым хвостом, пропущен в карте – отдавал 404",,
+/catalog/hiphi/z/,,0,0,,301,/catalog/elektromobili/,"HiPhi Z снята с производства (Human Horizons остановила выпуск) – убрана из каталога 03.11.2026, адрес ведёт в раздел электромобилей",,
+/catalog/hiphi/,,0,0,,301,/catalog/elektromobili/,"Марка HiPhi осталась без моделей после снятия Z с производства",,
