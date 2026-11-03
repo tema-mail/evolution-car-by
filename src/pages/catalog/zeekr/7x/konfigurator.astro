@@ -1,0 +1,97 @@
+---
+import '../../../../styles/theme-v1.css';
+import '../../../../styles/islands.css';
+import BaseLayout from '../../../../layouts/BaseLayout.astro';
+import Header from '../../../../components/v1/Header.astro';
+import Footer from '../../../../components/v1/Footer.astro';
+import Breadcrumbs from '../../../../components/v1/Breadcrumbs.astro';
+import ConfiguratorsNav from '../../../../components/v1/ConfiguratorsNav.astro';
+import Contacts from '../../../../components/v1/Contacts.astro';
+import ModalHost from '../../../../components/islands/ModalHost';
+import L9Configurator from '../../../../components/islands/L9Configurator';
+import { configTrims, paints, wheels, interiors, shots, renderPaths, commonSpecs, zeekr7xConfig } from '../../../../content/models/zeekr-7x-config';
+import { quiz, finalOffer } from '../../../../content/home';
+import { breadcrumbsLd, abs } from '../../../../lib/seo';
+
+const crumbs = [
+  { name: 'Главная', href: '/' },
+  { name: 'Каталог автомобилей', href: '/catalog/' },
+  { name: 'Zeekr', href: '/catalog/zeekr/' },
+  { name: '7X', href: '/catalog/zeekr/7x/' },
+  { name: 'Конфигуратор 7X', href: zeekr7xConfig.path },
+];
+---
+
+<BaseLayout
+  theme="v1"
+  title={zeekr7xConfig.seoTitle}
+  description={zeekr7xConfig.seoDescription}
+  canonical={abs(zeekr7xConfig.path)}
+  jsonLd={[breadcrumbsLd(crumbs)]}
+>
+  <Header />
+  <Breadcrumbs crumbs={crumbs} />
+
+  <main>
+    <section class="section cfg-head">
+      <div class="container cfg-head__grid">
+        <h1>{zeekr7xConfig.h1}</h1>
+        <div class="cfg-head__side">
+          <p class="cfg-head__lead">{zeekr7xConfig.lead}</p>
+          <a class="cfg-head__link" href={zeekr7xConfig.cardLink.href}>
+            {zeekr7xConfig.cardLink.label} <span aria-hidden="true">→</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="cfg-body">
+      <div class="container">
+        <L9Configurator
+          client:load
+          trims={configTrims}
+          paints={paints}
+          wheels={wheels}
+          interiors={interiors}
+          shots={shots}
+          renderPaths={renderPaths}
+          commonSpecs={commonSpecs}
+          ui={zeekr7xConfig.ui}
+          form={{
+            namePlaceholder: finalOffer.namePlaceholder,
+            phonePlaceholder: finalOffer.phonePlaceholder,
+            cta: finalOffer.cta,
+            success: finalOffer.success,
+          }}
+        />
+      </div>
+    </section>
+
+    <ConfiguratorsNav current={zeekr7xConfig.path} />
+    <Contacts />
+  </main>
+
+  <Footer />
+  <ModalHost
+    client:idle
+    quizTitle={quiz.title}
+    quizSteps={quiz.steps}
+    contactQuestion={quiz.contactStep.q}
+    channels={quiz.contactStep.channels}
+    success={finalOffer.success}
+    videoPoster="/img/unsplash/service.jpg"
+  />
+</BaseLayout>
+
+<style>
+  .cfg-head { padding-block: clamp(1.25rem, 1rem + 1.5vw, 2.5rem) clamp(1.25rem, 1rem + 1.5vw, 2rem); }
+  .cfg-head__grid { display: grid; gap: 1rem; }
+  .cfg-head__side { display: grid; gap: .75rem; justify-items: start; }
+  .cfg-head__lead { color: var(--c-text-2); font-size: 1rem; line-height: 1.5; max-width: 52ch; }
+  .cfg-head__link { color: var(--c-accent); font-weight: 600; font-size: .9375rem; }
+  .cfg-head__link:hover { color: var(--c-accent-hover); }
+  @media (min-width: 1024px) {
+    .cfg-head__grid { grid-template-columns: minmax(0, 1fr) minmax(0, 26rem); gap: 3rem; align-items: end; }
+  }
+  .cfg-body { padding-bottom: var(--section-pad); }
+</style>
