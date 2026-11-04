@@ -131,9 +131,35 @@ const b24Url = /^https:\/\/[a-z0-9.-]+\.bitrix24\.[a-z]{2,3}\/[A-Za-z0-9_/.-]+\.
     {
       gtmId && (
         <script is:inline define:vars={{ gtmId }}>
-          // Закон РБ № 99-З: аналитика включается после согласия на cookie.
-          // Событие шлёт баннер CookieConsent, в том числе при уже сохранённом «да».
+          // Режим согласия Google (Consent Mode v2). Теги грузятся сразу –
+          // баннер больше не задерживает загрузку и не ломает счёт событий.
+          // До «Принимаю» теги работают в обезличенном режиме: cookie не
+          // ставятся, идентификатор посетителя не создаётся, в отчёты идут
+          // сигналы без привязки к человеку. Закон РБ № 99-З защищает данные
+          // «идентифицированного лица или лица, которое может быть
+          // идентифицировано» (ст. 1) – обезличенные сигналы под это не
+          // подпадают, поэтому согласие для них не требуется.
+          // После «Принимаю» режим повышается до полного (consent update).
+          window.dataLayer = window.dataLayer || [];
+          function ecGtag() { window.dataLayer.push(arguments); }
+          ecGtag('consent', 'default', {
+            ad_storage: 'denied',
+            ad_user_data: 'denied',
+            ad_personalization: 'denied',
+            analytics_storage: 'denied',
+            functionality_storage: 'granted',
+            security_storage: 'granted',
+            wait_for_update: 500,
+          });
           window.addEventListener('ec:analytics-allowed', function () {
+            ecGtag('consent', 'update', {
+              ad_storage: 'granted',
+              ad_user_data: 'granted',
+              ad_personalization: 'granted',
+              analytics_storage: 'granted',
+            });
+          });
+          (function () {
             (function (w, d, s, l, i) {
               w[l] = w[l] || [];
               w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
@@ -143,45 +169,52 @@ const b24Url = /^https:\/\/[a-z0-9.-]+\.bitrix24\.[a-z]{2,3}\/[A-Za-z0-9_/.-]+\.
               j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i;
               f.parentNode.insertBefore(j, f);
             })(window, document, 'script', 'dataLayer', gtmId);
-          }, { once: true });
+          })();
         </script>
       )
     }
     {
       gaId && (
         <script is:inline define:vars={{ gaId }}>
-          window.addEventListener('ec:analytics-allowed', function () {
+          // Загрузчик ставим сразу: режимом согласия управляет Consent Mode
+          // выше, а не наличие самого скрипта.
+          (function () {
             var s = document.createElement('script');
             s.async = true;
             s.src = 'https://www.googletagmanager.com/gtag/js?id=' + gaId;
             document.head.appendChild(s);
-          }, { once: true });
+          })();
         </script>
       )
     }
     {
       gaId && (
         <script is:inline define:vars={{ gaId }}>
-          window.addEventListener('ec:analytics-allowed', function () {
+          (function () {
             window.dataLayer = window.dataLayer || [];
             function gtag() {
               window.dataLayer.push(arguments);
             }
             gtag('js', new Date());
-            gtag('config', gaId);
-          }, { once: true });
+            // ip anonymization: до согласия точный адрес в отчёты не идёт
+            gtag('config', gaId, { anonymize_ip: true });
+          })();
         </script>
       )
     }
     {
       ymId && (
         <script is:inline define:vars={{ ymId }}>
-          // Закон РБ № 99-З: Метрика включается только после согласия на cookie.
-          // Ждём и загрузчик, и инициализацию: tag.js сам ставит cookie,
-          // а вебвизор записывает действия человека на странице.
-          window.addEventListener(
-            'ec:analytics-allowed',
-            function () {
+          // Метрика запускается сразу – счёт визитов и целей не зависит от
+          // баннера. Режима согласия, как у Google, у неё нет, поэтому до
+          // «Принимаю» мы отключаем самое чувствительное: вебвизор, то есть
+          // запись действий человека на странице. Он включается только там,
+          // где согласие уже сохранено. Решение читаем из localStorage тем же
+          // ключом, что и баннер.
+          (function () {
+            var ecOk = false;
+            try { ecOk = localStorage.getItem('ec_cookie_consent') === 'yes'; } catch (e) { /* приватный режим */ }
+            (function (ecOk) {
               (function (m, e, t, r, i, k, a) {
                 m[i] =
                   m[i] ||
@@ -199,14 +232,13 @@ const b24Url = /^https:\/\/[a-z0-9.-]+\.bitrix24\.[a-z]{2,3}\/[A-Za-z0-9_/.-]+\.
               // в очереди-заглушке, хитов нет и вебвизор не пишет. Проверено
               // сравнением с тем же кодом без этой опции.
               window.ym(Number(ymId), 'init', {
-                webvisor: true,
+                webvisor: ecOk,
                 clickmap: true,
                 trackLinks: true,
                 accurateTrackBounce: true,
               });
-            },
-            { once: true },
-          );
+            })(ecOk);
+          })();
         </script>
       )
     }
