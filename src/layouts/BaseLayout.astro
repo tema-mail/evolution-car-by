@@ -131,33 +131,31 @@ const b24Url = /^https:\/\/[a-z0-9.-]+\.bitrix24\.[a-z]{2,3}\/[A-Za-z0-9_/.-]+\.
     {
       gtmId && (
         <script is:inline define:vars={{ gtmId }}>
-          // Режим согласия Google (Consent Mode v2). Теги грузятся сразу –
-          // баннер больше не задерживает загрузку и не ломает счёт событий.
-          // До «Принимаю» теги работают в обезличенном режиме: cookie не
-          // ставятся, идентификатор посетителя не создаётся, в отчёты идут
-          // сигналы без привязки к человеку. Закон РБ № 99-З защищает данные
+          // Решение владельца 04.11.2026: аналитика собирает всё с первой
+          // секунды, баннер cookie на неё не влияет – «нам нужно, чтобы
+          // Метрика и Google всё собирали корректно, куки просто баннер».
+          // Поэтому режим согласия Google объявлен полным сразу, а не
+          // поднимается после нажатия.
+          //
+          // Что это значит по закону. Закон РБ № 99-З защищает данные
           // «идентифицированного лица или лица, которое может быть
-          // идентифицировано» (ст. 1) – обезличенные сигналы под это не
-          // подпадают, поэтому согласие для них не требуется.
-          // После «Принимаю» режим повышается до полного (consent update).
+          // идентифицировано» (ст. 1), а статья 6 даёт закрытый список
+          // случаев обработки без согласия, и веб-аналитики в нём нет.
+          // Идентификатор посетителя, который ставят GA4 и Метрика,
+          // позволяет узнавать одного и того же человека между визитами –
+          // то есть риск здесь есть, и он принят владельцем осознанно.
+          // Обратно это откатывается одной правкой: вернуть 'denied' в
+          // ad_storage и analytics_storage и повышение по событию
+          // 'ec:analytics-allowed', которое баннер уже шлёт.
           window.dataLayer = window.dataLayer || [];
           function ecGtag() { window.dataLayer.push(arguments); }
           ecGtag('consent', 'default', {
-            ad_storage: 'denied',
-            ad_user_data: 'denied',
-            ad_personalization: 'denied',
-            analytics_storage: 'denied',
+            ad_storage: 'granted',
+            ad_user_data: 'granted',
+            ad_personalization: 'granted',
+            analytics_storage: 'granted',
             functionality_storage: 'granted',
             security_storage: 'granted',
-            wait_for_update: 500,
-          });
-          window.addEventListener('ec:analytics-allowed', function () {
-            ecGtag('consent', 'update', {
-              ad_storage: 'granted',
-              ad_user_data: 'granted',
-              ad_personalization: 'granted',
-              analytics_storage: 'granted',
-            });
           });
           (function () {
             (function (w, d, s, l, i) {
@@ -205,16 +203,10 @@ const b24Url = /^https:\/\/[a-z0-9.-]+\.bitrix24\.[a-z]{2,3}\/[A-Za-z0-9_/.-]+\.
     {
       ymId && (
         <script is:inline define:vars={{ ymId }}>
-          // Метрика запускается сразу – счёт визитов и целей не зависит от
-          // баннера. Режима согласия, как у Google, у неё нет, поэтому до
-          // «Принимаю» мы отключаем самое чувствительное: вебвизор, то есть
-          // запись действий человека на странице. Он включается только там,
-          // где согласие уже сохранено. Решение читаем из localStorage тем же
-          // ключом, что и баннер.
+          // Метрика запускается сразу и в полном составе, включая вебвизор –
+          // решение владельца 04.11.2026 (см. комментарий у Consent Mode выше).
           (function () {
-            var ecOk = false;
-            try { ecOk = localStorage.getItem('ec_cookie_consent') === 'yes'; } catch (e) { /* приватный режим */ }
-            (function (ecOk) {
+            (function () {
               (function (m, e, t, r, i, k, a) {
                 m[i] =
                   m[i] ||
@@ -232,12 +224,12 @@ const b24Url = /^https:\/\/[a-z0-9.-]+\.bitrix24\.[a-z]{2,3}\/[A-Za-z0-9_/.-]+\.
               // в очереди-заглушке, хитов нет и вебвизор не пишет. Проверено
               // сравнением с тем же кодом без этой опции.
               window.ym(Number(ymId), 'init', {
-                webvisor: ecOk,
+                webvisor: true,
                 clickmap: true,
                 trackLinks: true,
                 accurateTrackBounce: true,
               });
-            })(ecOk);
+            })();
           })();
         </script>
       )
