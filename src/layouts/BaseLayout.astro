@@ -260,6 +260,30 @@ const b24Url = /^https:\/\/[a-z0-9.-]+\.bitrix24\.[a-z]{2,3}\/[A-Za-z0-9_/.-]+\.
   }
   .b24-form-field-phone .ec-b24-country:focus-visible { outline: 2px solid #00aeef; outline-offset: 2px; }
   .b24-form-field-phone .ec-b24-hint { margin: 6px 0 0; font-size: 13px; line-height: 1.35; color: #c0392b; }
+
+  /* Подпись «Телефон» ложилась поверх маски +375 00 000-00-00.
+     Причина: виджет держит подпись по центру поля (position absolute,
+     top 50 %) и рассчитывает, что плейсхолдера нет – у поля «Имя» его и
+     правда нет, там подпись работает вместо него. Маску в плейсхолдер
+     ставим мы сами (lib/bitrix-phone.ts), чтобы человек видел формат
+     номера, и две надписи оказывались в одной точке.
+     Поднимаем подпись к верхнему краю и освобождаем ей место отступом
+     внутри поля – так надписи стоят друг под другом, как в заполненном
+     состоянии обычной формы. Трогаем только поле телефона: у остальных
+     полей виджета поведение правильное. */
+  .b24-form-field-phone .b24-form-control-label {
+    top: 7px;
+    margin-top: 0;
+    transform: none;
+    font-size: 11px;
+    line-height: 1.2;
+    letter-spacing: .02em;
+    opacity: .72;
+  }
+  .b24-form-field-phone input.b24-form-control {
+    padding-top: 25px;
+    padding-bottom: 7px;
+  }
 </style>
   </head>
   <body>

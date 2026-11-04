@@ -240,6 +240,17 @@
 .lead-modal { display: grid; gap: 1rem; }
 .lead-modal__title { font-family: var(--font-display); font-size: clamp(1.25rem, 1.1rem + .6vw, 1.5rem); line-height: 1.2; }
 .lead-modal__text { color: var(--c-text-2); font-size: .875rem; line-height: 1.5; margin-bottom: .25rem; }
+/* Окно при уходе со страницы: кнопка в канал и запасной путь к заявке. */
+.lead-modal__tg { display: block; text-align: center; margin-top: .25rem; }
+.lead-modal__secondary {
+  display: block; width: 100%; margin-top: .75rem; padding: .5rem;
+  background: none; border: 0; color: var(--c-text-2); font: inherit;
+  font-size: .875rem; text-decoration: underline; text-underline-offset: 3px;
+  cursor: pointer;
+}
+.lead-modal__secondary:hover { color: var(--c-text); }
+/* Подпись под формой окна по таймеру: что будет после отправки. */
+.lead-modal__note { color: var(--c-text-2); font-size: .8125rem; line-height: 1.45; margin-top: .75rem; }
 .modal__video img { width: 100%; border-radius: var(--r-card); }
 .modal__video figcaption { color: var(--c-text-3); font-size: .8125rem; margin-top: .875rem; }
 

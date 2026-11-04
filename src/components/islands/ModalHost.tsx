@@ -1,8 +1,18 @@
 import { useEffect, useRef, useState } from 'preact/hooks';
 import Quiz from './Quiz';
 import LeadForm from './LeadForm';
+import { popups } from '../../content/popups';
 
-type Kind = 'quiz' | 'video' | 'lead' | null;
+type Kind = 'quiz' | 'video' | 'lead' | 'hello' | 'stay' | null;
+
+/** Показанные окна помним на визит: второй раз человека не дёргаем. */
+const SEEN = 'ec-popup-seen';
+const seen = (k: string): boolean => {
+  try { return (sessionStorage.getItem(SEEN) || '').includes(k); } catch { return true; }
+};
+const markSeen = (k: string): void => {
+  try { sessionStorage.setItem(SEEN, (sessionStorage.getItem(SEEN) || '') + k + ','); } catch { /* приватный режим – просто покажем ещё раз */ }
+};
 
 interface Props {
   quizTitle: string;
@@ -40,6 +50,36 @@ export default function ModalHost({
     };
     document.addEventListener('click', onClick);
     return () => document.removeEventListener('click', onClick);
+  }, []);
+
+  // Окно по таймеру и окно при уходе. Открываем только если человек сейчас
+  // ничего не смотрит сам: перебивать открытый квиз или форму нельзя.
+  useEffect(() => {
+    // Заявка уже отправлена – больше не предлагаем ничего.
+    const done = () => { try { return !!sessionStorage.getItem('ec-lead-sent'); } catch { return false; } };
+
+    let timer = 0;
+    if (!seen('hello') && !done()) {
+      timer = window.setTimeout(() => {
+        setKind((cur) => (cur ? cur : (markSeen('hello'), setAction(popups.hello.title), 'hello')));
+      }, popups.delaySec * 1000);
+    }
+
+    // Уход со страницы ловим по курсору, уходящему за верхнюю кромку окна:
+    // так человек тянется к адресной строке или к крестику вкладки.
+    // На телефоне мыши нет, и окно там не показывается вовсе.
+    const onLeave = (e: MouseEvent) => {
+      if (e.clientY > 8 || e.relatedTarget) return;
+      if (seen('stay') || done()) return;
+      setKind((cur) => (cur ? cur : (markSeen('stay'), 'stay')));
+    };
+    const fine = window.matchMedia('(pointer: fine)').matches;
+    if (fine) document.addEventListener('mouseout', onLeave);
+
+    return () => {
+      if (timer) clearTimeout(timer);
+      if (fine) document.removeEventListener('mouseout', onLeave);
+    };
   }, []);
 
   useEffect(() => {
@@ -83,6 +123,50 @@ export default function ModalHost({
             success={success}
             source={`Окно заявки: ${action}`}
           />
+        </div>
+      )}
+
+      {/* Через 10 секунд: человек ходит по сайту и не решается выбрать.
+          Та же форма, что в обычном окне заявки, но со своим текстом и
+          своим источником – в кабинете видно, что заявка пришла отсюда. */}
+      {kind === 'hello' && (
+        <div class="lead-modal">
+          <p class="lead-modal__title">{popups.hello.title}</p>
+          <p class="lead-modal__text">{popups.hello.text}</p>
+          <LeadForm
+            namePlaceholder="Ваше имя"
+            phonePlaceholder="Ваш номер телефона"
+            cta={popups.hello.cta}
+            success={success}
+            source={popups.hello.source}
+          />
+          <p class="lead-modal__note">{popups.hello.note}</p>
+        </div>
+      )}
+
+      {/* При уходе со страницы: вместо «останьтесь» даём причину остаться –
+          канал, где наличие обновляется каждый день. Второй кнопкой
+          оставляем путь к заявке, чтобы окно не было тупиком. */}
+      {kind === 'stay' && (
+        <div class="lead-modal">
+          <p class="lead-modal__title">{popups.stay.title}</p>
+          <p class="lead-modal__text">{popups.stay.text}</p>
+          <a
+            class="btn lead-modal__tg"
+            href={popups.stay.href}
+            target="_blank"
+            rel="noopener"
+            onClick={() => setKind(null)}
+          >
+            {popups.stay.button}
+          </a>
+          <button
+            class="lead-modal__secondary"
+            type="button"
+            onClick={() => { setAction(popups.stay.secondary); setKind('lead'); }}
+          >
+            {popups.stay.secondary}
+          </button>
         </div>
       )}
 

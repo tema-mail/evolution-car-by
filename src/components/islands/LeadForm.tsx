@@ -69,6 +69,9 @@ export default function LeadForm({
       consent: agreed,
       company,
     });
+    // Заявка ушла – запоминаем на визит, чтобы всплывающие окна
+    // (ModalHost) больше не предлагали оставить её ещё раз.
+    if (ok) { try { sessionStorage.setItem('ec-lead-sent', '1'); } catch { /* приватный режим */ } }
     setStatus(ok ? 'done' : 'error');
     if (ok) goToThanks();
   };
