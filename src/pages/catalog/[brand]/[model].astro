@@ -40,6 +40,11 @@ const CONFIGURATORS: Record<string, string> = {
 };
 const configurator = CONFIGURATORS[car.slug];
 
+// Блок под коммерческий запрос «купить <модель> в Минске». Пока на одной
+// карточке – владелец смотрит и согласует до раскатки на остальные 128.
+const BUY_BLOCK = ['geely-preface'];
+const showBuy = BUY_BLOCK.includes(car.slug);
+
 const crumbs = [
   { name: 'Главная', href: '/' },
   { name: 'Каталог автомобилей', href: '/catalog/' },
@@ -64,6 +69,7 @@ const similar = cars
 import CompareButtons from '../../../components/v1/CompareButtons.astro';
 import { COMPARE_SLUGS } from '../../../content/compare';
 import CarGallery from '../../../components/v1/CarGallery.astro';
+import BuyBlock from '../../../components/v1/BuyBlock.astro';
 import { galleryFor } from '../../../content/galleries';
 const alt = `${car.title} – ${powertrains[car.powertrain].toLowerCase()}, поставка ${countries[car.country].genitive}`;
 // галерея – только у машин, для которых есть набор фото (пока Zeekr 7X)
@@ -155,6 +161,8 @@ const gallery = extra ? [{ src: car.photo, thumb: car.photo, alt }, ...extra] : 
         </div>
       </section>
 
+      {showBuy && <BuyBlock car={car} />}
+
       {groups.length > 0 && (
         <section class="section section--tight" id="specs">
           <div class="container">
@@ -183,6 +191,7 @@ const gallery = extra ? [{ src: car.photo, thumb: car.photo, alt }, ...extra] : 
           </div>
         </section>
       )}
+
 
       <section class="section section--tight">
         <div class="container">

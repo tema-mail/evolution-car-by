@@ -1,0 +1,113 @@
+---
+/** Блок под коммерческий запрос «купить <модель> в Минске».
+ *
+ * Зачем отдельным блоком, а не словом «купить» в заголовке страницы: по
+ * Search Console у карточек 135 запросов со словом «купить» на 4 770 кликов
+ * в квартал, но страницы на них не отвечают – человек видит характеристики,
+ * а не ответ «сколько стоит, сколько ждать, что входит». Блок стоит сразу
+ * под первым экраном, отвечает тремя строками и даёт действие.
+ *
+ * Все числа – из карточки и общих условий поставки (content/landing.ts),
+ * ничего нового здесь не придумывается: цена та же, что в фактах выше,
+ * сроки те же, что на странице доставки.
+ */
+import { site } from '../../content/site';
+import { countries, formatUsd } from '../../content/cars';
+import type { Car } from '../../content/cars';
+
+interface Props { car: Car }
+const { car } = Astro.props;
+
+// Сроки поставки по странам – как на /dostavka-i-rastamozhka/ и в блоге.
+const SROKI: Record<string, string> = {
+  china: '4–7 недель',
+  korea: '4–7 недель',
+  europa: '4–7 недель',
+  usa: '7–10 недель',
+  japan: '4–7 недель',
+};
+const srok = SROKI[car.country] ?? '4–7 недель';
+const otkuda = countries[car.country].genitive;
+const vNalichii = car.availability === 'in-stock';
+
+const vhodit = [
+  'Подбор и проверка машины на месте – с фото и видео до оплаты',
+  'Выкуп у продавца и экспортное оформление',
+  'Доставка со страхованием груза',
+  'Таможенные платежи и оформление',
+  'Сертификация и документы для постановки на учёт',
+];
+---
+
+<section class="buy" id="buy">
+  <div class="container buy__wrap">
+    <div class="buy__main">
+      <h2 class="buy__title">Купить {car.title} в Минске</h2>
+
+      <p class="buy__answer">
+        {vNalichii ? (
+          <>
+            {car.title} есть в наличии – машина уже в Беларуси, прошла таможню и оформляется
+            за считаные дни.
+          </>
+        ) : (
+          <>
+            Привозим {car.title} {otkuda} под заказ. Срок от подтверждения заказа до выдачи –
+            {' '}{srok}.
+          </>
+        )}
+        {car.priceUsd && (
+          <>
+            {' '}Ориентир под ключ – от {formatUsd(car.priceUsd)}{car.priceByn
+              ? `, это примерно ${car.priceByn.toLocaleString('ru-RU')} BYN`
+              : ''}. Точную сумму считаем на дату оформления: она зависит от курса и ставок.
+          </>
+        )}
+      </p>
+
+      <ul class="buy__list">
+        {vhodit.map((item) => <li>{item}</li>)}
+      </ul>
+    </div>
+
+    <aside class="buy__cta">
+      <p class="buy__cta-title">Посчитаем вашу машину</p>
+      <p class="buy__cta-text">
+        Назовём итоговую сумму под ключ с доставкой, оформлением и документами.
+        На этом шаге платить ничего не нужно.
+      </p>
+      <button class="btn buy__btn" type="button" data-open="lead">Рассчитать под ключ</button>
+      <p class="buy__phone">
+        Или позвоните: <a href={site.phoneHref}>{site.phone}</a>
+      </p>
+    </aside>
+  </div>
+</section>
+
+<style>
+  .buy { padding-block: clamp(1.5rem, 1.2rem + 1.5vw, 2.75rem); }
+  .buy__wrap { display: grid; gap: 1.25rem; }
+  @media (min-width: 900px) {
+    .buy__wrap { grid-template-columns: minmax(0, 1fr) minmax(0, 20.5rem); gap: 2.5rem; align-items: start; }
+  }
+
+  .buy__title { font-size: clamp(1.35rem, 1.1rem + 1.1vw, 1.9rem); line-height: 1.2; margin: 0 0 .75rem; }
+  .buy__answer { font-size: 1.0625rem; line-height: 1.6; margin: 0 0 1.125rem; max-width: 62ch; }
+
+  .buy__list { list-style: none; padding: 0; margin: 0; display: grid; gap: .5rem; }
+  .buy__list li { position: relative; padding-left: 1.5rem; line-height: 1.5; color: var(--c-text-2); }
+  .buy__list li::before {
+    content: ''; position: absolute; left: 0; top: .5em; width: .5rem; height: .5rem;
+    border-radius: 50%; background: var(--c-accent);
+  }
+
+  .buy__cta {
+    background: var(--c-surface); border: 1px solid var(--c-line); border-radius: var(--r-card);
+    padding: 1.25rem; display: grid; gap: .625rem; align-content: start;
+  }
+  .buy__cta-title { font-weight: 600; font-size: 1.0625rem; margin: 0; }
+  .buy__cta-text { color: var(--c-text-2); font-size: .9375rem; line-height: 1.55; margin: 0; }
+  .buy__btn { width: 100%; margin-top: .25rem; }
+  .buy__phone { font-size: .9375rem; margin: .25rem 0 0; color: var(--c-text-2); }
+  .buy__phone a { color: var(--c-accent); font-weight: 600; white-space: nowrap; }
+</style>

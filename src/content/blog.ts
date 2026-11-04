@@ -63,9 +63,19 @@ import { skolkoStoitPrivezti } from './blog/skolko-stoit-privezti-iz-kitaya';
 import { kakProhoditPrigon } from './blog/kak-prohodit-prigon';
 import { utilsborBelarus } from './blog/utilsbor-belarus';
 import { zapasHodaZimoy } from './blog/zapas-hoda-zimoy';
+import { lixiangL9Review } from './blog/lixiang-l9-review';
+import { serviceChineseCarMinsk } from './blog/service-chinese-car-minsk';
+import { bydHanVsTeslaModel3 } from './blog/byd-han-vs-tesla-model-3';
+import { geelyPrefaceReview } from './blog/geely-preface-review';
+import { chineseCarParts } from './blog/chinese-car-parts';
 
 /** Порядок в хабе: сверху свежие */
 export const articles: BlogArticle[] = [
+  lixiangL9Review,
+  geelyPrefaceReview,
+  bydHanVsTeslaModel3,
+  serviceChineseCarMinsk,
+  chineseCarParts,
   rastamozhkaElektromobilya,
   skolkoStoitPrivezti,
   utilsborBelarus,
