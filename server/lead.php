@@ -219,7 +219,10 @@ function bitrix(array $lead): string
         'SOURCE_DESCRIPTION' => trim($lead['form'] . "\n" . implode("\n", $rest)),
         'COMMENTS' => 'Номер заявки ' . $lead['id'] . ', ' . $lead['at'],
         'OPENED' => 'Y',
-        'ASSIGNED_BY_ID' => 1,
+        // Ответственный за лид – сотрудник 3843 (просьба Павла Петренюка
+        // 05.11.2026). Вынесен в настройку: сменить ответственного можно
+        // строкой B24_ASSIGNED в lead.env, не трогая код и не выкладывая сайт.
+        'ASSIGNED_BY_ID' => (int) (conf('B24_ASSIGNED') ?: 3843),
     ];
     if ($phone !== '') {
         $fields['PHONE'] = [['VALUE' => $phone, 'VALUE_TYPE' => 'WORK']];
