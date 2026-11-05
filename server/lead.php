@@ -20,6 +20,8 @@
  *   TG_TOKEN, TG_CHAT (через запятую), ORIGIN
  *   B24_HOOK – входящий вебхук Битрикс24 (необязательно; пока пуст,
  *              заявки в CRM не уходят и ошибок это не вызывает)
+ *   B24_ASSIGNED (продажи) и B24_ASSIGNED_SERVICE (сервис) – кому в CRM
+ *              достаётся лид; по умолчанию 3843 и 4965
  * Заявки пишутся в ~/data/leads.jsonl – тоже вне каталога сайта: это
  * персональные данные, по закону № 99-З их нельзя отдавать по прямой ссылке.
  */
@@ -163,9 +165,19 @@ function message(array $lead): string
     $f = $lead['fields'];
     $lines = ['<b>' . esc($lead['form']) . '</b> · № ' . $lead['id']];
     foreach (LABELS as $key => $label) {
-        if (!empty($f[$key])) {
-            $lines[] = '<b>' . $label . ':</b> ' . ($key === 'Order' ? "\n" : '') . esc((string)$f[$key]);
+        if (empty($f[$key])) {
+            continue;
         }
+        // Страницу отдаём ссылкой: менеджер открывает её в один клик и
+        // сразу видит, что человек смотрел. В адресе из формы лежит только
+        // путь («/catalog/lixiang/l9/»), поэтому достраиваем домен.
+        if ($key === 'Page') {
+            $path = (string) $f[$key];
+            $url = str_starts_with($path, 'http') ? $path : 'https://evolutioncar.by' . $path;
+            $lines[] = '<b>' . $label . ':</b> <a href="' . esc($url) . '">' . esc($path) . '</a>';
+            continue;
+        }
+        $lines[] = '<b>' . $label . ':</b> ' . ($key === 'Order' ? "\n" : '') . esc((string)$f[$key]);
     }
     foreach ($f as $key => $value) {
         if (!isset(LABELS[$key]) && $value !== '' && $value !== null) {
@@ -175,6 +187,43 @@ function message(array $lead): string
     $minsk = (new DateTimeImmutable($lead['at']))->setTimezone(new DateTimeZone('Europe/Minsk'));
     $lines[] = '<i>' . $minsk->format('d.m.Y, H:i:s') . ' Минск</i>';
     return implode("\n", $lines);
+}
+
+/**
+ * Кому в Битриксе достанется лид.
+ *
+ * Сервисные заявки ведёт один сотрудник, продажу машин – другой. Решаем
+ * по двум признакам: по названию формы (её текст приходит с кнопки, на
+ * которую нажали) и по адресу страницы, с которой пришла заявка. Второй
+ * признак нужен ради будущих страниц и статей про обслуживание: там
+ * кнопка может называться как угодно, а адрес всё равно скажет правду.
+ *
+ * Если признаков нет – лид идёт на продажи. Это осознанный выбор: лучше
+ * отдать сервисную заявку продавцу, чем потерять покупателя в сервисе.
+ */
+function assignedFor(array $lead): int
+{
+    $sales = (int) (conf('B24_ASSIGNED') ?: 3843);
+    $service = (int) (conf('B24_ASSIGNED_SERVICE') ?: 4965);
+
+    $haystack = mb_strtolower($lead['form'] . ' ' . (string) ($lead['fields']['Page'] ?? ''));
+
+    // Слова из названия формы и куски адресов сервисных страниц.
+    $marks = [
+        'сервис', 'обслуж', 'ремонт', 'диагностик', 'запчаст',
+        '/servis', '/service-', '-parts', 'maslo', 'garant',
+    ];
+    foreach ($marks as $mark) {
+        if (str_contains($haystack, $mark)) {
+            return $service;
+        }
+    }
+    // «ТО» – отдельным словом и только им: подстрокой оно живёт внутри
+    // «это», «авто», «всё то же» и утащило бы в сервис заявку на покупку.
+    if (preg_match('/(^|[^а-яё])то([^а-яё]|$)/ui', $haystack)) {
+        return $service;
+    }
+    return $sales;
 }
 
 /**
@@ -219,10 +268,11 @@ function bitrix(array $lead): string
         'SOURCE_DESCRIPTION' => trim($lead['form'] . "\n" . implode("\n", $rest)),
         'COMMENTS' => 'Номер заявки ' . $lead['id'] . ', ' . $lead['at'],
         'OPENED' => 'Y',
-        // Ответственный за лид – сотрудник 3843 (просьба Павла Петренюка
-        // 05.11.2026). Вынесен в настройку: сменить ответственного можно
-        // строкой B24_ASSIGNED в lead.env, не трогая код и не выкладывая сайт.
-        'ASSIGNED_BY_ID' => (int) (conf('B24_ASSIGNED') ?: 3843),
+        // Ответственный зависит от того, про что заявка: сервис и
+        // обслуживание уходят одному человеку, покупка машины – другому
+        // (решение владельца 05.11.2026). Оба номера – в настройках
+        // lead.env, меняются без правки кода и без выкладки сайта.
+        'ASSIGNED_BY_ID' => assignedFor($lead),
     ];
     if ($phone !== '') {
         $fields['PHONE'] = [['VALUE' => $phone, 'VALUE_TYPE' => 'WORK']];
