@@ -29,10 +29,10 @@ KEY="${DEPLOY_KEY:-$HOME/.ssh/hoster_by_ed25519}"
 [[ -f "$KEY" ]] || { echo "нет ключа $KEY" >&2; exit 1; }
 [[ -d "$HERE/dist" ]] || { echo "нет $HERE/dist – сначала npm run build" >&2; exit 1; }
 
-# 04.11.2026 сборка без PUBLIC_SITE_URL ушла на бой: canonical, sitemap, robots
-# и разметка 457 файлов вели на зеркало tema-mail.github.io. Проверка здесь, а
-# не только в release.sh, потому что заливка запускается и сама по себе.
-if chuzhie=$(grep -rl 'tema-mail\.github\.io' "$HERE/dist" 2>/dev/null); then
+# Сборка без PUBLIC_SITE_URL ушла на бой (найдено 05.11.2026): canonical, sitemap,
+# robots и разметка 457 файлов вели на зеркало tema-mail.github.io. Проверка здесь,
+# а не только в release.sh, потому что заливка запускается и сама по себе.
+if chuzhie=$(grep -rlE 'tema-mail\.github\.io|xn--80agnajes3a' "$HERE/dist" 2>/dev/null); then
   echo "НЕ ЗАЛИВАЮ: в сборке чужой домен, файлов: $(echo "$chuzhie" | wc -l | tr -d ' '). Собирать через zsh deploy/release.sh" >&2
   exit 1
 fi

@@ -57,4 +57,20 @@ admin_code=$(check "https://admin.evolutioncar.by/")
 echo "   главная: $main_code, кабинет без пароля: $admin_code"
 [[ "$main_code" == "200" ]] || fail "главная отдаёт $main_code"
 [[ "$admin_code" == "401" ]] || fail "кабинет отдаёт $admin_code вместо 401 – он открыт"
+
+# Коды не видят чужой домен: зеркало в canonical и sitemap тоже отвечает 200.
+SITE_HOST="https://evolutioncar.by"
+page() {
+  ssh -o ConnectTimeout=25 claude-vps "curl -s --max-time 25 '$1'" 2>/dev/null
+}
+proverit_domen() {  # главная и sitemap: только боевой домен
+  local glavnaya="$1" karta="$2"
+  [[ "$glavnaya" == *"rel=\"canonical\" href=\"$SITE_HOST/\""* ]] || { echo "canonical главной не на боевом домене"; return 1; }
+  local vsego svoih
+  vsego=$(print -r -- "$karta" | grep -c '<loc>' || true)
+  svoih=$(print -r -- "$karta" | grep -c "<loc>$SITE_HOST/" || true)
+  [[ "$vsego" -gt 0 && "$vsego" == "$svoih" ]] || { echo "в карте сайта своих адресов $svoih из $vsego"; return 1; }
+}
+oshibka=$(proverit_domen "$(page "$SITE_HOST/")" "$(page "$SITE_HOST/sitemap.xml")") || fail "$oshibka"
+echo "   canonical главной и карта сайта на боевом домене"
 echo "готово: сайт жив, кабинет закрыт"
