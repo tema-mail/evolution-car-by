@@ -18,6 +18,8 @@
  *
  * Настройки читаются из <домашний каталог>/lead.env (вне каталога сайта):
  *   TG_TOKEN, TG_CHAT (через запятую), ORIGIN
+ *   B24_HOOK – входящий вебхук Битрикс24 (необязательно; пока пуст,
+ *              заявки в CRM не уходят и ошибок это не вызывает)
  * Заявки пишутся в ~/data/leads.jsonl – тоже вне каталога сайта: это
  * персональные данные, по закону № 99-З их нельзя отдавать по прямой ссылке.
  */
@@ -175,6 +177,78 @@ function message(array $lead): string
     return implode("\n", $lines);
 }
 
+/**
+ * Лид в Битрикс24 через входящий вебхук.
+ *
+ * Вебхук – это секрет: он даёт доступ к CRM, поэтому лежит только в
+ * lead.env на сервере (права 600) и никогда в репозитории. Пока
+ * B24_HOOK пуст, функция молча ничего не делает – сайт работает как
+ * прежде, и отсутствие вебхука не роняет приём заявок.
+ *
+ * Заявка уже записана на диск и отправлена в Телеграм до этого вызова,
+ * поэтому даже отказ CRM её не теряет: в ответе придёт причина, и её
+ * видно в логе.
+ */
+function bitrix(array $lead): string
+{
+    $hook = rtrim(conf('B24_HOOK'), '/');
+    if ($hook === '') {
+        return 'не настроен';
+    }
+
+    // Имя и телефон лежат среди полей формы под разными подписями –
+    // забираем по смыслу, а не по жёсткому порядку.
+    $name = $phone = $email = '';
+    $rest = [];
+    foreach ($lead['fields'] as $label => $value) {
+        $low = mb_strtolower((string) $label);
+        if ($name === '' && str_contains($low, 'им')) {
+            $name = (string) $value;
+        } elseif ($phone === '' && (str_contains($low, 'тел') || str_contains($low, 'phone'))) {
+            $phone = (string) $value;
+        } elseif ($email === '' && (str_contains($low, 'mail') || str_contains($low, 'почт'))) {
+            $email = (string) $value;
+        } else {
+            $rest[] = $label . ': ' . $value;
+        }
+    }
+
+    $fields = [
+        'TITLE' => 'Сайт: ' . $lead['form'],
+        'NAME' => $name !== '' ? $name : 'С сайта',
+        'SOURCE_DESCRIPTION' => trim($lead['form'] . "\n" . implode("\n", $rest)),
+        'COMMENTS' => 'Номер заявки ' . $lead['id'] . ', ' . $lead['at'],
+        'OPENED' => 'Y',
+        'ASSIGNED_BY_ID' => 1,
+    ];
+    if ($phone !== '') {
+        $fields['PHONE'] = [['VALUE' => $phone, 'VALUE_TYPE' => 'WORK']];
+    }
+    if ($email !== '') {
+        $fields['EMAIL'] = [['VALUE' => $email, 'VALUE_TYPE' => 'WORK']];
+    }
+
+    $ch = curl_init($hook . '/crm.lead.add.json');
+    curl_setopt_array($ch, [
+        CURLOPT_POST => true,
+        CURLOPT_POSTFIELDS => http_build_query(['fields' => $fields, 'params' => ['REGISTER_SONET_EVENT' => 'Y']]),
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_TIMEOUT => 10,
+    ]);
+    $out = curl_exec($ch);
+    $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+
+    if ($out === false || $code !== 200) {
+        return 'отказ CRM (код ' . $code . ')';
+    }
+    $data = json_decode((string) $out, true);
+    if (isset($data['result'])) {
+        return 'лид ' . $data['result'];
+    }
+    return 'ошибка CRM: ' . substr((string) ($data['error_description'] ?? $out), 0, 120);
+}
+
 function telegram(string $text): string
 {
     $token = conf('TG_TOKEN');
@@ -248,6 +322,7 @@ if (str_ends_with($path, '/health')) {
     reply(200, [
         'ok' => true,
         'telegram' => conf('TG_TOKEN') !== '' && $chats ? true : false,
+        'crm' => conf('B24_HOOK') !== '',
         'leads' => is_readable(dataDir() . '/leads.jsonl') ? count(file(dataDir() . '/leads.jsonl')) : 0,
         'server' => 'php ' . PHP_VERSION,
     ]);
@@ -357,9 +432,10 @@ file_put_contents($file, json_encode($lead, JSON_UNESCAPED_UNICODE) . "\n", FILE
 @chmod($file, 0600);
 
 $status = telegram(message($lead));
-error_log(sprintf('[lead] %s %s | telegram: %s', $lead['id'], $lead['form'], $status));
+$crm = bitrix($lead);
+error_log(sprintf('[lead] %s %s | telegram: %s | crm: %s', $lead['id'], $lead['form'], $status, $crm));
 
 // Статус отправки возвращаем в ответе: по логам хостинга его не видно, а
 // знать, дошло ли уведомление, нужно – на Бегете заявка от живого клиента
 // уже один раз потерялась молча (30.10.2026).
-reply(200, ['ok' => true, 'id' => $lead['id'], 'telegram' => $status], $origin);
+reply(200, ['ok' => true, 'id' => $lead['id'], 'telegram' => $status, 'crm' => $crm], $origin);
