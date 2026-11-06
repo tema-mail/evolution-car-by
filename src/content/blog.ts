@@ -68,9 +68,19 @@ import { serviceChineseCarMinsk } from './blog/service-chinese-car-minsk';
 import { bydHanVsTeslaModel3 } from './blog/byd-han-vs-tesla-model-3';
 import { geelyPrefaceReview } from './blog/geely-preface-review';
 import { chineseCarParts } from './blog/chinese-car-parts';
+import { lixiangL9VsDenzaD9 } from './blog/lixiang-l9-vs-denza-d9';
+import { geelyPrefaceVsHyundaiElantra } from './blog/geely-preface-vs-hyundai-elantra';
+import { bydQinPlusReview } from './blog/byd-qin-plus-review';
+import { hyundaiElantraReview } from './blog/hyundai-elantra-review';
+import { geelyCoolrayReview } from './blog/geely-coolray-review';
 
 /** Порядок в хабе: сверху свежие */
 export const articles: BlogArticle[] = [
+  lixiangL9VsDenzaD9,
+  geelyPrefaceVsHyundaiElantra,
+  bydQinPlusReview,
+  hyundaiElantraReview,
+  geelyCoolrayReview,
   lixiangL9Review,
   geelyPrefaceReview,
   bydHanVsTeslaModel3,
