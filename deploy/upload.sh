@@ -37,6 +37,15 @@ if chuzhie=$(grep -rlE 'tema-mail\.github\.io|xn--80agnajes3a' "$HERE/dist" 2>/d
   exit 1
 fi
 
+# Вес картинок. Найдено 07.11.2026: PageSpeed дал 31 балл на телефоне, потому
+# что картинки при переносе с Тильды приехали в PNG в полном размере – 4,5 МБ
+# на одной главной. Та же ошибка сидела и на втором сайте, значит ловить её
+# должен шаг выкладки, а не вопрос владельца.
+if ! node "$HERE/scripts/proverka-kartinok.mjs" "$HERE/dist"; then
+  echo "НЕ ЗАЛИВАЮ: см. список выше. Собирать через zsh deploy/release.sh" >&2
+  exit 1
+fi
+
 REMOTE="$SSH_LOGIN@$SSH_HOST"
 ROOT="www/evolutioncar.by"
 

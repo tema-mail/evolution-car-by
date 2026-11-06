@@ -50,7 +50,7 @@ const total =
 
     <div class="pgroup">Главная <span>1</span></div>
     <div class="prow">
-      <img class="thumb" src="/img/cars/lynk-co-08.jpg" alt="" />
+      <img class="thumb" loading="lazy" decoding="async" src="/img/cars/lynk-co-08.jpg" alt="" />
       <div>
         <a class="pname pcard" href={card('/')}>Главная</a>
         <div class="muted" style="font-size:12px">Автомобили из Китая, Кореи, США и Европы под заказ в Минске</div>
@@ -65,7 +65,7 @@ const total =
       const first = cars.find((c) => c.country === d.country);
       return (
         <div class="prow">
-          <img class="thumb" src={first?.photo ?? '/img/cars/denza-d9.jpg'} alt="" />
+          <img class="thumb" loading="lazy" decoding="async" src={first?.photo ?? '/img/cars/denza-d9.jpg'} alt="" />
           <div>
             <a class="pname pcard" href={card(`/${d.slug}/`)}>{d.h1}</a>
             <div class="muted" style="font-size:12px">{d.heroLead}</div>
@@ -79,7 +79,7 @@ const total =
     <div class="pgroup">Каталоги <span>{1 + sections.length + brands.length} · {cars.length} карточек</span></div>
     <details class="pcat">
       <summary class="prow">
-        <img class="thumb" src="/img/cars/zeekr-009.jpg" alt="" />
+        <img class="thumb" loading="lazy" decoding="async" src="/img/cars/zeekr-009.jpg" alt="" />
         <div>
           <span class="pname"><i class="caret"></i><a class="pcard" href={card('/catalog/')} onclick="event.stopPropagation()">Общий каталог</a></span>
           <div class="muted" style="font-size:12px">{cars.length} автомобилей · {sections.length} подборок · {brands.length} марок</div>
@@ -89,7 +89,7 @@ const total =
       </summary>
       {cars.map((c) => (
         <div class="prow lvl1">
-          <img class="thumb" src={c.photo} alt="" />
+          <img class="thumb" loading="lazy" decoding="async" src={c.photo} alt="" />
           <div>
             <a class="pname pcard" href={card(carPath(c))}>{c.title}</a>
             <div class="muted" style="font-size:12px">{c.brand} · {countries[c.country].label}{c.priceUsd ? ` · от ${c.priceUsd.toLocaleString('ru-RU')} $` : ' · цена по запросу'}</div>
@@ -104,7 +104,7 @@ const total =
       const inside = cars.filter(sec.match);
       return (
         <div class="prow">
-          <img class="thumb" src={inside[0]?.photo ?? '/img/cars/byd-dolphin.jpg'} alt="" />
+          <img class="thumb" loading="lazy" decoding="async" src={inside[0]?.photo ?? '/img/cars/byd-dolphin.jpg'} alt="" />
           <div>
             <a class="pname pcard" href={card(`/catalog/${sec.slug}/`)}>{sec.title}</a>
             <div class="muted" style="font-size:12px">{inside.length} автомобилей</div>
@@ -117,7 +117,7 @@ const total =
 
     {brands.map((b) => (
       <div class="prow">
-        <img class="thumb" src={b.cars[0]?.photo ?? '/img/cars/denza-d9.jpg'} alt="" />
+        <img class="thumb" loading="lazy" decoding="async" src={b.cars[0]?.photo ?? '/img/cars/denza-d9.jpg'} alt="" />
         <div>
           <a class="pname pcard" href={card(brandPath(b.name))}>{b.name}</a>
           <div class="muted" style="font-size:12px">{b.cars.length} моделей</div>
@@ -130,7 +130,7 @@ const total =
     <div class="pgroup">Конфигураторы <span>{configurators.length}</span></div>
     {configurators.map((c) => (
       <div class="prow">
-        <img class="thumb" src={c.cover} alt="" />
+        <img class="thumb" loading="lazy" decoding="async" src={c.cover} alt="" />
         <div>
           <a class="pname pcard" href={card(c.href)}>{c.brand} {c.model}</a>
           <div class="muted" style="font-size:12px">{c.options}</div>
