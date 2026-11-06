@@ -28,10 +28,10 @@ const plural = (n: number, one: string, few: string, many: string) => {
 const models = (n: number) => plural(n, 'модель', 'модели', 'моделей');
 
 const tiles = [
-  { title: 'Авто в наличии', meta: `${models(count('v-nalichii'))} в шоуруме`, href: '/catalog/v-nalichii/', img: '/img/Rectangle_30754.png', pos: 'center 60%' },
-  { title: 'Авто под заказ', meta: `${models(count('pod-zakaz'))} – привезём`, href: '/catalog/pod-zakaz/', img: '/img/Frame_1171275437.png', pos: 'center 72%' },
-  { title: 'Электромобили', meta: models(count('elektromobili')), href: '/catalog/elektromobili/', img: '/img/Rectangle_30756.png', pos: 'center 65%' },
-  { title: 'Весь каталог', meta: `${plural(brandsTotal, 'марка', 'марки', 'марок')} · ${models(cars.length)}`, href: '/catalog/', img: '/img/Frame_1171275436.png', pos: 'center 72%', accent: true },
+  { title: 'Авто в наличии', meta: `${models(count('v-nalichii'))} в шоуруме`, href: '/catalog/v-nalichii/', img: '/img/Rectangle_30754.webp', pos: 'center 60%' },
+  { title: 'Авто под заказ', meta: `${models(count('pod-zakaz'))} – привезём`, href: '/catalog/pod-zakaz/', img: '/img/Frame_1171275437.webp', pos: 'center 72%' },
+  { title: 'Электромобили', meta: models(count('elektromobili')), href: '/catalog/elektromobili/', img: '/img/Rectangle_30756.webp', pos: 'center 65%' },
+  { title: 'Весь каталог', meta: `${plural(brandsTotal, 'марка', 'марки', 'марок')} · ${models(cars.length)}`, href: '/catalog/', img: '/img/Frame_1171275436.webp', pos: 'center 72%', accent: true },
 ];
 
 const links = [
