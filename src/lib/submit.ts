@@ -1,6 +1,7 @@
 import { trackLead } from './analytics';
 
 import { track } from './counter';
+import { sourceLine } from './attribution';
 
 export interface Lead {
   name: string;
@@ -29,28 +30,6 @@ const CAR_PAGE = /^\/catalog\/[^/]+\/[^/]+\/?$/;
 function carFromPage(): string {
   if (!CAR_PAGE.test(location.pathname)) return '';
   return document.querySelector('h1')?.textContent?.trim().slice(0, 120) ?? '';
-}
-
-/** Метки рекламной кампании из адреса – чтобы в заявке был виден источник */
-function utmFromUrl(): string {
-  const KEY = 'ec_utm';
-  const q = new URLSearchParams(location.search);
-  const fresh = ['utm_source', 'utm_medium', 'utm_campaign']
-    .map((k) => q.get(k))
-    .filter(Boolean)
-    .join(' / ');
-  try {
-    // Метки есть в адресе только на первой странице. Запоминаем их на визит,
-    // иначе человек, пришедший по объявлению и походивший по сайту,
-    // оставит заявку без источника.
-    if (fresh) {
-      sessionStorage.setItem(KEY, fresh);
-      return fresh;
-    }
-    return sessionStorage.getItem(KEY) ?? '';
-  } catch {
-    return fresh;
-  }
 }
 
 /**
@@ -104,7 +83,7 @@ export async function submitLead(lead: Lead): Promise<boolean> {
     car: lead.car || carFromPage(),
     page: location.pathname,
     referrer: document.referrer.slice(0, 200),
-    utm: utmFromUrl(),
+    utm: sourceLine(),
     // поле-ловушка: человек его не видит и не заполняет, роботы заполняют
     company: lead.company ?? '',
   };
