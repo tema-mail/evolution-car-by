@@ -73,12 +73,22 @@ export default function ModalHost({
       if (seen('stay') || done()) return;
       setKind((cur) => (cur ? cur : (markSeen('stay'), 'stay')));
     };
+    // Слушатель включается только после stay.minSec секунд на сайте: до
+    // этого окна при уходе нет вообще, даже если курсор ушёл за кромку.
     const fine = window.matchMedia('(pointer: fine)').matches;
-    if (fine) document.addEventListener('mouseout', onLeave);
+    let armTimer = 0;
+    let armed = false;
+    if (fine) {
+      armTimer = window.setTimeout(() => {
+        armed = true;
+        document.addEventListener('mouseout', onLeave);
+      }, popups.stay.minSec * 1000);
+    }
 
     return () => {
       if (timer) clearTimeout(timer);
-      if (fine) document.removeEventListener('mouseout', onLeave);
+      if (armTimer) clearTimeout(armTimer);
+      if (armed) document.removeEventListener('mouseout', onLeave);
     };
   }, []);
 
