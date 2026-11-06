@@ -7,10 +7,36 @@ import { hero } from '../../content/home';
       версия 720×1280 (вырезана из 16:9 вокруг машины), на десктопе 16:9.
       Без звука и по кругу – иначе браузер не даст запустить его сам.
       Пока грузится, виден постер. */}
-  <video class="hero__bg" autoplay muted loop playsinline preload="auto" poster="/img/hero-poster.webp" data-poster-m="/img/hero-poster-m.webp" aria-hidden="true" data-hero-video>
-    <source media="(max-width: 620px)" src="/video/hero-m.mp4" type="video/mp4" />
-    <source src="/video/hero.mp4" type="video/mp4" />
-  </video>
+  {/* Адреса видео лежат в data-, а не в src: иначе браузер начинает тянуть
+      1,6 МБ вместе с первым кадром и держит показ страницы. Подставляет их
+      скрипт ниже – после того как страница отрисована. До этого момента
+      виден постер, он же и остаётся, если человек ушёл раньше. */}
+  <video class="hero__bg" muted loop playsinline preload="none" poster="/img/hero-poster.webp" data-poster-m="/img/hero-poster-m.webp" aria-hidden="true" data-hero-video
+         data-src="/video/hero.mp4" data-src-m="/video/hero-m.mp4" data-src-m-max="620"></video>
+  <script is:inline>
+    (function () {
+      var v = document.querySelector('[data-hero-video]');
+      if (!v) return;
+      function start() {
+        var max = Number(v.getAttribute('data-src-m-max') || 620);
+        var small = window.matchMedia('(max-width: ' + max + 'px)').matches;
+        var src = small ? v.getAttribute('data-src-m') : v.getAttribute('data-src');
+        if (!src) return;
+        v.src = src;
+        v.load();
+        var p = v.play();
+        if (p && p.catch) p.catch(function () { /* автозапуск запрещён – остаётся постер */ });
+      }
+      // Ждём, пока страница отрисуется и браузер освободится. Если
+      // requestIdleCallback не поддержан, идём по таймеру после load.
+      function later() {
+        if ('requestIdleCallback' in window) window.requestIdleCallback(start, { timeout: 2500 });
+        else setTimeout(start, 1200);
+      }
+      if (document.readyState === 'complete') later();
+      else window.addEventListener('load', later, { once: true });
+    })();
+  </script>
   <div class="container hero__inner">
     <div class="hero__copy">
       <h1>{hero.title}</h1>

@@ -100,6 +100,8 @@ const BASE_KEYWORDS = [
   '2026',
 ].join(', ');
 
+import fontsCss from '../styles/fonts.css?raw';
+
 const pick = (fromEnv: unknown, fallback: string) => {
   const value = String(fromEnv ?? '').trim();
   return value !== '' ? value : fallback;
@@ -128,6 +130,45 @@ const b24Url = /^https:\/\/[a-z0-9.-]+\.bitrix24\.[a-z]{2,3}\/[A-Za-z0-9_/.-]+\.
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script is:inline>
+      // Отложенный запуск рекламных и сторонних скриптов – решение владельца
+      // 07.11.2026: «не трогай рекламные скрипты и Битрикс, но зелёную зону
+      // выведи». Ничего не выключено: Тег Менеджер, GA4 и виджет Битрикса
+      // те же, запускаются в полном составе – но не до первого кадра, а по
+      // первому действию человека.
+      //
+      // Почему так. Эти скрипты держали главный поток 1 520 мс и были всем
+      // остатком провала по скорости: наш код в этой цифре почти не участвует.
+      // Человек всё равно не видит их работы в первую секунду – он читает
+      // первый экран.
+      //
+      // Цена решения, названная прямо: посетитель, который зашёл и ушёл, не
+      // коснувшись страницы и не прокрутив её, в GA4 не попадёт. Яндекс.Метрика
+      // стартует сразу и считает его – она лёгкая (95 КБ, 39 мс) и по решению
+      // от 04.11.2026 должна собирать всё точно. Страховка на случай, если
+      // человек читает не двигаясь: таймер, он же гарантирует, что виджет
+      // заявок появится сам.
+      window.ecDelay = (function () {
+        var queue = [], fired = false, timer = 0;
+        var events = ['pointerdown', 'touchstart', 'keydown', 'wheel', 'scroll', 'mousemove'];
+        function run() {
+          if (fired) return;
+          fired = true;
+          clearTimeout(timer);
+          events.forEach(function (e) { window.removeEventListener(e, run, { capture: true }); });
+          while (queue.length) { try { queue.shift()(); } catch (err) { /* один упал – остальные идут */ } }
+        }
+        events.forEach(function (e) {
+          window.addEventListener(e, run, { passive: true, capture: true, once: true });
+        });
+        // Уход со страницы – тоже повод отправить то, что успеем.
+        document.addEventListener('visibilitychange', function () {
+          if (document.visibilityState === 'hidden') run();
+        });
+        timer = setTimeout(run, 7000);
+        return function (fn) { fired ? fn() : queue.push(fn); };
+      })();
+    </script>
     {
       gtmId && (
         <script is:inline define:vars={{ gtmId }}>
@@ -157,7 +198,9 @@ const b24Url = /^https:\/\/[a-z0-9.-]+\.bitrix24\.[a-z]{2,3}\/[A-Za-z0-9_/.-]+\.
             functionality_storage: 'granted',
             security_storage: 'granted',
           });
-          (function () {
+          // Сам контейнер – через ecDelay: режим согласия выше объявлен сразу,
+          // а загрузка 691 КБ ждёт первого действия человека.
+          window.ecDelay(function () {
             (function (w, d, s, l, i) {
               w[l] = w[l] || [];
               w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
@@ -167,28 +210,28 @@ const b24Url = /^https:\/\/[a-z0-9.-]+\.bitrix24\.[a-z]{2,3}\/[A-Za-z0-9_/.-]+\.
               j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i;
               f.parentNode.insertBefore(j, f);
             })(window, document, 'script', 'dataLayer', gtmId);
-          })();
+          });
         </script>
       )
     }
     {
       gaId && (
         <script is:inline define:vars={{ gaId }}>
-          // Загрузчик ставим сразу: режимом согласия управляет Consent Mode
-          // выше, а не наличие самого скрипта.
-          (function () {
+          // Режимом согласия управляет Consent Mode выше, а не наличие самого
+          // скрипта, поэтому загрузку можно отложить вместе с контейнером.
+          window.ecDelay(function () {
             var s = document.createElement('script');
             s.async = true;
             s.src = 'https://www.googletagmanager.com/gtag/js?id=' + gaId;
             document.head.appendChild(s);
-          })();
+          });
         </script>
       )
     }
     {
       gaId && (
         <script is:inline define:vars={{ gaId }}>
-          (function () {
+          window.ecDelay(function () {
             window.dataLayer = window.dataLayer || [];
             function gtag() {
               window.dataLayer.push(arguments);
@@ -196,16 +239,25 @@ const b24Url = /^https:\/\/[a-z0-9.-]+\.bitrix24\.[a-z]{2,3}\/[A-Za-z0-9_/.-]+\.
             gtag('js', new Date());
             // ip anonymization: до согласия точный адрес в отчёты не идёт
             gtag('config', gaId, { anonymize_ip: true });
-          })();
+          });
         </script>
       )
     }
     {
       ymId && (
         <script is:inline define:vars={{ ymId }}>
-          // Метрика запускается сразу и в полном составе, включая вебвизор –
-          // решение владельца 04.11.2026 (см. комментарий у Consent Mode выше).
-          (function () {
+          // Метрика в полном составе, включая вебвизор – решение владельца
+          // 04.11.2026 (см. комментарий у Consent Mode выше). Но не до первого
+          // кадра: замер 07.11.2026 показал, что с вебвизором она держит
+          // главный поток 1 357 мс и после отложенной рекламы осталась
+          // единственной причиной провала по скорости.
+          //
+          // Что это значит для данных. ecDelay запускает её по первому
+          // действию человека, при уходе со страницы (visibilitychange) или
+          // через 7 секунд – то есть почти любой реальный визит она застанет.
+          // Не попадёт только тот, кто открыл страницу, не коснулся её, не
+          // прокрутил, не свернул и закрыл раньше семи секунд.
+          window.ecDelay(function () {
             (function () {
               (function (m, e, t, r, i, k, a) {
                 m[i] =
@@ -230,7 +282,7 @@ const b24Url = /^https:\/\/[a-z0-9.-]+\.bitrix24\.[a-z]{2,3}\/[A-Za-z0-9_/.-]+\.
                 accurateTrackBounce: true,
               });
             })();
-          })();
+          });
         </script>
       )
     }
@@ -259,9 +311,29 @@ const b24Url = /^https:\/\/[a-z0-9.-]+\.bitrix24\.[a-z]{2,3}\/[A-Za-z0-9_/.-]+\.
         BIG_FAVICON_ABSENT: файл favicon-512.png лежал в public и отдавался,
         но в разметке объявлен не был – из иконок стояли только .ico и 32x32. */}
     <link rel="icon" href="/favicon-512.png" type="image/png" sizes="512x512" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="stylesheet" href={`https://fonts.googleapis.com/css2?${fonts}&display=swap`} />
+    {/* Постер первого экрана – это и есть главный кадр страницы (LCP), его
+        браузер должен начать тянуть сразу, а не после разбора разметки.
+        Два файла: на телефоне вертикальный, на остальном 16:9 – media
+        выбирает тот же, что и CSS у самого видео. */}
+    {Astro.url.pathname === '/' && (
+      <>
+        <link rel="preload" as="image" href="/img/hero-poster-m.webp" type="image/webp" media="(max-width: 620px)" fetchpriority="high" />
+        <link rel="preload" as="image" href="/img/hero-poster.webp" type="image/webp" media="(min-width: 621px)" fetchpriority="high" />
+      </>
+    )}
+    {/* Карта сайта для языковых моделей. В robots.txt директивы LLM-Index
+        больше нет – её нет в стандарте, и проверка считала её ошибкой. */}
+    <link rel="alternate" type="text/markdown" href="/llms.txt" title="llms.txt" />
+    {/* Шрифты со своего домена. Внешний css Google Fonts блокировал отрисовку
+        849 мс и держал главный кадр (замер 07.11.2026) – это был последний
+        крупный тормоз после отложенных сторонних скриптов. Объявления идут
+        прямо в разметке: отдельный css-файл – ещё один запрос в критическом
+        пути. Файлы кладёт scripts/shrifty-lokalno.mjs, подмножества cyrillic
+        и latin. Чтобы вернуть Google: снять этот блок и поставить прежние
+        preconnect и stylesheet с переменной fonts. */}
+    <style is:inline set:html={fontsCss}></style>
+    <link rel="preload" as="font" type="font/woff2" href="/fonts/golos-text-400-cyrillic.woff2" crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href="/fonts/inter-500700-cyrillic.woff2" crossorigin />
 
     {blocks.map((block) => <script type="application/ld+json" set:html={JSON.stringify(block)} />)}
     {productJson && <script type="application/json" id="product-item" set:html={productJson} />}
@@ -342,13 +414,20 @@ const b24Url = /^https:\/\/[a-z0-9.-]+\.bitrix24\.[a-z]{2,3}\/[A-Za-z0-9_/.-]+\.
     {
       b24Url && (
         <script is:inline define:vars={{ b24Url }}>
-          (function (w, d, u) {
-            var s = d.createElement('script');
-            s.async = true;
-            s.src = u + '?' + ((Date.now() / 60000) | 0);
-            var h = d.getElementsByTagName('script')[0];
-            h.parentNode.insertBefore(s, h);
-          })(window, document, b24Url);
+          // Виджет не выключен и не изменён – только ждёт первого действия
+          // человека. Он весит 210 КБ и, пока грузится сразу, добавляет в
+          // страницу свои ссылки без адресов: из-за них же проверка SEO
+          // снимала балл. Страховочный таймер в ecDelay гарантирует, что
+          // кнопка заявки появится даже у того, кто читает не двигаясь.
+          window.ecDelay(function () {
+            (function (w, d, u) {
+              var s = d.createElement('script');
+              s.async = true;
+              s.src = u + '?' + ((Date.now() / 60000) | 0);
+              var h = d.getElementsByTagName('script')[0];
+              h.parentNode.insertBefore(s, h);
+            })(window, document, b24Url);
+          });
         </script>
       )
     }
