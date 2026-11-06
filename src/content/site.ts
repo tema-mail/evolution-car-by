@@ -20,7 +20,12 @@ export const site = {
   showroom: 'проспект Машерова, 15/4',
   address: 'г. Минск, проспект Машерова, 15/4',
   city: 'Минск',
-  telegram: 'https://t.me/evolutioncar_by',
+  // Кнопки «Написать в Telegram» (шапка, блок стоимости, подвал, контакты)
+  // ведут на бота менеджера, а не на аккаунт – решение владельца 07.11.2026:
+  // с аккаунта человек не получал ответа, бот ставит его в работу сразу.
+  // Бот чужой, им управляет компания: отсюда только ссылка, трогать его нельзя.
+  // Телеграм-канал с наличием живёт отдельно, в content/popups.ts – не путать.
+  telegram: 'https://t.me/manager_evolutioncar_bot',
   vk: 'https://vk.com/',
   instagram: 'https://www.instagram.com/evolutioncar.by/',
   tiktok: 'https://www.tiktok.com/@evolutioncar.by',
