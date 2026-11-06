@@ -8,7 +8,10 @@ import { benefits } from '../../content/home';
       {benefits.map((item) => (
         <li class="card benefit">
           <span class="benefit__dot" aria-hidden="true"></span>
-          <h3 class="benefit__title">{item.title}</h3>
+          {/* h2, а не h3: у секции своего заголовка нет, и h3 сразу после h1
+              давал разрыв в структуре – проверка доступности снимала за это
+              балл (найдено 07.11.2026). Размер задаёт класс, не тег. */}
+          <h2 class="benefit__title">{item.title}</h2>
           <p class="benefit__text">{item.text}</p>
         </li>
       ))}
