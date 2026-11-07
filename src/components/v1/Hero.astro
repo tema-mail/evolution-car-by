@@ -11,7 +11,17 @@ import { hero } from '../../content/home';
       1,6 МБ вместе с первым кадром и держит показ страницы. Подставляет их
       скрипт ниже – после того как страница отрисована. До этого момента
       виден постер, он же и остаётся, если человек ушёл раньше. */}
-  <video class="hero__bg" muted loop playsinline preload="none" poster="/img/hero-poster.webp" data-poster-m="/img/hero-poster-m.webp" aria-hidden="true" data-hero-video
+  {/* Первый кадр – картинкой, а не атрибутом poster у видео. Через poster
+      браузер тянул файл для компьютера даже на телефоне: выбрать нужный из
+      двух умеет только разметка, а подменял его скрипт, который теперь
+      отложен. Здесь media выбирает файл до загрузки, и на телефоне едут
+      23 КБ вместо 58 (найдено замером 07.11.2026). Это и есть главный кадр
+      страницы, поэтому fetchpriority high. */}
+  <picture class="hero__shot">
+    <source media="(max-width: 620px)" srcset="/img/hero-poster-m.webp" type="image/webp" />
+    <img class="hero__bg" src="/img/hero-poster.webp" alt="" aria-hidden="true" fetchpriority="high" decoding="async" width="1600" height="900" />
+  </picture>
+  <video class="hero__bg hero__bg--video" muted loop playsinline preload="none" aria-hidden="true" data-hero-video
          data-src="/video/hero.mp4" data-src-m="/video/hero-m.mp4" data-src-m-max="620"></video>
   <script is:inline>
     (function () {
@@ -24,17 +34,25 @@ import { hero } from '../../content/home';
         if (!src) return;
         v.src = src;
         v.load();
+        // Кадр-картинку снимаем только когда видео реально пошло: иначе при
+        // запрете автозапуска человек остался бы с пустым первым экраном.
+        v.addEventListener('playing', function () { v.classList.add('is-on'); }, { once: true });
         var p = v.play();
         if (p && p.catch) p.catch(function () { /* автозапуск запрещён – остаётся постер */ });
       }
-      // Ждём, пока страница отрисуется и браузер освободится. Если
-      // requestIdleCallback не поддержан, идём по таймеру после load.
-      function later() {
-        if ('requestIdleCallback' in window) window.requestIdleCallback(start, { timeout: 2500 });
-        else setTimeout(start, 1200);
-      }
-      if (document.readyState === 'complete') later();
-      else window.addEventListener('load', later, { once: true });
+      // Запускаем тем же отложенным механизмом, что сторонние скрипты
+      // (window.ecDelay в BaseLayout): по первому действию человека, при уходе
+      // со страницы или через страховочные 7 секунд. Через idle не годится:
+      // замер 07.11.2026 показал, что 1,6 МБ видео успевают загрузиться и
+      // декодирование держит поток 410 мс – это была вся недостача до 100
+      // баллов, остальные метрики уже на 97-100.
+      //
+      // Человек видит постер сразу, а видео получает через мгновение после
+      // первого касания или прокрутки. Если ecDelay почему-то нет, не теряем
+      // видео совсем, а идём прежним путём через idle.
+      if (typeof window.ecDelay === 'function') window.ecDelay(start);
+      else if (document.readyState === 'complete') setTimeout(start, 1200);
+      else window.addEventListener('load', function () { setTimeout(start, 1200); }, { once: true });
     })();
   </script>
   <div class="container hero__inner">
@@ -47,6 +65,17 @@ import { hero } from '../../content/home';
 </section>
 
 <style>
+  .hero__shot {
+    display: contents;
+  }
+  /* Видео лежит поверх кадра и становится видимым, только когда пошло. */
+  .hero__bg--video {
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+  .hero__bg--video.is-on {
+    opacity: 1;
+  }
   .hero {
     position: relative;
     margin-top: calc(var(--header-h) * -1 - 1rem);
