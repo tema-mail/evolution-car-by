@@ -8,6 +8,7 @@ searchRegion): позиции снимаются для человека в эт
   metrika          – «Метрика и каналы» (счётчик 98499004 + Search Console) → metrika.json в форме TEYES /api/metrika
   gsc-month        – месяц запросов Google из Search Console → months/google-0-<с>-<по>.json
   wm-import FILE   – месяц запросов Яндекса из кабинета Вебмастера (API Вебмастера не отвечает с 11.10) → months/
+  demand           – ПЛАТНО: частотность Wordstat по Минску для phrases.json (нужна колонке спроса)
   serp --paid      – ПЛАТНО: снимок выдачи Минска XMLRiver по phrases.json, Яндекс и Google до топ-20 → serp/<дата>.json
   positions        – собрать positions.json (форма TEYES /api/positions, без нейросетей) из months/ и serp/
   recommendations FILE – прогон агента улучшений (uluchsheniya.json) → recommendations.json
@@ -215,12 +216,21 @@ def region_view() -> dict:
     if not shots:
         return {"rows": [], "measured_from": None, "measured_to": None}
     cur = shots[0]
+    # Спрос берём из phrases.json, а не только из снимка: в снимок он попадает
+    # в момент съёма, и если частотность сняли позже (режим demand), таблица
+    # осталась бы с прочерками, а прогноз переходов – с нулями. Платить за
+    # повторный съём выдачи ради этого незачем (найдено 08.11.2026).
+    fresh = read(HERE / "phrases.json")
+    fresh = fresh if isinstance(fresh, list) else (fresh.get("rows") or fresh.get("phrases") or [])
+    demand_now = {r["q"]: round(r["nso_quarter"] / 3) for r in fresh
+                  if r.get("q") and r.get("nso_quarter") is not None}
     at = lambda s: dt.datetime.fromisoformat(s["taken"][:10])
     prev = next((s for s in shots[1:] if at(s) <= at(cur) - MONTH_GAP), None)
     old = {r["query"]: r for r in prev["rows"]} if prev else {}
     rows, dates = [], []
     for r in cur["rows"]:
-        item = {"query": r["query"], "demand": r["demand"], "direction": direction(r["query"])}
+        item = {"query": r["query"], "demand": demand_now.get(r["query"], r["demand"]),
+                "direction": direction(r["query"])}
         for e in ("yandex", "google"):
             s = r.get(e) or {}
             if "error" in s or not s:
@@ -260,6 +270,37 @@ def recommendations(file: str) -> None:
     print("recommendations:", len(d["items"]))
 
 
+
+def demand() -> None:
+    """ПЛАТНО: частотность Wordstat по Минску для фраз phrases.json.
+
+    Зачем отдельным режимом: в разделе «Позиции» колонка спроса и весь прогноз
+    переходов считаются из него, а без него таблица показывает прочерки и
+    «сейчас дают ≈ 0 чел.» при живых замерах позиций (найдено 08.11.2026).
+    Снимается один раз в квартал: Wordstat отдаёт последний полный квартал.
+    """
+    path = HERE / "phrases.json"
+    rows = read(path)
+    rows = rows if isinstance(rows, list) else (rows.get("rows") or rows.get("phrases") or [])
+    todo = [r for r in rows if r.get("nso_quarter") is None]
+    if not todo:
+        return print("demand: у всех фраз спрос уже есть")
+    env = dict(line.split("=", 1) for line in secret("xmlriver.env").splitlines() if "=" in line)
+    river = xr_mod.XMLRiver(env.get("XMLRIVER_USER", "").strip(), env.get("XMLRIVER_KEY", "").strip(),
+                            "/tmp/xmlriver.lock", domain=DOMAIN)
+    ok = bad = 0
+    for row in todo:
+        try:
+            got = river.wordstat(row["q"], "demand_minsk", dt.date.today())
+            row["nso_quarter"] = got["value"]
+            ok += 1
+        except Exception as exc:  # провайдер уже прячет ключ в тексте
+            row["nso_error"] = str(exc)[:120]
+            bad += 1
+    write(path, rows)
+    print(f"demand: снято {ok}, не вышло {bad}")
+
+
 def main(argv: list[str]) -> None:
     mode = argv[0] if argv else "daily"
     if mode == "daily":
@@ -272,6 +313,8 @@ def main(argv: list[str]) -> None:
         wm_import(argv[1]); positions()
     elif mode == "serp":
         serp("--paid" in argv); positions()
+    elif mode == "demand":
+        demand()
     elif mode == "positions":
         positions()
     elif mode == "recommendations":

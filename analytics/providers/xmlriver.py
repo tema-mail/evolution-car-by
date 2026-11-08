@@ -28,7 +28,11 @@ DOMAIN = "teyes-sibir.ru"
 PAGE_SIZE = 10
 TIMEOUT_SECONDS = 45
 RESPONSE_LIMIT = 8_000_000
-DEMAND_REGIONS = {"demand_all": None, "demand_rf": 225, "demand_nsk": 65}
+# Коды регионов Яндекса для частотности. 157 – Минск, 149 – Беларусь:
+# проект продвигается в Минске (src/content/site.ts, searchRegion), и спрос
+# надо спрашивать по его городу, а не по городу донора (65 – Новосибирск).
+DEMAND_REGIONS = {"demand_all": None, "demand_rf": 225, "demand_nsk": 65,
+                  "demand_minsk": 157, "demand_by": 149}
 ENGINES = ("wordstat", "yandex", "google")
 
 Fetch = Callable[[str, int], bytes]
