@@ -42,8 +42,13 @@ DOMAIN = "evolutioncar.by"
 # Счётчик Evolution Car «Эволюшн Привоз» (сайт evolutioncar.by, часовой пояс Europe/Minsk).
 mk.COUNTER = int(os.environ.get("METRIKA_COUNTER", "98499004"))
 # JS-цели сайта (src/lib/metrika.ts) → роли отчёта TEYES; номера целей берутся из счётчика по идентификатору
-GOAL_ROLES = [("lead", "Отправка формы", "lead"), ("phone", "Клик по телефону", "phone_click"),
-              ("messenger", "Переход в мессенджер", "messenger_click"), ("purchase", "Заказ из корзины", "order")]
+# Идентификаторы – те, что сайт реально шлёт в Метрику (src/lib/submit.ts и
+# src/lib/counter.ts), а не имена из проекта, с которого перенесён сборщик.
+# Из-за расхождения отчёт месяцами показывал «отправки форм: –» при живых
+# целях в счётчике (найдено 08.11.2026): цели zayavka, klik_telefon и
+# klik_messenger заведены и срабатывают, искали же lead, phone и messenger.
+GOAL_ROLES = [("lead", "Отправка формы", "zayavka"), ("phone", "Клик по телефону", "klik_telefon"),
+              ("messenger", "Переход в мессенджер", "klik_messenger"), ("purchase", "Заказ из корзины", "order")]
 gsc_mod.DOMAIN = xr_mod.DOMAIN = DOMAIN
 # Подписи регионов в кабинете. 149 – Беларусь (analytics/phrases.json, регион
 # замера этого сайта); 0 – «Все», так Search Console отдаёт месяц: он не делит

@@ -125,7 +125,7 @@ function NskView({ n, e }: { n: Nsk; e: Eng }) {
       <p class="ps-muted" style="margin:0">{HINT[only]} В списке {num(rows.length)} запросов: сейчас дают ≈ <b>{num(sumNow)}</b> чел. в месяц, в топ-3 добавят ≈ <b>{num(sumGain)}</b>.</p>
       <div class="ps-wrap">
         <table>
-          <thead><tr><th class="l">Запрос · страница в выдаче</th><th>Спрос в НСК, мес.</th><th>{ENG[e]}, место</th><th>Было</th><th>Сейчас, чел./мес.</th><th>+ в топ-3</th></tr></thead>
+          <thead><tr><th class="l">Запрос · страница в выдаче</th><th>Спрос {reg.locative}, мес.</th><th>{ENG[e]}, место</th><th>Было</th><th>Сейчас, чел./мес.</th><th>+ в топ-3</th></tr></thead>
           <tbody>
             {rows.map((r) => {
               const s = r[e]!;
