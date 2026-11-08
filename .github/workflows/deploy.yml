@@ -29,11 +29,16 @@ jobs:
       - run: npm run build
         env:
           PUBLIC_SITE_URL: https://xn--80agnajes3a.xn--p1ai
-      # Админка собирается из готовых страниц сайта, строго после сборки Astro.
-      - name: Собрать админку из готовых страниц
-        run: python3 admin/build.py dist
-        env:
-          SITE_URL: https://xn--80agnajes3a.xn--p1ai
+      # Кабинет на зеркало НЕ публикуем. Решение владельца 08.11.2026: кабинет
+      # должен быть один – admin.evolutioncar.by, за паролем. На Pages пароля
+      # нет в принципе, и копия кабинета здесь открывалась любому, кто знает
+      # адрес (ликсианг.рф/admin/ отвечал 200 – найдено при проверке).
+      # Сборку Astro кабинет тоже кладёт в dist/admin, поэтому удаляем его
+      # после сборки, а не только пропускаем старый шаг admin/build.py.
+      - name: Убрать кабинет из публикации на зеркале
+        run: |
+          rm -rf dist/admin
+          test ! -e dist/admin && echo "кабинета в сборке зеркала нет"
       - name: Запретить Jekyll обрабатывать сборку
         run: touch dist/.nojekyll
       - uses: actions/upload-pages-artifact@v3
