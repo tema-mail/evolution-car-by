@@ -61,6 +61,7 @@ fi
 echo "заливаю сайт на $SSH_HOST"
 rsync -az --delete -e "$SSH_CMD" \
   --exclude='/api/' --exclude='.htaccess' --exclude='.well-known/' \
+  --exclude='/admin/_astro' --exclude='/admin/favicon-32.png' \
   "$HERE/dist/" "$REMOTE:~/$ROOT/"
 
 # Конфиг веб-сервера генерируется из карты миграции и лежит в репозитории
@@ -71,6 +72,15 @@ if [[ -f "$HERE/deploy/htaccess" ]]; then
   rsync -az -e "$SSH_CMD" "$HERE/deploy/htaccess" "$REMOTE:~/$ROOT/.htaccess"
   eval "$SSH_CMD $REMOTE 'chmod 644 ~/$ROOT/.htaccess'"
 fi
+
+# Кабинет открыт на поддомене admin.evolutioncar.by, а это символическая
+# ссылка на подкаталог admin/. Значит /_astro/… с поддомена ищется ВНУТРИ
+# admin/, где его нет, и скрипты отдавали 404: страницы приходили, а экраны
+# не оживали – бесконечное «Загружаем заявки…» (найдено 08.11.2026).
+# Лечится ссылками на общие файлы сайта; дублировать их заливкой незачем.
+# В rsync они исключены выше, иначе --delete сносил бы их при каждой выкладке.
+echo "проверяю ссылки на общие файлы кабинета"
+eval "$SSH_CMD $REMOTE 'cd ~/$ROOT/admin && ln -sfn ../_astro _astro && ln -sfn ../favicon-32.png favicon-32.png && ls -ld _astro | cut -c1-20'"
 
 # Приёмник заявок на PHP: Node на виртуальном хостинге нет, server/lead.mjs
 # здесь не работает. Заливаем только если файл изменился – у него рядом лежит
