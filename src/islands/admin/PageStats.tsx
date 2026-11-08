@@ -3,7 +3,6 @@
     строку этой страницы. Владелец 18.10.2026: такой блок нужен в карточке
     каждой страницы на всех сайтах. */
 import { useEffect, useState } from 'preact/hooks';
-import { adminAuth } from './auth';
 
 interface Row { page: string; in: number; pv: number; phone: number; msg: number; open: number; quiz: number; form: number; b24: number; actions: number }
 interface Summary { days: number; total: Record<string, number>; actions: number; intents: number; cr: number; done: number; pages: Row[] }
@@ -17,7 +16,10 @@ export default function PageStats({ page }: { page: string }) {
 
   useEffect(() => {
     setErr(''); setData(null);
-    fetch(`/api/admin/events?days=${days}`, { headers: { Authorization: adminAuth() } })
+    // Адрес кабинетный: каталог закрыт Apache, свой заголовок не нужен.
+    // Раньше тут был Authorization из хранилища браузера, которое заполнял
+    // замок со старого хостинга, – он уходил пустым, и цифры не грузились.
+    fetch(`/api/events.php?days=${days}`)
       .then((r) => (r.ok ? r.json() : Promise.reject(new Error(r.status === 401 ? 'нужен вход в кабинет' : `сервер ответил ${r.status}`))))
       .then(setData)
       .catch((e) => setErr(String(e.message || e)));
