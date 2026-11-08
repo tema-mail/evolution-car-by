@@ -219,3 +219,19 @@ details.pcat[open] .caret{transform:rotate(90deg)}
 }
 .cars__note { font-size: 12px; color: #8a949e; max-width: 46ch; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .pstat__note { margin: 12px 0 0; font-size: 12px; line-height: 1.45; color: #8a949e; max-width: 80ch; }
+
+/* Вход в кабинет: «Запомнить меня» ставит метку на 180 дней, «Выйти» снимает.
+   Обе – обычные ссылки на php внутри закрытого каталога (08.11.2026). */
+.topnav .keepme,
+.topnav .logout {
+  color: rgba(255, 255, 255, .75);
+  font-size: 13px;
+  text-decoration: none;
+  border-bottom: 1px dotted rgba(255, 255, 255, .35);
+  white-space: nowrap;
+}
+.topnav .keepme:hover,
+.topnav .logout:hover {
+  color: #fff;
+  border-bottom-color: #fff;
+}

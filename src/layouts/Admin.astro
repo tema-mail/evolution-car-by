@@ -61,13 +61,12 @@ const tabs: [Tab, string, string, string][] = [
         ))
       }
       <span class="site">🟢 Боевой сайт · Сайт: <a href={site} target="_blank" rel="noopener">{site.replace(/^https?:\/\//, '')}</a></span>
-      <button
-        type="button"
-        class="logout"
-        onclick="try{sessionStorage.removeItem('ec_admin_auth');localStorage.removeItem('ec_admin_keep')}catch(e){};location.reload()"
-        style="background:none;border:0;color:rgba(255,255,255,.75);font:inherit;font-size:13px;cursor:pointer;padding:0"
-        >Выйти</button
-      >
+      {/* Вход держится меткой в браузере, которую ставит /zapomnit.php – он
+          лежит внутри закрытого паролем каталога, поэтому выполняется только
+          после верного пароля. Прежняя кнопка чистила localStorage: это
+          осталось от замка на Pages и ничего не закрывало. */}
+      <a class="keepme" href="/zapomnit.php" title="Не спрашивать пароль на этом устройстве 180 дней">Запомнить меня</a>
+      <a class="logout" href="/vyyti.php" title="Забыть это устройство, пароль спросят снова">Выйти</a>
     </nav>
     <main><slot /></main>
   </body>
