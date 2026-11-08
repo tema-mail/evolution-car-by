@@ -3,6 +3,11 @@
     видно, у каких машин нет цены или характеристик. */
 import { useMemo, useState } from 'preact/hooks';
 
+// Кабинет на поддомене admin., картинки – на основном домене: без полного
+// адреса браузер ищет их в admin/img/ и показывает пустые плитки (08.11.2026).
+const img = (p?: string) =>
+  !p ? '' : p.startsWith('http') ? p : 'https://evolutioncar.by' + p;
+
 export interface CarRow {
   slug: string; brand: string; title: string; photo: string;
   priceUsd: number | null; priceByn: number | null; year: string;
@@ -69,7 +74,7 @@ export default function CarsAdmin({ items, lists }: { items: CarRow[]; lists: Li
         <tbody>
           {shown.map((i) => (
             <tr>
-              <td><img src={i.photo} alt="" width="56" height="56" loading="lazy" /></td>
+              <td><img src={img(i.photo)} alt="" width="56" height="56" loading="lazy" /></td>
               <td>
                 <a href={`/page/catalog/${i.slug}/`} class="cars__name">{i.title}</a>
                 <div class="muted">{i.brand}</div>

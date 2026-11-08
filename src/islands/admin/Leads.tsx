@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'preact/hooks';
-import { adminAuth } from './auth';
 
 /* «Заявки» – перенос с кабинета-стандарта Milovini (доска – эталон ALEX KROWN v1 / EV SIBIR). Магазин без онлайн-оплаты:
    заказ из корзины = заявка (references/contracts.md), у заявки товары и категория – по ним считается спрос.
@@ -34,8 +33,6 @@ function fromServer(r: any): Lead {
     history: r.history, extra: Object.entries(f).filter(([k, v]) => !STD.has(k) && v) as [string, string][],
   };
 }
-
-const auth = adminAuth;
 
 const leadsCsv = (rows: Lead[], cat: (s: string) => string) => {
   const q = (v: unknown) => `"${String(v ?? '').replace(/"/g, '""')}"`;
@@ -145,13 +142,19 @@ export default function Leads({ sample, cats }: { sample: Lead[]; cats: Record<s
   const [example, setExample] = useState(false);
   const [tg, setTg] = useState<boolean | null>(null);
   useEffect(() => {
-    fetch('/api/health', { cache: 'no-store' }).then((r) => r.json()).then((d) => setTg(Boolean(d.telegram))).catch(() => setTg(null));
-    fetch('/api/leads', { headers: { Authorization: auth() }, cache: 'no-store' })
+    // Адреса относительные и ведут в закрытый каталог кабинета: доступ там
+    // проверяет Apache паролем или меткой «запомнить меня». Заголовок
+    // Authorization больше не шлём – он брался из хранилища браузера, которое
+    // заполнял замок со старого хостинга, и с 03.11.2026 уходил пустым.
+    // Состояние каналов приходит в том же ответе: запрос к основному домену
+    // из поддомена браузер бы не пустил.
+    fetch('/api/leads.php', { cache: 'no-store' })
       .then(async (r) => {
         if (r.status === 401) throw new Error('сервер не принял вход кабинета');
         if (!r.ok) throw new Error(`сервер заявок ответил ${r.status}`);
         const d = await r.json();
         const leads = (d.leads || []).map(fromServer);
+        setTg(typeof d.telegram === 'boolean' ? d.telegram : null);
         setState({ kind: 'ok', leads });
         setExample(!leads.length);
       })
@@ -159,7 +162,7 @@ export default function Leads({ sample, cats }: { sample: Lead[]; cats: Record<s
   }, []);
   const onStage = async (id: string, stage: Lead['stage']) => {
     try {
-      const r = await fetch(`/api/leads/${encodeURIComponent(id)}`, { method: 'PATCH', headers: { Authorization: auth(), 'Content-Type': 'application/json' }, body: JSON.stringify({ stage }) });
+      const r = await fetch(`/api/leads.php?id=${encodeURIComponent(id)}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ stage }) });
       return r.ok;
     } catch { return false; }
   };
