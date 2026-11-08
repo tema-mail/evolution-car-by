@@ -4,9 +4,8 @@
 // Весь текст из отчёта выводится через Preact (экранируется), без innerHTML.
 import { useEffect, useState } from 'preact/hooks';
 
-import { adminAuth } from './auth';
 
-const API = '/api/admin/report/metrika';
+const API = '/api/report.php?name=metrika';
 type R = any; // форма отчёта – seo_admin/providers/metrika_report.py (build, merge_previous)
 
 const PERIODS = [['week', 'Неделя'], ['month', 'Месяц'], ['quarter', 'Квартал'], ['year', 'Год']];
@@ -369,7 +368,7 @@ export default function Metrika() {
   const load = async () => {
     setBusy(true); setError('');
     try {
-      const res = await fetch(API, { headers: { Authorization: adminAuth() }, cache: 'no-store' });
+      const res = await fetch(API, { cache: 'no-store' });
       if (res.status === 401) { setError('Вход в кабинет устарел – нажмите «Выйти» и войдите снова.'); return; }
       if (res.status === 404) { setData({ report: null, last_try: null }); return; }
       if (!res.ok) { setError(`Сервер ответил ${res.status}.`); return; }

@@ -5,14 +5,13 @@ import { useEffect, useMemo, useState } from 'preact/hooks';
 import WmMonth, { RARE, type View, type Wm } from './WmMonth';
 import { cls, dm, inTop, num, pos } from './posUtil';
 
-import { adminAuth } from './auth';
 // Город и страна продвижения – из данных проекта: экран перенесён с новосибирских
 // кабинетов, и город был вписан в тексты прямо. Белорусскому сайту подписывали
 // замер Новосибирском, хотя сайт работает в другой стране (владелец 29.10.2026).
 // Теперь подпись идёт из site.searchRegion, и город задаётся один раз на проект.
 import { searchRegion as reg } from '../../content/site';
 
-const API = '/api/admin/report/positions';
+const API = '/api/report.php?name=positions';
 type Engine = unknown; // поля google / yandex ответа (окна Search Console и архив Вебмастера) кабинет не читает – месяцы из months
 type Spot = { position: number | null; depth: number | null; url: string | null; at: string; prev: number | null; had_prev: boolean } | null;
 type NskRow = { query: string; demand: number | null; direction: string; yandex: Spot; google: Spot };
@@ -159,7 +158,7 @@ export default function Positions() {
   const [err, setErr] = useState('');
   const [eng, setEng] = useState<Eng>('yandex');
   useEffect(() => {
-    fetch(API, { headers: { Authorization: adminAuth() }, cache: 'no-store' })
+    fetch(API, { cache: 'no-store' })
       .then((r) => (r.ok ? r.json() : Promise.reject(new Error(r.status === 401 ? 'сервер не принял логин кабинета' : r.status === 404 ? 'отчёт ещё не собран' : `сервер ответил ${r.status}`))))
       .then(setD, (e) => setErr(`Позиции не загрузились: ${e.message}`));
   }, []);
