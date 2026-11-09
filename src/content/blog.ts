@@ -19,7 +19,23 @@ export type Block =
   /** врезка: важное предупреждение или оговорка про цифры */
   | { t: 'note'; text: string }
   /** цифра с подписью – для «сколько стоит» и сроков */
-  | { t: 'facts'; items: { value: string; label: string }[] };
+  | { t: 'facts'; items: { value: string; label: string }[] }
+  /**
+   * Фотография внутри текста. Только официальные кадры марки или снимки
+   * машин, которые мы реально привезли: выдуманных интерьеров и рендеров
+   * «похожей машины» в статьях не ставим (правило владельца 08.11.2026).
+   * Путь – всегда webp (правило 07.11.2026), ширину и высоту указываем,
+   * иначе вёрстка прыгает при загрузке.
+   */
+  | { t: 'img'; src: string; alt: string; caption?: string; w: number; h: number }
+  /**
+   * Призыв посреди текста. Нужен, потому что один призыв в конце ловит
+   * только дочитавших: человек, который нашёл свой ответ в середине,
+   * уходит без заявки. Ведёт на подбор, каталог или расчёт – адрес свой
+   * у каждого, иначе все кнопки ведут в одно место и мы не видим, какая
+   * часть статьи продаёт.
+   */
+  | { t: 'cta'; title: string; text: string; button: string; href: string };
 
 export interface Section {
   /** заголовок H2 – он же пункт содержания справа */
@@ -73,9 +89,19 @@ import { geelyPrefaceVsHyundaiElantra } from './blog/geely-preface-vs-hyundai-el
 import { bydQinPlusReview } from './blog/byd-qin-plus-review';
 import { hyundaiElantraReview } from './blog/hyundai-elantra-review';
 import { geelyCoolrayReview } from './blog/geely-coolray-review';
+import { voyahModeliICeny } from './blog/voyah-modeli-i-ceny';
+import { voyahFreeReview } from './blog/voyah-free-review';
+import { gacAionYReview } from './blog/gac-aion-y-review';
+import { changanUniVReview } from './blog/changan-uni-v-review';
+import { bydDolphinReview } from './blog/byd-dolphin-review';
 
 /** Порядок в хабе: сверху свежие */
 export const articles: BlogArticle[] = [
+  voyahModeliICeny,
+  voyahFreeReview,
+  gacAionYReview,
+  changanUniVReview,
+  bydDolphinReview,
   lixiangL9VsDenzaD9,
   geelyPrefaceVsHyundaiElantra,
   bydQinPlusReview,

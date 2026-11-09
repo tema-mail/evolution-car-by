@@ -123,6 +123,26 @@ const crumbsLd = {
                 if (b.t === 'ol')
                   return <ol class="art__steps">{b.items.map((i) => <li set:html={i} />)}</ol>;
                 if (b.t === 'note') return <p class="art__note" set:html={b.text} />;
+                if (b.t === 'img')
+                  return (
+                    <figure class="art__fig">
+                      <img src={b.src} alt={b.alt} width={b.w} height={b.h} loading="lazy" decoding="async" />
+                      {b.caption && <figcaption set:html={b.caption} />}
+                    </figure>
+                  );
+                if (b.t === 'cta')
+                  return (
+                    <aside class="art__cta-mid">
+                      <p class="art__cta-mid-title">{b.title}</p>
+                      <p class="art__cta-mid-text" set:html={b.text} />
+                      {/* '#lead' – открыть форму подбора прямо здесь, остальное –
+                          обычная ссылка (каталог, наличие, расчёт). Так видно,
+                          какой призыв сработал: форма или переход. */}
+                      {b.href === '#lead'
+                        ? <button type="button" class="btn" data-open="lead">{b.button}</button>
+                        : <a class="btn" href={b.href}>{b.button}</a>}
+                    </aside>
+                  );
                 if (b.t === 'facts')
                   return (
                     <div class="art__facts">
@@ -261,6 +281,27 @@ const crumbsLd = {
     background: rgba(201, 162, 39, .08); border: 1px solid rgba(201, 162, 39, .3);
     border-radius: 10px; padding: 12px 14px; font-size: 15px;
   }
+
+  /* Фото внутри статьи. Размеры заданы в разметке, поэтому место под кадр
+     занято сразу и текст при загрузке не прыгает. */
+  .art__fig { margin: 0 0 18px; }
+  .art__fig img {
+    display: block; width: 100%; height: auto; border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, .08);
+  }
+  .art__fig figcaption {
+    margin-top: 8px; font-size: 13px; line-height: 1.5; color: var(--muted, #8b8f98);
+  }
+
+  /* Призыв посреди текста: заметный, но не кричащий – он должен читаться
+     как следующий шаг, а не как баннер. */
+  .art__cta-mid {
+    margin: 0 0 20px; padding: 16px 18px; border-radius: 14px;
+    background: rgba(255, 255, 255, .04); border: 1px solid rgba(255, 255, 255, .1);
+  }
+  .art__cta-mid-title { font-size: 17px; font-weight: 600; margin: 0 0 6px !important; }
+  .art__cta-mid-text { font-size: 14.5px; margin: 0 0 12px !important; color: var(--muted, #b6bac2); }
+  .art__cta-mid .btn { display: inline-flex; }
 
   .art__facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin: 0 0 18px; }
   .art__facts div { background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.08); border-radius: 12px; padding: 14px; }
