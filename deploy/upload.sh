@@ -52,10 +52,31 @@ fi
 REMOTE="$SSH_LOGIN@$SSH_HOST"
 ROOT="www/evolutioncar.by"
 
+# Прыжок на хостинг. Imunify на hoster.by банит адрес за частые запросы, и
+# прямой ssh с мака отваливается – поэтому идём через промежуточный сервер.
+# Серверов два: если claude-vps лежит (так было 10.11.2026, и выкладка встала
+# на сутки), пробуем firstvds-msk. DEPLOY_DIRECT=1 – идти напрямую, когда бана нет.
+pick_jump() {
+  for host in claude-vps firstvds-msk; do
+    if ssh -o ConnectTimeout=12 -o BatchMode=yes "$host" true 2>/dev/null; then
+      echo "$host"
+      return 0
+    fi
+  done
+  return 1
+}
+
 if [[ "${DEPLOY_DIRECT:-}" == "1" ]]; then
   SSH_CMD="ssh -i $KEY -o ConnectTimeout=30"
 else
-  SSH_CMD="ssh -J claude-vps -i $KEY -o ConnectTimeout=30"
+  JUMP="${DEPLOY_JUMP:-$(pick_jump || true)}"
+  if [[ -z "$JUMP" ]]; then
+    echo "НЕ ЗАЛИВАЮ: ни claude-vps, ни firstvds-msk не отвечают, а напрямую хостинг" >&2
+    echo "не пускает (Imunify). Поднимите любой из серверов или задайте DEPLOY_JUMP." >&2
+    exit 1
+  fi
+  echo "   иду через $JUMP"
+  SSH_CMD="ssh -J $JUMP -i $KEY -o ConnectTimeout=30"
 fi
 
 echo "заливаю сайт на $SSH_HOST"
