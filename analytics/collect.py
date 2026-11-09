@@ -280,8 +280,10 @@ def demand() -> None:
     Снимается один раз в квартал: Wordstat отдаёт последний полный квартал.
     """
     path = HERE / "phrases.json"
-    rows = read(path)
-    rows = rows if isinstance(rows, list) else (rows.get("rows") or rows.get("phrases") or [])
+    data = read(path, {})
+    # Файл – объект с ключом rows. Сохранять надо в том же виде: один раз
+    # записали голым списком, и режим serp упал на phrases["rows"] (08.11.2026).
+    rows = data["rows"] if isinstance(data, dict) and "rows" in data else data
     todo = [r for r in rows if r.get("nso_quarter") is None]
     if not todo:
         return print("demand: у всех фраз спрос уже есть")
@@ -297,7 +299,7 @@ def demand() -> None:
         except Exception as exc:  # провайдер уже прячет ключ в тексте
             row["nso_error"] = str(exc)[:120]
             bad += 1
-    write(path, rows)
+    write(path, {"rows": rows} if isinstance(data, dict) and "rows" in data else rows)
     print(f"demand: снято {ok}, не вышло {bad}")
 
 

@@ -31,6 +31,13 @@ RESPONSE_LIMIT = 8_000_000
 # Коды регионов Яндекса для частотности. 157 – Минск, 149 – Беларусь:
 # проект продвигается в Минске (src/content/site.ts, searchRegion), и спрос
 # надо спрашивать по его городу, а не по городу донора (65 – Новосибирск).
+# Регион съёма выдачи. 157 – Минск у Яндекса, 2112 – Беларусь у Google;
+# домен Яндекса оставляем ru: by отдаёт ту же выдачу, а ru проверен.
+SERP_YANDEX_LR = 157
+SERP_YANDEX_DOMAIN = "ru"
+SERP_GOOGLE_COUNTRY = 2112
+SERP_GOOGLE_LR = "BY"
+
 DEMAND_REGIONS = {"demand_all": None, "demand_rf": 225, "demand_nsk": 65,
                   "demand_minsk": 157, "demand_by": 149}
 ENGINES = ("wordstat", "yandex", "google")
@@ -170,14 +177,23 @@ class XMLRiver:
                                    "end": end.isoformat(), "match_type": "broad"}}
 
     def serp(self, phrase: str, engine: str, page: int) -> dict:
-        """Платно: одна страница органической выдачи (10 позиций) Новосибирска, desktop."""
+        """Платно: одна страница органической выдачи (10 позиций) региона проекта, desktop.
+
+        Регион задан константами SERP_* ниже. Было жёстко вшито 65 –
+        Новосибирск города-донора, и снимок 08.11.2026 ушёл в чужой город:
+        позиции снялись по России, а в кабинете стояла подпись «Минск».
+        Коды проверены запросом: Яндекс lr=157 и Google country=2112 отдают
+        белорусскую выдачу (westmotors.by, lemon-cars.by и т.д.).
+        """
         if engine == "yandex":
             path = "search_yandex/xml"
-            params = {"query": phrase, "lr": 65, "groupby": PAGE_SIZE, "page": page, "device": "desktop",
-                      "domain": "ru", "lang": "ru"}
+            params = {"query": phrase, "lr": SERP_YANDEX_LR, "groupby": PAGE_SIZE, "page": page,
+                      "device": "desktop", "domain": SERP_YANDEX_DOMAIN, "lang": "ru"}
         elif engine == "google":
             path = "search/xml"
-            params = {"query": phrase, "loc": 1011984, "country": 2643, "lr": "RU", "domain": 10,
+            # Город Google по запросам не делит – берём страну целиком, это
+            # честнее, чем подставлять код города и выдавать его за точный.
+            params = {"query": phrase, "country": SERP_GOOGLE_COUNTRY, "lr": SERP_GOOGLE_LR,
                       "groupby": PAGE_SIZE, "page": page + 1, "device": "desktop"}
         else:
             raise ValueError(f"Неизвестный поисковик: {engine}")
