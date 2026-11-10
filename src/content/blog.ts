@@ -94,9 +94,19 @@ import { voyahFreeReview } from './blog/voyah-free-review';
 import { gacAionYReview } from './blog/gac-aion-y-review';
 import { changanUniVReview } from './blog/changan-uni-v-review';
 import { bydDolphinReview } from './blog/byd-dolphin-review';
+import { rastamozhkaAvtoBelarus } from './blog/rastamozhka-avto-belarus';
+import { belgeeX50IGeelyCoolray } from './blog/belgee-x50-i-geely-coolray';
+import { kakPrignatAvtoIzKorei } from './blog/kak-prignat-avto-iz-korei';
+import { kiaCarnivalPokoleniya } from './blog/kia-carnival-pokoleniya';
+import { geelyMonjaroReview } from './blog/geely-monjaro-review';
 
 /** Порядок в хабе: сверху свежие */
 export const articles: BlogArticle[] = [
+  rastamozhkaAvtoBelarus,
+  kakPrignatAvtoIzKorei,
+  belgeeX50IGeelyCoolray,
+  geelyMonjaroReview,
+  kiaCarnivalPokoleniya,
   voyahModeliICeny,
   voyahFreeReview,
   gacAionYReview,
