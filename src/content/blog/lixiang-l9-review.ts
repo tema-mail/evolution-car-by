@@ -209,6 +209,7 @@ export const lixiangL9Review: BlogArticle = {
   ],
 
   links: [
+    { label: 'Lixiang L7 или L9: что выбрать', href: '/blog/lixiang-l7-ili-l9/' },
     { label: 'Lixiang L9 в каталоге', href: '/catalog/lixiang/l9/', note: 'комплектации и цена под ключ' },
     { label: 'Конфигуратор L9', href: '/catalog/lixiang/l9/konfigurator/', note: 'собрать цвет, диски и салон' },
     { label: 'Все Lixiang', href: '/catalog/lixiang/', note: 'L6, L7, L8, L9 и MEGA' },

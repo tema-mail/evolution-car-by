@@ -564,6 +564,7 @@ export const geelyMonjaroReview: BlogArticle = {
   ],
 
   links: [
+    { label: 'Какое масло заливать в Geely', href: '/blog/maslo-geely/', note: 'допуски, объём, интервалы' },
     { label: 'Belgee X50 и Geely Coolray: в чём разница', href: '/blog/belgee-x50-i-geely-coolray/' },
     { label: 'Geely Monjaro в каталоге', href: '/catalog/geely/monjaro/', note: '2023–2024, ориентир от 26 000 $' },
     { label: 'Geely Xingyue L 2026', href: '/catalog/geely/xingyue-l/', note: '272 л.с., полный привод, в наличии' },

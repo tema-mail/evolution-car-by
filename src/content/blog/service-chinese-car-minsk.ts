@@ -192,6 +192,8 @@ export const serviceChineseCarMinsk: BlogArticle = {
   ],
 
   links: [
+    { label: 'Первое ТО после пригона', href: '/blog/pervoe-to-prignannoy-mashiny/', note: 'когда и что входит' },
+    { label: 'Какое масло заливать в Geely', href: '/blog/maslo-geely/' },
     { label: 'Сервис в Минске', href: '/servis/', note: 'что делаем и какая гарантия' },
     { label: 'Авто в наличии', href: '/catalog/v-nalichii/', note: 'машины, которые уже в Беларуси' },
     { label: 'Авто под заказ', href: '/catalog/pod-zakaz/', note: 'что можем привезти' },

@@ -682,6 +682,7 @@ export const gdeZaryazhatElektromobilBelarus: BlogArticle = {
   ],
 
   links: [
+    { label: 'Расход электромобиля на 100 км и цена поездки', href: '/blog/rashod-elektromobilya-na-100-km/' },
     { label: 'Зарядка электромобиля дома: 220 В, wallbox и тариф', href: '/blog/zaryadka-elektromobilya-doma/' },
     {
       label: 'Электромобили',

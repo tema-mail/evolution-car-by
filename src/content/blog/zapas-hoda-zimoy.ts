@@ -236,6 +236,7 @@ export const zapasHodaZimoy: BlogArticle = {
   ],
 
   links: [
+    { label: 'Батарея электромобиля: ресурс и цена замены', href: '/blog/batareya-elektromobilya/' },
     {
       label: 'Электромобили',
       href: '/catalog/elektromobili/',

@@ -621,6 +621,7 @@ export const zaryadkaElektromobilyaDoma: BlogArticle = {
   ],
 
   links: [
+    { label: 'Расход электромобиля на 100 км и цена поездки', href: '/blog/rashod-elektromobilya-na-100-km/' },
     { label: 'Где заряжать электромобиль в Беларуси: сети, тарифы, карта', href: '/blog/gde-zaryazhat-elektromobil-belarus/' },
     {
       label: 'Электромобили',

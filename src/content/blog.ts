@@ -104,9 +104,19 @@ import { otkudaVygodneePrignatAvto } from './blog/otkuda-vygodnee-prignat-avto';
 import { gdeZaryazhatElektromobilBelarus } from './blog/gde-zaryazhat-elektromobil-belarus';
 import { skolkoZhdatAvtoIzKitaya } from './blog/skolko-zhdat-avto-iz-kitaya';
 import { zaryadkaElektromobilyaDoma } from './blog/zaryadka-elektromobilya-doma';
+import { lixiangL7IliL9 } from './blog/lixiang-l7-ili-l9';
+import { batareyaElektromobilya } from './blog/batareya-elektromobilya';
+import { masloGeely } from './blog/maslo-geely';
+import { pervoeToPrignannoyMashiny } from './blog/pervoe-to-prignannoy-mashiny';
+import { rashodElektromobilyaNa100Km } from './blog/rashod-elektromobilya-na-100-km';
 
 /** Порядок в хабе: сверху свежие */
 export const articles: BlogArticle[] = [
+  lixiangL7IliL9,
+  batareyaElektromobilya,
+  rashodElektromobilyaNa100Km,
+  masloGeely,
+  pervoeToPrignannoyMashiny,
   otkudaVygodneePrignatAvto,
   skolkoZhdatAvtoIzKitaya,
   gdeZaryazhatElektromobilBelarus,
