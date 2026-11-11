@@ -99,9 +99,19 @@ import { belgeeX50IGeelyCoolray } from './blog/belgee-x50-i-geely-coolray';
 import { kakPrignatAvtoIzKorei } from './blog/kak-prignat-avto-iz-korei';
 import { kiaCarnivalPokoleniya } from './blog/kia-carnival-pokoleniya';
 import { geelyMonjaroReview } from './blog/geely-monjaro-review';
+import { zeekr009VsDenzaD9 } from './blog/zeekr-009-vs-denza-d9';
+import { otkudaVygodneePrignatAvto } from './blog/otkuda-vygodnee-prignat-avto';
+import { gdeZaryazhatElektromobilBelarus } from './blog/gde-zaryazhat-elektromobil-belarus';
+import { skolkoZhdatAvtoIzKitaya } from './blog/skolko-zhdat-avto-iz-kitaya';
+import { zaryadkaElektromobilyaDoma } from './blog/zaryadka-elektromobilya-doma';
 
 /** Порядок в хабе: сверху свежие */
 export const articles: BlogArticle[] = [
+  otkudaVygodneePrignatAvto,
+  skolkoZhdatAvtoIzKitaya,
+  gdeZaryazhatElektromobilBelarus,
+  zaryadkaElektromobilyaDoma,
+  zeekr009VsDenzaD9,
   rastamozhkaAvtoBelarus,
   kakPrignatAvtoIzKorei,
   belgeeX50IGeelyCoolray,

@@ -667,6 +667,7 @@ export const rastamozhkaAvtoBelarus: BlogArticle = {
   ],
 
   links: [
+    { label: 'Откуда выгоднее пригнать авто: Китай, Корея, США, Европа', href: '/blog/otkuda-vygodnee-prignat-avto/' },
     { label: 'Как пригнать авто из Кореи: этапы, Encar, проверка по VIN', href: '/blog/kak-prignat-avto-iz-korei/' },
     {
       label: 'Доставка и растаможка',

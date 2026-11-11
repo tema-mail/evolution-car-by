@@ -686,6 +686,7 @@ export const kakPrignatAvtoIzKorei: BlogArticle = {
   ],
 
   links: [
+    { label: 'Откуда выгоднее пригнать авто: Китай, Корея, США, Европа', href: '/blog/otkuda-vygodnee-prignat-avto/' },
     { label: 'Растаможка авто в Беларуси: ставки и примеры', href: '/blog/rastamozhka-avto-belarus/' },
     { label: 'Kia Carnival: поколения, дизель 2.2 и отзывы', href: '/blog/kia-carnival-pokoleniya/' },
     { label: 'Автомобили из Южной Кореи', href: '/korea/', note: 'подбор и привоз под ключ' },
