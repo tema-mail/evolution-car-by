@@ -183,7 +183,7 @@ def serp(paid: bool) -> None:
     phrases = read(HERE / "phrases.json", {})["rows"]
     out, spent, stop = [], 0, None
     for ph in phrases:
-        row = {"query": ph["q"], "demand": round(ph["nso_quarter"] / 3) if ph.get("nso_quarter") is not None else None}
+        row = {"query": ph["q"], "demand": ph["nso_quarter"] if ph.get("nso_quarter") is not None else None}  # totalValue Wordstat – уже за месяц, не делить (11.11.2026)
         for engine in ("yandex", "google"):
             spot, depth = None, 0
             for page in range(MAX_PAGES):
@@ -222,7 +222,7 @@ def region_view() -> dict:
     # повторный съём выдачи ради этого незачем (найдено 08.11.2026).
     fresh = read(HERE / "phrases.json")
     fresh = fresh if isinstance(fresh, list) else (fresh.get("rows") or fresh.get("phrases") or [])
-    demand_now = {r["q"]: round(r["nso_quarter"] / 3) for r in fresh
+    demand_now = {r["q"]: r["nso_quarter"] for r in fresh
                   if r.get("q") and r.get("nso_quarter") is not None}
     at = lambda s: dt.datetime.fromisoformat(s["taken"][:10])
     prev = next((s for s in shots[1:] if at(s) <= at(cur) - MONTH_GAP), None)
@@ -278,6 +278,9 @@ def demand() -> None:
     переходов считаются из него, а без него таблица показывает прочерки и
     «сейчас дают ≈ 0 чел.» при живых замерах позиций (найдено 08.11.2026).
     Снимается один раз в квартал: Wordstat отдаёт последний полный квартал.
+    Поле зовётся nso_quarter по истории, но totalValue в ответе – частота за
+    последний месяц (сверено 11.11.2026: voyah 2 381 против 2 373 за 30 дней
+    в режиме words). До 11.11 его делили на 3 и показывали спрос втрое ниже.
     """
     path = HERE / "phrases.json"
     data = read(path, {})
