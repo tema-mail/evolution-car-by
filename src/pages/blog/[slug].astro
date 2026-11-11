@@ -107,7 +107,7 @@ const crumbsLd = {
           {/* Ранний призыв: человек с горячим вопросом не должен искать кнопку */}
           <aside class="art__early">
             <p>{a.cta.text}</p>
-            <button type="button" data-open="lead">
+            <button type="button" class="btn" data-open="lead">
               {a.cta.button}
             </button>
           </aside>
@@ -181,7 +181,7 @@ const crumbsLd = {
             <div class="art__cta-b">
               <p><b>{a.cta.title}</b></p>
               <p>{a.cta.text}</p>
-              <button type="button" data-open="lead">
+              <button type="button" class="btn" data-open="lead">
                 {a.cta.button}
               </button>
               <p class="art__phone">
@@ -234,7 +234,7 @@ const crumbsLd = {
             <div class="art__cta">
               <p class="art__cta-t">{a.cta.title}</p>
               <p>{a.cta.text}</p>
-              <button type="button" data-open="lead">
+              <button type="button" class="btn" data-open="lead">
                 {a.cta.button}
               </button>
               <a class="art__cta-tel" href={site.phoneHref}>{site.phone}</a>
@@ -246,7 +246,7 @@ const crumbsLd = {
 
     {/* Телефон: кнопка заявки закреплена внизу экрана */}
     <div class="art__bar">
-      <button type="button" data-open="lead">
+      <button type="button" class="btn" data-open="lead">
         {a.cta.button}
       </button>
       <a href={site.phoneHref} aria-label="Позвонить">Позвонить</a>
@@ -266,7 +266,7 @@ const crumbsLd = {
   /* Ответ на главный вопрос: его читает и человек, и ИИ-ответ */
   .art__answer {
     font-size: clamp(17px, 2vw, 20px); line-height: 1.55; font-weight: 500;
-    border-left: 3px solid var(--accent, #c9a227); padding: 2px 0 2px 16px; margin: 0 0 24px;
+    border-left: 3px solid var(--c-accent); padding: 2px 0 2px 16px; margin: 0 0 24px;
   }
 
   .art__sec { margin: 36px 0 0; scroll-margin-top: 90px; }
@@ -278,7 +278,7 @@ const crumbsLd = {
   .art__steps li { margin: 0 0 12px; }
 
   .art__note {
-    background: rgba(201, 162, 39, .08); border: 1px solid rgba(201, 162, 39, .3);
+    background: var(--c-accent-soft); border: 1px solid rgba(255, 81, 2, .35);
     border-radius: 10px; padding: 12px 14px; font-size: 15px;
   }
 
@@ -329,10 +329,8 @@ const crumbsLd = {
     border-radius: 14px; padding: 16px 18px; margin: 0 0 8px;
   }
   .art__early p, .art__cta-b p { margin: 0 0 12px; line-height: 1.6; }
-  .art__early button, .art__cta-b button, .art__cta button, .art__bar button {
-    background: var(--accent, #c9a227); color: #11131a; border: 0; border-radius: 10px;
-    padding: 12px 18px; font: inherit; font-weight: 600; cursor: pointer;
-  }
+  /* Кнопки – общий стиль сайта .btn (base.css + theme-v1.css), своих цветов здесь нет */
+  .art__early .btn, .art__cta-b .btn, .art__cta .btn, .art__bar .btn { cursor: pointer; }
   .art__phone { font-size: 15px; margin: 12px 0 0 !important; }
 
   /* Содержание на телефоне */
@@ -348,7 +346,7 @@ const crumbsLd = {
     background: rgba(17,19,26,.92); backdrop-filter: blur(8px);
     border-top: 1px solid rgba(255,255,255,.12);
   }
-  .art__bar button { flex: 1 1 auto; max-width: 320px; }
+  .art__bar .btn { flex: 1 1 auto; max-width: 320px; padding: .95rem 1.25rem; }
   .art__bar a { font-size: 15px; white-space: nowrap; padding: 0 6px; }
 
   .art__side { display: none; }
@@ -363,7 +361,7 @@ const crumbsLd = {
     .art__toc li { margin: 0 0 8px; }
     .art__cta { background: rgba(255,255,255,.04); }
     .art__cta p { font-size: 15px; line-height: 1.6; margin: 0 0 12px; }
-    .art__cta button { width: 100%; }
+    .art__cta .btn { width: 100%; padding: 1rem 1.25rem; }
     .art__cta-tel { display: block; text-align: center; margin-top: 10px; font-weight: 500; }
     .art__toc-m, .art__bar { display: none; }
     /* Липкой панели нет – внизу страницы остаётся только отступ под контент */
