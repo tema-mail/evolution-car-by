@@ -281,6 +281,30 @@ const b24Url = /^https:\/\/[a-z0-9.-]+\.bitrix24\.[a-z]{2,3}\/[A-Za-z0-9_/.-]+\.
                 trackLinks: true,
                 accurateTrackBounce: true,
               });
+              // «Не отказ» по действию, а не только по 15 секундам (решение
+              // владельца 13.11.2026). На iPhone страница замирает, как только
+              // человек переключился в другое приложение, и таймер 15 с не
+              // дотикивает: у Safari 16 % визитов 1–14 с шли в отказы против
+              // 3–6 % у Android. Прокрутил четверть страницы или нажал ссылку,
+              // кнопку – визит не отказ, одинаково во всех браузерах.
+              var nb = false;
+              function notBounce() {
+                if (nb) return;
+                nb = true;
+                window.removeEventListener('scroll', onScroll);
+                document.removeEventListener('click', onClick, true);
+                window.ym(Number(ymId), 'notBounce');
+              }
+              function onScroll() {
+                var max = document.documentElement.scrollHeight - window.innerHeight;
+                if (max > 0 && window.scrollY >= max * 0.25) notBounce();
+              }
+              function onClick(e) {
+                if (e.target && e.target.closest && e.target.closest('a, button, [data-open], summary, input, select, textarea')) notBounce();
+              }
+              window.addEventListener('scroll', onScroll, { passive: true });
+              document.addEventListener('click', onClick, true);
+              onScroll();
             })();
           });
         </script>
