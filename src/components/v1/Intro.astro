@@ -2,7 +2,8 @@
 /**
  * Заставка при входе: логотип → «Подбираем и привозим…» → «Ваш автомобиль.
  * Наша ответственность.» по 1,5 с, затем занавес уходит вверх и открывает
- * сайт. Один раз за визит (sessionStorage), пропускается нажатием или Esc,
+ * сайт. Только при самом первом заходе с устройства (localStorage, правило
+ * владельца 13.11.2026: не каждую сессию), пропускается нажатием или Esc,
  * при «меньше движения» в системе не показывается. Включается скриптом до
  * первой отрисовки – без него (или с ошибкой) сайт виден сразу.
  */
@@ -20,9 +21,11 @@ for (const w of words) {
 
 <script is:inline>
   try {
-    if (!sessionStorage.getItem('ev-intro') && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    // localStorage, а не sessionStorage: заставка один раз на устройство,
+    // повторный заход (новая вкладка, другой день) – сразу сайт.
+    if (!localStorage.getItem('ev-intro-seen') && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
       document.documentElement.classList.add('ev-intro-on');
-      sessionStorage.setItem('ev-intro', '1');
+      localStorage.setItem('ev-intro-seen', '1');
     }
   } catch (e) {}
 </script>
