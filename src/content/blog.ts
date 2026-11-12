@@ -109,9 +109,19 @@ import { batareyaElektromobilya } from './blog/batareya-elektromobilya';
 import { masloGeely } from './blog/maslo-geely';
 import { pervoeToPrignannoyMashiny } from './blog/pervoe-to-prignannoy-mashiny';
 import { rashodElektromobilyaNa100Km } from './blog/rashod-elektromobilya-na-100-km';
+import { bydSongPlusEvIliDmI } from './blog/byd-song-plus-ev-ili-dm-i';
+import { changanQiyuanQ05Review } from './blog/changan-qiyuan-q05-review';
+import { zeekr7xIzKitaya } from './blog/zeekr-7x-iz-kitaya';
+import { posledovatelnyyGibrid } from './blog/posledovatelnyy-gibrid';
+import { jetourDashing15Ili16 } from './blog/jetour-dashing-1-5-ili-1-6';
 
 /** Порядок в хабе: сверху свежие */
 export const articles: BlogArticle[] = [
+  jetourDashing15Ili16,
+  posledovatelnyyGibrid,
+  zeekr7xIzKitaya,
+  changanQiyuanQ05Review,
+  bydSongPlusEvIliDmI,
   lixiangL7IliL9,
   batareyaElektromobilya,
   rashodElektromobilyaNa100Km,
