@@ -67,7 +67,6 @@ const similar = cars
   .filter((c, i, arr) => arr.findIndex((x) => x.slug === c.slug) === i)
   .slice(0, 3);
 import CompareButtons from '../../../components/v1/CompareButtons.astro';
-import { COMPARE_SLUGS } from '../../../content/compare';
 import CarGallery from '../../../components/v1/CarGallery.astro';
 import BuyBlock from '../../../components/v1/BuyBlock.astro';
 import { galleryFor } from '../../../content/galleries';
@@ -126,7 +125,7 @@ const gallery = extra ? [{ src: car.photo, thumb: car.photo, alt }, ...extra] : 
               <a class="btn btn--ghost" href="#specs">Характеристики</a>
               {configurator && <a class="btn btn--ghost" href={configurator}>Конфигуратор</a>}
             </div>
-            {COMPARE_SLUGS.includes(car.slug) && <CompareButtons car={car} />}
+            <CompareButtons car={car} />
           </div>
 
           <div class="intro-extra">

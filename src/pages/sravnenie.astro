@@ -14,11 +14,10 @@ import Breadcrumbs from '../components/v1/Breadcrumbs.astro';
 import ModalHost from '../components/islands/ModalHost';
 import { cars, carPath } from '../content/cars';
 import { quiz, finalOffer } from '../content/home';
-import { compareText as t, compareRows, COMPARE_SLUGS, COMPARE_LIMIT, COMPARE_PATH } from '../content/compare';
+import { compareText as t, compareRows, COMPARE_LIMIT, COMPARE_PATH } from '../content/compare';
 import { abs } from '../lib/seo';
 
 const data = cars
-  .filter((c) => COMPARE_SLUGS.includes(c.slug))
   .map((c) => ({
     slug: c.slug,
     title: c.title,

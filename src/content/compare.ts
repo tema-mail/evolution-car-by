@@ -1,9 +1,8 @@
-// Избранное и сравнение машин (по образцу Авито). Пока включено только на
-// трёх карточках Li Auto – список COMPARE_SLUGS; расширять по решению владельца.
+// Избранное и сравнение машин (по образцу Авито). С 12.11.2026 включено на всех
+// карточках каталога (решение владельца; до этого – только Li Auto L6, L7, L9).
 import type { Car } from './cars';
 import { availabilities, countries, powertrains, formatUsd, formatByn } from './cars';
 
-export const COMPARE_SLUGS = ['lixiang-l6', 'lixiang-l7', 'lixiang-l9'];
 export const COMPARE_LIMIT = 3;
 export const COMPARE_PATH = '/sravnenie/';
 
