@@ -2,6 +2,12 @@
 
 Ведётся с 15.11.2026. Новое – сверху. Подробности и цифры – по ссылкам на разборы.
 
+## 15.11.2026, позже – карточка 8X v2, калькуляторы, курс
+
+- Прототип v2 в дизайне EV Car: https://tema-mail.github.io/razbory/evolutioncar-zeekr-8x-d2effe31/prototip/ – 16 блоков по цепочке вопросов покупателя (желание → выбор → деньги → доверие → сомнения → заявка), проверка цепочки PASS. Отчёт по каждому блоку: https://tema-mail.github.io/razbory/evolutioncar-zeekr-8x-bloki-1d866380/
+- Калькуляторы растаможки РБ и РФ и источники курса: https://tema-mail.github.io/razbory/evolutioncar-rastamozhka-kurs-4be022d3/ . Для сайта – свой калькулятор под ключ на курсе НБРБ (api.nbrb.by), сверка с ГТК.
+- Ждёт ответа: порядок блоков ок?; курс платёжного агента; брокер (утильсбор и льгота на электро 2026).
+
 ## 15.11.2026 – Атлант-М и карточка Zeekr 8X под заказ
 
 **Разбор Атлант-М (atlantm.by):** https://tema-mail.github.io/razbory/evolutioncar-atlantm-kartochki-bf4e7773/
