@@ -14,7 +14,6 @@ const disallow = [
   '/logotip/',
   '/su7-ultra/',
   '/su7-ultra-live/',
-  '/v3/',
   '/sravnenie/',
 ];
 
