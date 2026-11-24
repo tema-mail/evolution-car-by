@@ -14,7 +14,9 @@ const crumbs = [
 ];
 
 // пока фотоотчётов нет, показываем позиции, которые уже в наличии
-const delivered = cars.filter((c) => c.availability === 'in-stock');
+// плюс BYD, снятые с наличия 24.11.2026: на этой странице владелец просил их не менять
+const KEEP = ['byd-qin-plus-ev', 'byd-song-plus-ev', 'byd-sea-lion-07'];
+const delivered = cars.filter((c) => c.availability === 'in-stock' || KEEP.includes(c.slug));
 ---
 
 <BaseLayout
