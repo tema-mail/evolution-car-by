@@ -3544,11 +3544,10 @@
     "title": "BYD Qin Plus EV",
     "country": "china",
     "categories": [
-      "Автомобили в наличии",
       "Автомобили из Китая",
       "Автомобили под заказ"
     ],
-    "availability": "in-stock",
+    "availability": "on-order",
     "powertrain": "ev",
     "year": "2025",
     "priceUsd": 18600,
@@ -3716,11 +3715,10 @@
     "title": "BYD Song Plus EV",
     "country": "china",
     "categories": [
-      "Автомобили в наличии",
       "Автомобили из Китая",
       "Автомобили под заказ"
     ],
-    "availability": "in-stock",
+    "availability": "on-order",
     "powertrain": "ev",
     "year": "2025",
     "priceUsd": 28500,
@@ -5076,11 +5074,10 @@
     "title": "BYD Sea Lion 07",
     "country": "china",
     "categories": [
-      "Автомобили в наличии",
       "Автомобили из Китая",
       "Автомобили под заказ"
     ],
-    "availability": "in-stock",
+    "availability": "on-order",
     "powertrain": "ev",
     "year": "2025",
     "priceUsd": 36000,
