@@ -335,7 +335,7 @@ def to_json(page, rs, site_slug, url, brand):
     return {
         'slug': site_slug, 'from': rs, 'url': url, 'brand': brand, 'title': title, 'description': desc,
         'ogImage': pre.group(1) if pre else None, 'preload': pre.group(1) if pre else None,
-        'css': links + ['/kartochki/knopki.css'], 'jsonLd': graph,
+        'css': links + ['/kartochki/knopki.css?v=' + __import__('hashlib').md5(open(os.path.join(PUB, 'kartochki/knopki.css'), 'rb').read()).hexdigest()[:8]], 'jsonLd': graph,
         'html': theme_attr(body).replace('data-evk-toggle', 'data-theme-toggle'),
     }
 
@@ -356,7 +356,9 @@ def main():
     ap.add_argument('--site', default=os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
     ap.add_argument('only', nargs='*')
     a = ap.parse_args()
+    global PUB
     site, pub = a.site, os.path.join(a.site, 'public')
+    PUB = pub
     cars = {c['slug']: c for c in json.load(open(f'{site}/src/content/cars.json', encoding='utf-8'))}
     links = {rs: car_path(cars[s]) for rs, s in {**MAP, **EXTRA_LINKS}.items()}
     links.update(STATIC_LINKS)
@@ -385,6 +387,13 @@ def main():
             os.makedirs(f'{pub}/kartochki/{site_slug}/hero', exist_ok=True)
             shutil.copy(os.path.join(vd, f), f'{pub}/kartochki/{site_slug}/hero/{name}')
             page = page.replace(f'https://tema-mail.github.io/{rs}-konfigurator/img/{rs}/ext/{name}', f'/kartochki/{site_slug}/hero/{name}')
+        # версия файлов карточки – по содержимому: после правок браузер не возьмёт старое из кэша
+        def ver(m):
+            f = os.path.join(pub, m.group(1).lstrip('/'))
+            if not os.path.isfile(f): return m.group(0)
+            import hashlib
+            return f'{m.group(1)}?v={hashlib.md5(open(f, "rb").read()).hexdigest()[:8]}"'
+        page = re.sub(r'(/kartochki/[^"?]+\.(?:css|js))(?:\?v=[^"]*)?"', ver, page)
         data = to_json(page, rs, site_slug, url, car['brand'])
         json.dump(data, open(f'{outdir}/{site_slug}.json', 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
         # данные конфигуратора
