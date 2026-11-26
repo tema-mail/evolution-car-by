@@ -8,6 +8,9 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Header from '../v1/Header.astro';
 import Footer from '../v1/Footer.astro';
+import Breadcrumbs from '../v1/Breadcrumbs.astro';
+import { cars, carPath, brandPath } from '../../content/cars';
+import { breadcrumbsLd } from '../../lib/seo';
 import '../../styles/theme-v1.css';
 
 interface Karta {
@@ -18,9 +21,19 @@ const all = import.meta.glob<Karta>('../../content/karty/*.json', { eager: true,
 const { slug } = Astro.props as { slug: string };
 const k = Object.values(all).find((x) => x.slug === slug);
 if (!k) throw new Error(`Нет карточки ${slug}: пересоберите scripts/karty/build.py`);
+// хлебные крошки – как на страницах моделей сайта ([model].astro)
+const car = cars.find((c) => c.slug === slug);
+if (!car) throw new Error(`Нет машины ${slug} в cars.json`);
+const crumbs = [
+  { name: 'Главная', href: '/' },
+  { name: 'Каталог автомобилей', href: '/catalog/' },
+  { name: car.brand, href: brandPath(car.brand) },
+  { name: car.title, href: carPath(car) },
+];
+const jsonLd = [breadcrumbsLd(crumbs), ...(k.jsonLd as { '@type'?: string }[]).filter((g) => g['@type'] !== 'BreadcrumbList')];
 ---
 
-<BaseLayout theme="v1" title={k.title} description={k.description} canonical={new URL(k.url, Astro.site).href} ogImage={k.ogImage ?? undefined} jsonLd={k.jsonLd}>
+<BaseLayout theme="v1" title={k.title} description={k.description} canonical={new URL(k.url, Astro.site).href} ogImage={k.ogImage ?? undefined} jsonLd={jsonLd}>
   <Fragment slot="head">
     {/* тема карточки – только тёмная, как сайт; переключатель скрыт (data-evk – data-theme занят темой сайта) */}
     <script is:inline>document.documentElement.setAttribute('data-evk','dark');</script>
@@ -29,6 +42,7 @@ if (!k) throw new Error(`Нет карточки ${slug}: пересоберит
   {/* стили карточки – после стилей сайта (Astro кладёт их в конец <head>), чтобы вид блоков был как в образце */}
   {k.css.map((href) => <link rel="stylesheet" href={href} />)}
   <Header />
+  <Breadcrumbs crumbs={crumbs} />
   <div class="evk" data-brand={k.brand} set:html={k.html} />
   <Footer />
 </BaseLayout>
