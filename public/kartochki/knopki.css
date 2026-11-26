@@ -12,6 +12,8 @@
 .evk ul,.evk ol{list-style:none}
 /* шапка общая с сайтом: отступы под неё – по её высоте */
 :root{--hh:var(--header-h,92px)}
-/* кнопка виджета Битрикс24 – левее переключателя темы и выше нижнего меню карточки */
-.b24-widget-button-position-bottom-right{right:72px!important;bottom:16px!important}
-@media (max-width:760px){.b24-widget-button-position-bottom-right{right:68px!important;bottom:84px!important}}
+/* только тёмная тема: переключатель скрыт (в разметке остаётся – на него завязан karta.js) */
+#tema,[data-evk-toggle]{display:none!important}
+/* кнопка виджета Битрикс24 – в углу, выше нижнего меню карточки на телефоне */
+.b24-widget-button-position-bottom-right{right:16px!important;bottom:16px!important}
+@media (max-width:760px){.b24-widget-button-position-bottom-right{right:16px!important;bottom:84px!important}}

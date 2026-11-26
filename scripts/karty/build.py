@@ -170,9 +170,11 @@ def copy_shared(ob, pub):
         '.evk ul,.evk ol{list-style:none}\n'
         '/* шапка общая с сайтом: отступы под неё – по её высоте */\n'
         ':root{--hh:var(--header-h,92px)}\n'
-        '/* кнопка виджета Битрикс24 – левее переключателя темы и выше нижнего меню карточки */\n'
-        '.b24-widget-button-position-bottom-right{right:72px!important;bottom:16px!important}\n'
-        '@media (max-width:760px){.b24-widget-button-position-bottom-right{right:68px!important;bottom:84px!important}}\n')
+        '/* только тёмная тема: переключатель скрыт (в разметке остаётся – на него завязан karta.js) */\n'
+        '#tema,[data-evk-toggle]{display:none!important}\n'
+        '/* кнопка виджета Битрикс24 – в углу, выше нижнего меню карточки на телефоне */\n'
+        '.b24-widget-button-position-bottom-right{right:16px!important;bottom:16px!important}\n'
+        '@media (max-width:760px){.b24-widget-button-position-bottom-right{right:16px!important;bottom:84px!important}}\n')
 
     os.makedirs(f'{k}/img', exist_ok=True)
     for f in ['logo-evolution-car.webp', 'serv-lift.webp']:

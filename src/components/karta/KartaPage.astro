@@ -22,8 +22,8 @@ if (!k) throw new Error(`Нет карточки ${slug}: пересоберит
 
 <BaseLayout theme="v1" title={k.title} description={k.description} canonical={new URL(k.url, Astro.site).href} ogImage={k.ogImage ?? undefined} jsonLd={k.jsonLd}>
   <Fragment slot="head">
-    {/* тема карточки: тёмная, как сайт; светлую можно включить кнопкой, выбор запоминается (data-evk – data-theme занят темой сайта) */}
-    <script is:inline>(function(){var t;try{t=localStorage.getItem('tema-evk')}catch(e){}if(!t)t='dark';document.documentElement.setAttribute('data-evk',t)})();</script>
+    {/* тема карточки – только тёмная, как сайт; переключатель скрыт (data-evk – data-theme занят темой сайта) */}
+    <script is:inline>document.documentElement.setAttribute('data-evk','dark');</script>
     {k.preload && <link rel="preload" as="image" href={k.preload} />}
   </Fragment>
   {/* стили карточки – после стилей сайта (Astro кладёт их в конец <head>), чтобы вид блоков был как в образце */}
