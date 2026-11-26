@@ -134,6 +134,7 @@ def copy_shared(ob, pub):
         "        $('.w-success', box).hidden = false; f.hidden = true;\n",
         'квиз: отправка')
     s = re.sub(r" \+ ' \(в прототипе никуда не уходит\)'", '', s)
+    s = patch(s, "if (!tb || d.getElementById('hd')) return;", "if (!tb || d.getElementById('hd') || d.querySelector('.evk')) return;", 'квиз: тема')
     open(f'{k}/lizing/lz.js', 'w', encoding='utf-8').write(s)
 
     # конфигуратор: сборка -> заявка сайта
@@ -159,6 +160,8 @@ def copy_shared(ob, pub):
         '.evk svg{display:inline-block}\n'
         '.evk h1,.evk h2,.evk h3,.evk h4{text-transform:none;text-wrap:wrap}\n'
         '.evk ul,.evk ol{list-style:none}\n'
+        '/* шапка общая с сайтом: отступы под неё – по её высоте */\n'
+        ':root{--hh:var(--header-h,92px)}\n'
         '/* кнопка виджета Битрикс24 – левее переключателя темы и выше нижнего меню карточки */\n'
         '.b24-widget-button-position-bottom-right{right:72px!important;bottom:16px!important}\n'
         '@media (max-width:760px){.b24-widget-button-position-bottom-right{right:68px!important;bottom:84px!important}}\n')
@@ -261,6 +264,9 @@ def clean(page, rs, site_slug, links):
     p = re.sub(r'<aside class="seo".*?</aside>\n?', '', p, 1, flags=re.S)
     p = re.sub(r'<script type="application/json" id="w-seo">.*?</script>\n?', '', p, 1, flags=re.S)
     p = re.sub(r'\s*<div class="logic"></div>', '', p)
+    # шапка и подвал – общие с сайтом (Header/Footer в KartaPage.astro)
+    p = re.sub(r'<header class="hd" id="hd">.*?</header>\n?', '', p, 1, flags=re.S)
+    p = re.sub(r'<footer class="w-footer ft">.*?</footer>\n?', '', p, 1, flags=re.S)
     p = re.sub(r'<div class="w-wrap"></div>\n?', '', p)
     p = re.sub(r'\n\s*data-(question|next|proof|us|client)="[^"]*"', '', p)
     # адреса файлов
@@ -363,6 +369,14 @@ def main():
         print('•', rs, '->', url)
         page, C = build_model(rs, src, tpl, cars, links)
         page = clean(page, rs, site_slug, links)
+        # рендеры с фоном (Xiaomi) -> вырезанные копии из scripts/karty/vyrezki/
+        vd = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'vyrezki')
+        for f in sorted(os.listdir(vd)) if os.path.isdir(vd) else []:
+            if not f.startswith(rs + '__'): continue
+            name = f.split('__', 1)[1]
+            os.makedirs(f'{pub}/kartochki/{site_slug}/hero', exist_ok=True)
+            shutil.copy(os.path.join(vd, f), f'{pub}/kartochki/{site_slug}/hero/{name}')
+            page = page.replace(f'https://tema-mail.github.io/{rs}-konfigurator/img/{rs}/ext/{name}', f'/kartochki/{site_slug}/hero/{name}')
         data = to_json(page, rs, site_slug, url, car['brand'])
         json.dump(data, open(f'{outdir}/{site_slug}.json', 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
         # данные конфигуратора

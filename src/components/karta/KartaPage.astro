@@ -3,9 +3,11 @@
  * Карточка модели «Китай под заказ» по образцу Zeekr 9X (Deford2027/evolution-service-minsk).
  * Разметка и данные – src/content/karty/<slug>.json, стили и скрипты – public/kartochki/.
  * Всё это собирает scripts/karty/build.py: правки блоков – в образце, потом пересборка.
- * Шаблон сайта даёт аналитику, согласие на cookie, мету и schema.org; шапка и блоки – карточки.
+ * Шаблон сайта даёт аналитику, согласие на cookie, мету и schema.org; шапка и подвал – общие с сайтом, блоки – карточки.
  */
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../v1/Header.astro';
+import Footer from '../v1/Footer.astro';
 import '../../styles/theme-v1.css';
 
 interface Karta {
@@ -20,13 +22,15 @@ if (!k) throw new Error(`Нет карточки ${slug}: пересоберит
 
 <BaseLayout theme="v1" title={k.title} description={k.description} canonical={new URL(k.url, Astro.site).href} ogImage={k.ogImage ?? undefined} jsonLd={k.jsonLd}>
   <Fragment slot="head">
-    {/* тема карточки: светлая днём, тёмная вечером, выбор запоминается (data-evk – data-theme занят темой сайта) */}
-    <script is:inline>(function(){var t;try{t=localStorage.getItem('tema-evk')}catch(e){}if(!t){var h=new Date().getHours();t=(h>=19||h<7)?'dark':'light'}document.documentElement.setAttribute('data-evk',t)})();</script>
+    {/* тема карточки: тёмная, как сайт; светлую можно включить кнопкой, выбор запоминается (data-evk – data-theme занят темой сайта) */}
+    <script is:inline>(function(){var t;try{t=localStorage.getItem('tema-evk')}catch(e){}if(!t)t='dark';document.documentElement.setAttribute('data-evk',t)})();</script>
     {k.preload && <link rel="preload" as="image" href={k.preload} />}
   </Fragment>
   {/* стили карточки – после стилей сайта (Astro кладёт их в конец <head>), чтобы вид блоков был как в образце */}
   {k.css.map((href) => <link rel="stylesheet" href={href} />)}
+  <Header />
   <div class="evk" data-brand={k.brand} set:html={k.html} />
+  <Footer />
 </BaseLayout>
 
 <script>

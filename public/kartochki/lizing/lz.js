@@ -96,7 +96,7 @@
   });
 
   /* тема – только на отдельной странице вариантов; в карточке кнопкой темы управляет karta.js */
-  var tb = $('#tema'); if (!tb || d.getElementById('hd')) return;
+  var tb = $('#tema'); if (!tb || d.getElementById('hd') || d.querySelector('.evk')) return;
   function ic() { tb.textContent = root.getAttribute('data-evk') === 'dark' ? '☀' : '☾' }
   tb.addEventListener('click', function () { var n = root.getAttribute('data-evk') === 'dark' ? 'light' : 'dark'; root.setAttribute('data-evk', n); try { localStorage.setItem('tema-evk', n) } catch (e) {} ic() }); ic();
 })();
