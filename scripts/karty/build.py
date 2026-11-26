@@ -83,9 +83,17 @@ def patch(s, old, new, what, count=1):
     return s.replace(old, new)
 
 
+ORANGE = [  # фирменный зелёный образца -> оранжевый сайта (кнопки, обводки, акценты)
+    ('#2f6966', '#ff5102'), ('#24524f', '#e84800'), ('47,105,102', '255,81,2'), ('#6fb7b2', '#ff7a3d'),
+]
+
+
 def theme_attr(s):
-    """тема карточки живёт в data-evk: data-theme у <html> занят темой сайта (v1)"""
-    return s.replace('data-theme', 'data-evk')
+    """тема карточки живёт в data-evk: data-theme у <html> занят темой сайта (v1); акцент – цвет сайта"""
+    s = s.replace('data-theme', 'data-evk')
+    for a, b in ORANGE:
+        s = s.replace(a, b)
+    return s
 
 
 def copy_shared(ob, pub):
