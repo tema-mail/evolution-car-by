@@ -14,11 +14,13 @@ import {
 } from '../../../content/cars';
 import type { Car } from '../../../content/cars';
 import { carMeta, carKeywords, carLd, breadcrumbsLd } from '../../../lib/seo';
+import { KARTY } from '../../../content/karty';
 
 import { quiz, finalOffer, benefits, steps } from '../../../content/home';
 
 export function getStaticPaths() {
-  return cars.map((car) => ({
+  // Модели «Китай под заказ» с новой карточкой строит src/pages/catalog/<марка>/<модель>/index.astro
+  return cars.filter((car) => !KARTY.has(car.slug)).map((car) => ({
     params: { brand: slugify(car.brand), model: modelSlug(car) },
     props: { car },
   }));

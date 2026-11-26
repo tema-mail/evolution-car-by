@@ -1,0 +1,68 @@
+/* Поправки общей карточки к ev.css (карточка 8X): рендеры разных марок разных пропорций – вписываем без обрезки */
+.stage img{left:4%;right:4%;top:6%;bottom:10%;width:92%;height:84%;object-fit:contain}
+.v4 .vi img{width:94%;max-height:92%;object-fit:contain}
+.cmp thead th img{aspect-ratio:16/8}
+.of.r img{object-fit:contain;background:radial-gradient(70% 70% at 50% 62%,#1b2230 0%,#0a0d14 70%)}
+html[data-evk=light] .of.r img{background:radial-gradient(70% 70% at 50% 62%,#fff 0%,#e9e9e6 100%)}
+.of.t{padding:20px 22px 22px}.of.t figcaption{padding:0}
+.td .td-car{display:grid;place-items:center;min-height:380px;background:radial-gradient(70% 60% at 50% 62%,#1b2230 0%,#0a0d14 60%,#05070c 100%)}
+html[data-evk=light] .td .td-car{background:radial-gradient(70% 60% at 50% 62%,#fff 0%,#e9e9e6 100%)}
+.td .td-car img{width:92%;height:auto;min-height:0;object-fit:contain}
+.sim img{width:100%;object-fit:contain}
+.cfg-shot img{aspect-ratio:16/8;object-fit:contain}
+.ck-n{font-size:12.5px;color:var(--tx3);padding:8px 0 0}
+@media (max-width:900px){.td .td-car{min-height:0;aspect-ratio:16/9}}
+.ob .of.big img{aspect-ratio:16/8}
+@media (min-width:761px){.cmp-pick{display:none}}
+.hero-m,.hero-i{min-width:0}.sw{flex-wrap:wrap}.dots{flex-wrap:wrap}
+
+/* блок лизинга со своей заявкой */
+.lz-f{margin-top:4px}.lz-f .w-field{margin-top:4px}.lz-f .w-check{margin:12px 0 16px}
+
+/* как заказать: плитки с иконками */
+.ord{list-style:none;display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:32px}
+.ord li{position:relative;padding:22px 22px 24px;overflow:hidden}
+.ord-ic{display:grid;place-items:center;width:52px;height:52px;border-radius:14px;background:var(--acc-s);color:var(--acc-t);margin-bottom:18px}
+.ord-n{position:absolute;top:16px;right:20px;font:700 40px/1 var(--fd);letter-spacing:-.04em;color:var(--line2)}
+.ord h3{font:600 18px/1.3 var(--fd)}
+.ord p{color:var(--tx2);font-size:14.5px;margin-top:6px}
+.ord li:last-child{border-color:var(--acc)}
+.ord li:last-child .ord-ic{background:var(--acc);color:#fff}
+@media (max-width:900px){.ord{grid-template-columns:1fr 1fr}}
+@media (max-width:760px){.ord{grid-template-columns:1fr}}
+/* лизинг в карточке */
+.lz-in{margin-top:28px}
+/* «Что если пойдёт не так» – карточки с картинкой */
+.risk .w-card{padding:0;overflow:hidden;display:flex;flex-direction:column}
+.risk-im{display:block;width:100%;height:auto;aspect-ratio:4/3;object-fit:cover;background:var(--line)}
+.risk-t{padding:20px 22px 24px}
+/* Отзывы: карусель вбок, сначала с фото */
+.otz-hd{display:flex;justify-content:space-between;align-items:flex-end;gap:16px 32px;flex-wrap:wrap}
+.otz-ctl{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.otz-rate{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border:1px solid var(--line2);border-radius:12px;color:var(--tx);text-decoration:none;transition:border-color .2s}
+.otz-rate:hover{border-color:var(--acc-t)}
+.otz-rate b{font:700 20px/1 var(--fd)}
+.otz-rate small{color:var(--tx2);font-size:13px}
+.otz-arr{display:flex;gap:8px}
+.otz-arr button{width:44px;height:44px;border-radius:50%;border:1px solid var(--line2);background:transparent;color:var(--tx);font-size:18px;cursor:pointer;transition:border-color .2s,background .2s,opacity .2s}
+.otz-arr button:hover:not(:disabled){border-color:var(--acc-t);background:var(--acc-s)}
+.otz-arr button:disabled{opacity:.35;cursor:default}
+.otz{display:flex;gap:16px;overflow-x:auto;min-width:0;max-width:100%;scroll-snap-type:x mandatory;scroll-behavior:smooth;margin-top:28px;padding-bottom:2px;scrollbar-width:none;overscroll-behavior-inline:contain}
+.otz::-webkit-scrollbar{display:none}
+.otz>.w-card{flex:0 0 calc((100% - 48px) / 3.35);scroll-snap-align:start;display:flex;flex-direction:column;padding:0;overflow:hidden}
+.otz-ph img{display:block;width:100%;height:auto;aspect-ratio:4/3;object-fit:cover;background:var(--line)}
+.otz-b{display:flex;flex-direction:column;gap:12px;flex:1;padding:20px 22px 22px}
+.otz-st{display:flex;align-items:center;gap:10px;flex-wrap:wrap;color:#f5b700;font-size:14px;letter-spacing:1px}
+.otz-tag{letter-spacing:0;font-size:12.5px;color:var(--acc-t);background:var(--acc-s);padding:3px 9px;border-radius:99px}
+.otz-b p{color:var(--tx2);font-size:14.5px;line-height:1.55}
+.otz-tx .otz-b p{font-size:17px;line-height:1.6;color:var(--tx)}
+.otz-q{font:700 44px/.6 var(--fd);color:var(--acc-t);height:22px}
+.otz-who{display:flex;align-items:center;gap:12px;margin-top:auto;padding-top:14px;border-top:1px solid var(--line)}
+.otz-av{flex:0 0 36px;height:36px;border-radius:50%;display:grid;place-items:center;background:var(--sf2);color:var(--tx);font-weight:600;font-size:14px}
+.otz-who b{display:block;font-size:14.5px;color:var(--tx)}
+.otz-who small{font-size:12.5px;color:var(--tx3)}
+.otz-who a{color:inherit;text-decoration:underline;text-underline-offset:2px}
+@media (max-width:1180px){.otz>.w-card{flex-basis:calc((100% - 16px) / 2.25)}}
+@media (max-width:760px){.otz>.w-card{flex-basis:84%}.otz-arr{display:none}.otz-hd{align-items:flex-start}}
+/* обзор: карточки с коллажами 4:3 – без обрезки краёв */
+.og .of.k43 img,.of.k43 img{aspect-ratio:4/3!important;object-fit:cover}

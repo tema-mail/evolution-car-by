@@ -1,0 +1,15 @@
+/* Кнопки карточек – основной цвет evolutioncar.by. Остальные цвета блоков – как в образце. */
+:root{--evk-btn:#ff5102;--evk-btn-h:#e84800}
+.w-btn{background:var(--evk-btn);border-color:var(--evk-btn);color:#fff}
+.w-btn:hover{background:var(--evk-btn-h);border-color:var(--evk-btn-h)}
+.w-btn.ghost{background:transparent;border-color:var(--line2);color:var(--tx)}
+.w-btn.ghost:hover{background:transparent;border-color:var(--evk-btn)}
+.z9 .z9__btn{background:var(--evk-btn);color:#fff}
+.z9 .z9__btn:hover{background:var(--evk-btn-h)}
+/* общие стили сайта (base.css) не должны менять вид карточки */
+.evk svg{display:inline-block}
+.evk h1,.evk h2,.evk h3,.evk h4{text-transform:none;text-wrap:wrap}
+.evk ul,.evk ol{list-style:none}
+/* кнопка виджета Битрикс24 – левее переключателя темы и выше нижнего меню карточки */
+.b24-widget-button-position-bottom-right{right:72px!important;bottom:16px!important}
+@media (max-width:760px){.b24-widget-button-position-bottom-right{right:68px!important;bottom:84px!important}}

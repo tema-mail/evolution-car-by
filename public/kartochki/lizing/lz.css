@@ -1,0 +1,82 @@
+/* Варианты калькулятора лизинга – токены и компоненты карточки (ev.css). */
+.lzv{padding:56px 0 8px}
+.lzv-h{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:16px}
+.lzv-h b{font:700 13px/1 var(--fd);letter-spacing:.12em;text-transform:uppercase;color:var(--acc-t)}
+.lzv-h span{color:var(--tx3);font-size:14px}
+.lz-note{margin-top:12px;font-size:12.5px;line-height:1.5;color:var(--tx3)}
+.lz-pay{font:700 clamp(30px,3vw,40px)/1 var(--fd);letter-spacing:-.03em}
+.lz-pay small{font-size:15px;font-weight:600;color:var(--tx3);letter-spacing:0;margin-left:4px}
+.lz-byn{margin-top:6px;font-size:13px;color:var(--tx3)}
+.lz-dl{display:grid;gap:6px;margin-top:14px;font-size:13.5px}
+.lz-dl div{display:flex;justify-content:space-between;gap:12px;color:var(--tx2)}
+.lz-dl b{color:var(--tx);font-weight:600}
+.lz-sel{width:100%;min-height:48px;padding:0 40px 0 14px;border-radius:var(--rb);border:1px solid var(--line2);background:var(--bg) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%23989791' stroke-width='1.6'/%3E%3C/svg%3E") no-repeat right 14px center;color:var(--tx);font:500 15px var(--fb);-webkit-appearance:none;appearance:none}
+.lz-range{width:100%;height:6px;margin:14px 0 6px;border-radius:99px;-webkit-appearance:none;appearance:none;background:linear-gradient(90deg,var(--acc) var(--p,25%),var(--line2) var(--p,25%));outline-offset:6px}
+.lz-range::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:#fff;border:2px solid var(--acc);box-shadow:0 2px 6px rgba(0,0,0,.3);cursor:pointer}
+.lz-range::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:#fff;border:2px solid var(--acc);cursor:pointer}
+.lz-ticks{display:flex;justify-content:space-between;font-size:12px;color:var(--tx3)}
+.lz-lbl{display:flex;justify-content:space-between;align-items:baseline}
+.lz-lbl b{font:700 16px var(--fd)}
+[data-lz] .chips{margin:8px 0 0}
+[data-lz] .chips button.on{color:var(--tx)}
+[data-lz] .w-check{margin:10px 0 12px;font-size:13px}
+[data-lz] .w-field input{min-height:48px}
+.lz-tw{display:flex;gap:8px;flex-wrap:wrap}
+
+/* A · компакт */
+.lza{display:grid;grid-template-columns:1.05fr 1fr 1.05fr;gap:0;padding:0;overflow:hidden}
+.lza>div{padding:26px 28px}
+.lza>div+div{border-left:1px solid var(--line)}
+.lza h3{font:700 22px/1.2 var(--fd);letter-spacing:-.02em;margin:6px 0 16px}
+.lza .lz-res{background:var(--sf2)}
+.lza .lz-f{display:grid;grid-template-columns:1fr;gap:8px;margin-top:16px}
+.lza .lz-f .w-check{grid-column:1/-1;margin:0}
+.lza .lz-f .w-btn{min-height:48px;padding:0 18px;font-size:12.5px}
+.lza .lz-f .w-field .lb{display:none}
+
+/* B · квиз 3 шага + живой расчёт */
+.lzb{display:grid;grid-template-columns:1.35fr 1fr;padding:0;overflow:hidden}
+.lzb-q{padding:26px 30px;display:flex;flex-direction:column;min-height:360px}
+.lzb-top{display:flex;justify-content:space-between;align-items:center;gap:12px;font-size:13px;color:var(--tx3)}
+.lz-prog{height:4px;border-radius:99px;background:var(--line);margin:10px 0 22px;overflow:hidden}
+.lz-prog i{display:block;height:100%;width:calc(var(--k,.33) * 100%);background:var(--acc);transition:width .35s}
+.lzb-q h3{font:700 22px/1.2 var(--fd);letter-spacing:-.02em;margin-bottom:14px}
+.lzb-q .lb{display:block;margin-top:16px}
+.lz-nav{display:flex;gap:10px;margin-top:auto;padding-top:22px}
+.lz-nav .w-btn{min-height:46px}
+.lzb-r{padding:26px 28px;background:var(--sf2);border-left:1px solid var(--line);display:flex;flex-direction:column}
+.lzb-r .kicker{margin-bottom:12px}
+.lzb-r .lz-sum{margin-top:14px;padding-top:14px;border-top:1px solid var(--line);font-size:13px;color:var(--tx2)}
+
+/* C · по одному вопросу */
+.lzc{max-width:680px;margin:0 auto;padding:28px 30px}
+.lzc-top{display:flex;align-items:center;gap:10px}
+.lzc-dots{display:flex;gap:6px;flex:1}
+.lzc-dots i{flex:1;height:4px;border-radius:99px;background:var(--line);transition:background .3s}
+.lzc-dots i.on{background:var(--acc)}
+.lzc-back{font-size:13px;color:var(--tx3);text-decoration:underline;background:none;border:0;cursor:pointer}
+.lzc h3{font:700 24px/1.2 var(--fd);letter-spacing:-.02em;margin:22px 0 16px}
+.lz-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px}
+.lz-tiles button{display:flex;flex-direction:column;gap:4px;align-items:flex-start;text-align:left;padding:16px 18px;border-radius:12px;border:1px solid var(--line2);background:var(--bg);color:var(--tx);cursor:pointer;transition:border-color .2s,background .2s}
+.lz-tiles button:hover{border-color:var(--tx3)}
+.lz-tiles button.on{border-color:var(--acc);background:var(--acc-s)}
+.lz-tiles b{font:700 17px/1.2 var(--fd)}
+.lz-tiles small{font-size:12.5px;color:var(--tx3);line-height:1.35}
+.lz-tiles.ver{grid-template-columns:repeat(auto-fill,minmax(190px,1fr))}
+.lzc-res{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start}
+
+@media (max-width:1000px){.lza{grid-template-columns:1fr 1fr}.lza .lz-res{grid-column:1/-1;border-left:0;border-top:1px solid var(--line)}}
+@media (max-width:760px){
+  .lzv{padding-top:40px}
+  .lza,.lzb{grid-template-columns:1fr}
+  .lza>div{padding:20px}.lza>div+div{border-left:0;border-top:1px solid var(--line)}
+  .lzb-q{padding:20px;min-height:0}.lzb-r{padding:20px;border-left:0;border-top:1px solid var(--line)}
+  .lzc{padding:20px}.lzc-res{grid-template-columns:1fr}
+  .lza .lz-f{grid-template-columns:1fr}
+}
+[data-lz] [hidden]{display:none!important}
+/* форма заявки: поля и кнопка не слипаются */
+.lz-f{display:grid;gap:12px;margin-top:16px}
+.lz-f .w-field{margin:0}
+[data-lz] .lz-f .w-check{margin:2px 0 4px}
+.lz-f .w-btn{margin-top:2px}
