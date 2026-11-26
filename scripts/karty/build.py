@@ -180,6 +180,10 @@ def copy_shared(ob, pub):
         '.td-t .w-btn{margin-top:28px}\n'
         '/* чек: скрытая строка («второй вариант» без цены) не должна показываться */\n'
         '.check .r[hidden]{display:none}\n'
+        '/* блок «Из чего складывается цена» скрыт до готовых ставок (разметка на месте – вернуть: убрать строку) */\n'
+        '#cena{display:none!important}\n'
+        '/* лизинг – до калькулятора с данными партнёров (середина декабря); сравнение с другими моделями – уедет в блог */\n'
+        '#lizing,#vs{display:none!important}\n'
         '/* только тёмная тема: переключатель скрыт (в разметке остаётся – на него завязан karta.js) */\n'
         '#tema,[data-evk-toggle]{display:none!important}\n'
         '/* кнопка виджета Битрикс24 – в углу, выше нижнего меню карточки на телефоне */\n'
@@ -439,6 +443,8 @@ def ceny(p, rs, car):
     tot = f'от {byn:,} BYN'.replace(',', '\u00a0') if byn else 'по запросу'
     p = patch(p, f'<span>Итого под ключ</span>{ask}', f'<span>Итого под ключ</span><span>{tot}</span>', f'{rs}: итого')
     p = patch(p, '≈ 745 BYN <span class="ask w-ask">[сверить]</span>', '≈ 745 BYN', f'{rs}: утильсбор')
+    # блок цены скрыт – «Посчитать эту сборку» ведёт в форму расчёта
+    p = patch(p, '<a class="w-btn sm" href="#cena">Посчитать эту сборку</a>', '<a class="w-btn sm" href="#raschet" data-goal="raschet">Посчитать эту сборку</a>', f'{rs}: кнопка сборки')
     return p
 
 
