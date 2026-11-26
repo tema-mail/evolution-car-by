@@ -170,6 +170,11 @@ def copy_shared(ob, pub):
         '.evk ul,.evk ol{list-style:none}\n'
         '/* шапка общая с сайтом: отступы под неё – по её высоте */\n'
         ':root{--hh:var(--header-h,92px)}\n'
+        '/* тест-драйв: фото у фасада сервиса – во всю левую половину; кнопка не липнет к тексту */\n'
+        '.td .td-car.td-foto{display:block;background:none}\n'
+        '.td .td-car.td-foto img{width:100%;height:100%;min-height:380px;object-fit:cover;object-position:62% 60%}\n'
+        '@media (max-width:900px){.td .td-car.td-foto img{min-height:0;aspect-ratio:16/9;object-position:50% 50%}}\n'
+        '.td-t .w-btn{margin-top:28px}\n'
         '/* только тёмная тема: переключатель скрыт (в разметке остаётся – на него завязан karta.js) */\n'
         '#tema,[data-evk-toggle]{display:none!important}\n'
         '/* кнопка виджета Битрикс24 – в углу, выше нижнего меню карточки на телефоне */\n'
@@ -389,6 +394,14 @@ def main():
             os.makedirs(f'{pub}/kartochki/{site_slug}/hero', exist_ok=True)
             shutil.copy(os.path.join(vd, f), f'{pub}/kartochki/{site_slug}/hero/{name}')
             page = page.replace(f'https://tema-mail.github.io/{rs}-konfigurator/img/{rs}/ext/{name}', f'/kartochki/{site_slug}/hero/{name}')
+        # тест-драйв: фото машины у фасада сервиса (scripts/karty/foto-td/<образец>.webp); нет фото – остаётся рендер
+        fd = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'foto-td', rs + '.webp')
+        if os.path.isfile(fd):
+            import hashlib
+            shutil.copy(fd, f'{pub}/kartochki/{site_slug}/td-fasad.webp')
+            v = hashlib.md5(open(fd, 'rb').read()).hexdigest()[:8]
+            m = one(r'<div class="td-car"><img src="[^"]+" alt="([^"]+?) – тест-драйв в Минске" loading="lazy"></div>', page, f'{rs}: тест-драйв')
+            page = page.replace(m.group(0), f'<div class="td-car td-foto"><img src="/kartochki/{site_slug}/td-fasad.webp?v={v}" alt="{m.group(1)} у сервиса Evolution Car в Минске – тест-драйв" width="1600" height="900" loading="lazy"></div>')
         # версия файлов карточки – по содержимому: после правок браузер не возьмёт старое из кэша
         def ver(m):
             f = os.path.join(pub, m.group(1).lstrip('/'))
