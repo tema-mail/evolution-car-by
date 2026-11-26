@@ -352,6 +352,84 @@ def to_json(page, rs, site_slug, url, brand):
     }
 
 
+# комплектации: названия – по-английски, без повторов в ценах и сравнении (конфигуратор оставляет все варианты)
+KOMPL = {
+    # 5-местные версии – в конфигураторе (группа «5 мест»), в ценах и сравнении – одна строка на версию
+    'zeekr-9x': {'zamena': {'«Яохэй»': 'Yaohei'}, 'ubrat': ['84', '85', '86']},
+    'lynkco-900': {'ubrat': ['655', '656', '657']},
+    # Max 75 и Max 103 – одна версия с выбором батареи
+    'zeekr-007': {'imena': {'74': 'Ultra', '76': 'Max'}, 'slit': {'76': '75'}},
+    'zeekr-009': {'zamena': {'«Бизнес»': 'Business', '«Семья»': 'Family'}},
+    'zeekr-x': {'imena': {'64': 'Max', '65': 'Max 4-Seater', '66': 'Ultra'}, 'cfg_imena': True},
+    # одинаковые Max и Ultra у гибрида и электро
+    'avatr-12': {'imena': {'E12_52REEVRWDL1_2604': 'Max EREV', 'E12_52REEVRWDL2_2604': 'Ultra EREV',
+                           'E12_98EVRWDL1_2604': 'Max EV', 'E12_98EVRWDL2_2604': 'Ultra EV'}},
+}
+
+
+def cmp_drop(p, ids, rs):
+    """убрать из таблицы сравнения колонки версий с data-cfg из ids"""
+    i = p.find('<div class="cmp" id="cmp"><table>')
+    if i < 0 or not ids: return p
+    j = p.index('</table>', i)
+    t = p[i:j]
+    head = one(r'<thead><tr>(.*?)</tr></thead>', t, f'{rs}: шапка сравнения').group(1)
+    cells = re.findall(r'<t[hd][^>]*>.*?</t[hd]>', head, re.S)
+    cols = [k for k, c in enumerate(cells) if any(f'data-cfg="{x}"' in c for x in ids)]
+    if len(cols) != len(ids):
+        raise SystemExit(f'{rs}: в сравнении нашёл {len(cols)} колонок из {len(ids)}')
+    n = len(cells)
+    def row(m):
+        cs = re.findall(r'<t[hd][^>]*>.*?</t[hd]>', m.group(1), re.S)
+        if len(cs) != n: return m.group(0)
+        return m.group(0).replace(m.group(1), ''.join(c for k, c in enumerate(cs) if k not in cols))
+    t = re.sub(r'<tr[^>]*>(.*?)</tr>', row, t, flags=re.S)
+    t = t.replace(f'colspan="{n}"', f'colspan="{n - len(cols)}"')
+    return p[:i] + t + p[j:]
+
+
+def komplektacii(p, rs):
+    k = KOMPL.get(rs)
+    if not k: return p
+    for a, b in k.get('zamena', {}).items():
+        p = p.replace(a, b)
+    m = one(r'window\.CAR=(\{.*?\});\s*</script>', p, f'{rs}: CAR')
+    car = json.loads(m.group(1))
+    V = {v['id']: v for v in car['versions']}
+    for vid, name in k.get('imena', {}).items():
+        old = V[vid]['n']; V[vid]['n'] = name
+        # шапка сравнения: <b>старое</b> в колонке этой версии
+        p = re.sub(r'(alt="[^"]*?)' + re.escape(old) + r'("[^>]*><b>)' + re.escape(old) + r'(</b><small>[^<]*</small><a class="go" href="#konfigurator" data-cfg="' + re.escape(vid) + '")',
+                   lambda mm: mm.group(1) + name + mm.group(2) + name + mm.group(3), p)
+    drop = list(k.get('ubrat', []))
+    for keep, gone in k.get('slit', {}).items():
+        V[keep]['b'] = sorted(V[keep]['b'] + V[gone]['b'], key=lambda b: b['p'] or 0)
+        drop.append(gone)
+    car['versions'] = [v for v in car['versions'] if v['id'] not in drop]
+    if car.get('cfgDef') in drop: car['cfgDef'] = car['versions'][0]['id']
+    p = p.replace(m.group(1), json.dumps(car, ensure_ascii=False))
+    p = cmp_drop(p, drop, rs)
+    # кнопки «Версия» в форме – по одной на название
+    sm = one(r'<div class="seg" id="seg">(.*?)</div>', p, f'{rs}: кнопки версий')
+    names = list(dict.fromkeys(v['n'] for v in car['versions']))
+    btn = '<button type="button" class="on" data-v="">Не решил</button>' + ''.join(f'<button type="button" data-v="{html.escape(x)}">{html.escape(x)}</button>' for x in names)
+    p = p.replace(sm.group(0), f'<div class="seg" id="seg">{btn}</div>')
+    left = [x for x in names if re.search('[А-Яа-яЁё]', x)]
+    if left: raise SystemExit(f'{rs}: русские названия версий: {left}')
+    return p
+
+
+def cfg_names(js, rs):
+    """в данных конфигуратора – те же английские названия"""
+    k = KOMPL.get(rs, {})
+    for a, b in k.get('zamena', {}).items():
+        js = js.replace(a, b)
+    if k.get('cfg_imena'):  # у Zeekr 007 названия различают батарею – их не трогаем
+        for vid, name in k['imena'].items():
+            js = patch(js, re.search(r'"id":"' + re.escape(vid) + r'","name":"[^"]*"', js).group(0), f'"id":"{vid}","name":"{name}"', f'{rs}: конфигуратор {vid}')
+    return js
+
+
 def ceny(p, rs, car):
     """чек «под ключ»: неизвестные суммы – «по запросу», итог – ориентир с прежней карточки модели на сайте"""
     ask = '<span class="ask w-ask">[запросить]</span>'
@@ -404,6 +482,7 @@ def main():
         page, C = build_model(rs, src, tpl, cars, links)
         page = clean(page, rs, site_slug, links)
         page = ceny(page, rs, car)
+        page = komplektacii(page, rs)
         # рендеры с фоном (Xiaomi) -> вырезанные копии из scripts/karty/vyrezki/
         vd = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'vyrezki')
         for f in sorted(os.listdir(vd)) if os.path.isdir(vd) else []:
@@ -434,6 +513,7 @@ def main():
         proj = C['proj']
         js = get(CFG_BASE.format(proj=proj) + 'js/zeekr-data.js').decode('utf-8')
         js = js.replace('"img/', '"' + CFG_BASE.format(proj=proj) + 'img/')
+        js = cfg_names(js, rs)
         os.makedirs(f'{pub}/kartochki/{site_slug}', exist_ok=True)
         open(f'{pub}/kartochki/{site_slug}/cfg-data.js', 'w', encoding='utf-8').write(js)
         astro_route(site, url, site_slug)
