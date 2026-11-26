@@ -130,6 +130,9 @@ def copy_shared(ob, pub):
         "      window.evkLead({ name: lf.elements.name ? lf.elements.name.value.trim() : '', phone: lt.value, form: 'лизинг', text: parts.slice(0, -1).filter(Boolean).join(' · ') })\n"
         "        .then(function (ok) { if (ok) fin(); else alert('Не удалось отправить. Позвоните нам: +375 (29) 135-88-88') });",
         'форма лизинга (старая)')
+    # цена комплектации не объявлена – «по запросу», а не служебная метка
+    s = patch(s, "var ASK = '<span class=\"ask w-ask\">[уточнить]</span>';", "var ASK = 'по запросу';", 'цена по запросу')
+    s = patch(s, "Под ключ в Минске: <span class=\"ask w-ask\">[запросить]</span>", "Под ключ в Минске: по запросу", 'под ключ у версии')
     open(f'{k}/karta.js', 'w', encoding='utf-8').write(s)
 
     # квиз лизинга
@@ -175,6 +178,8 @@ def copy_shared(ob, pub):
         '.td .td-car.td-foto img{width:100%;height:100%;min-height:380px;object-fit:cover;object-position:62% 60%}\n'
         '@media (max-width:900px){.td .td-car.td-foto img{min-height:0;aspect-ratio:16/9;object-position:50% 50%}}\n'
         '.td-t .w-btn{margin-top:28px}\n'
+        '/* чек: скрытая строка («второй вариант» без цены) не должна показываться */\n'
+        '.check .r[hidden]{display:none}\n'
         '/* только тёмная тема: переключатель скрыт (в разметке остаётся – на него завязан karta.js) */\n'
         '#tema,[data-evk-toggle]{display:none!important}\n'
         '/* кнопка виджета Битрикс24 – в углу, выше нижнего меню карточки на телефоне */\n'
@@ -347,6 +352,18 @@ def to_json(page, rs, site_slug, url, brand):
     }
 
 
+def ceny(p, rs, car):
+    """чек «под ключ»: неизвестные суммы – «по запросу», итог – ориентир с прежней карточки модели на сайте"""
+    ask = '<span class="ask w-ask">[запросить]</span>'
+    p = patch(p, f'<span>2. Доставка Китай → Минск</span>{ask}', '<span>2. Доставка Китай → Минск</span><span>по запросу</span>', f'{rs}: доставка')
+    p = patch(p, f'<span>5. Работа Evolution, ЭПТС, учёт</span>{ask}', '<span>5. Работа Evolution, ЭПТС, учёт</span><span>по запросу</span>', f'{rs}: работа')
+    byn = car.get('priceByn')
+    tot = f'от {byn:,} BYN'.replace(',', '\u00a0') if byn else 'по запросу'
+    p = patch(p, f'<span>Итого под ключ</span>{ask}', f'<span>Итого под ключ</span><span>{tot}</span>', f'{rs}: итого')
+    p = patch(p, '≈ 745 BYN <span class="ask w-ask">[сверить]</span>', '≈ 745 BYN', f'{rs}: утильсбор')
+    return p
+
+
 def astro_route(site, url, slug):
     d = os.path.join(site, 'src/pages' + url)
     os.makedirs(d, exist_ok=True)
@@ -386,6 +403,7 @@ def main():
         print('•', rs, '->', url)
         page, C = build_model(rs, src, tpl, cars, links)
         page = clean(page, rs, site_slug, links)
+        page = ceny(page, rs, car)
         # рендеры с фоном (Xiaomi) -> вырезанные копии из scripts/karty/vyrezki/
         vd = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'vyrezki')
         for f in sorted(os.listdir(vd)) if os.path.isdir(vd) else []:
@@ -398,6 +416,7 @@ def main():
         fd = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'foto-td', rs + '.webp')
         if os.path.isfile(fd):
             import hashlib
+            os.makedirs(f'{pub}/kartochki/{site_slug}', exist_ok=True)
             shutil.copy(fd, f'{pub}/kartochki/{site_slug}/td-fasad.webp')
             v = hashlib.md5(open(fd, 'rb').read()).hexdigest()[:8]
             m = one(r'<div class="td-car"><img src="[^"]+" alt="([^"]+?) – тест-драйв в Минске" loading="lazy"></div>', page, f'{rs}: тест-драйв')

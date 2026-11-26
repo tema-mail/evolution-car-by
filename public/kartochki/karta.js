@@ -8,7 +8,7 @@
   var fmt = function (n) { return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, ' ') };
   var store = { get: function (k) { try { return localStorage.getItem(k) } catch (e) { return null } }, set: function (k, v) { try { localStorage.setItem(k, v) } catch (e) {} } };
   function lock(on) { root.style.overflow = on ? 'hidden' : '' }
-  var ASK = '<span class="ask w-ask">[уточнить]</span>';
+  var ASK = 'по запросу';
 
   /* курс НБРБ – C.kurs (дата в C.kursDate) */
   var K = C.kurs;
@@ -77,7 +77,7 @@
       '<div class="nm">' + v.n + '</div><div class="tg">' + (v.tag || '') + '</div>' +
       '<div class="bt">' + v.b.map(function (b, k) { return '<button type="button" data-b="' + k + '"' + (k === v.def ? ' class="on"' : '') + (v.b.length < 2 ? ' disabled' : '') + '>' + b.l + '</button>' }).join('') + '</div>' +
       '<div class="cn"><span data-p></span><small data-u></small></div>' +
-      '<div class="tk">Под ключ в Минске: <span class="ask w-ask">[запросить]</span></div>' +
+      '<div class="tk">Под ключ в Минске: по запросу</div>' +
       '<div class="rn">' + (hyb(v) ? '<div><b data-e></b>на электричестве</div><div><b data-t></b>всего, CLTC</div>' : '<div><b data-e></b>запас хода, CLTC</div>') + '</div>' +
       '<ul>' + (v.li || []).map(function (x) { return '<li>' + x + '</li>' }).join('') + '</ul>' +
       '<a class="w-btn sm wide" href="#konfigurator" data-cfg="' + v.id + '">Собрать ' + v.n + '</a></div>';

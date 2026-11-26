@@ -17,6 +17,8 @@
 .td .td-car.td-foto img{width:100%;height:100%;min-height:380px;object-fit:cover;object-position:62% 60%}
 @media (max-width:900px){.td .td-car.td-foto img{min-height:0;aspect-ratio:16/9;object-position:50% 50%}}
 .td-t .w-btn{margin-top:28px}
+/* чек: скрытая строка («второй вариант» без цены) не должна показываться */
+.check .r[hidden]{display:none}
 /* только тёмная тема: переключатель скрыт (в разметке остаётся – на него завязан karta.js) */
 #tema,[data-evk-toggle]{display:none!important}
 /* кнопка виджета Битрикс24 – в углу, выше нижнего меню карточки на телефоне */
