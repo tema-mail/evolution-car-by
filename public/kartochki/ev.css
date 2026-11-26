@@ -1,6 +1,6 @@
 /* Прототип карточки Zeekr 8X в дизайне EV Car (evolutioncar.by, theme-v1): почти чёрный фон, оранжевый акцент, Inter + Golos Text. */
 :root{--bg:#00040c;--bg2:#02050b;--sf:#080b11;--sf2:#11151d;--line:#1e232a;--line2:#2b3239;--tx:#fff;--tx2:#c9c9c6;--tx3:#989791;
-  --acc:#ff5102;--acc-h:#e84800;--acc-s:rgba(255,81,2,.22);--acc-t:#ff7a3d;--ok:#3ecf8e;--ask:#ff9a7a;--ask-bg:rgba(255,122,90,.12);
+  --acc:#ff5102;--acc-h:#e84800;--acc-s:rgba(255,81,2,.22);--acc-t:#e8783f;--ok:#3ecf8e;--ask:#ff9a7a;--ask-bg:rgba(255,122,90,.12);
   --fb:"Golos Text",system-ui,sans-serif;--fd:"Inter",-apple-system,"Segoe UI",Arial,sans-serif;--r:16px;--rb:8px;--wrap:1320px;--hh:72px}
 html[data-evk=light]{--acc-t:#ff5102;--acc-s:rgba(255,81,2,.12);--bg:#f4f4f2;--bg2:#ecebe8;--sf:#fff;--sf2:#f6f6f4;--line:#e3e2de;--line2:#d2d1cc;--tx:#141414;--tx2:#3a3a38;--tx3:#6d6c68;--ask:#b4381a;--ask-bg:#ffe6dc}
 *{box-sizing:border-box;margin:0;padding:0}
@@ -412,7 +412,7 @@ html[data-evk=light] .v4 .vi{background:#efefec}
   .cfg-shot{position:relative;display:block;margin-bottom:12px}
   .cfg-open .cfg-shot img{display:block;width:100%;height:auto;margin:0;border-radius:10px;background:#f2f3f5}
   .cfg-tag{position:absolute;left:8px;bottom:8px;padding:6px 10px;border-radius:999px;background:rgba(0,4,12,.82);color:#fff;font-size:13px;font-weight:600;line-height:1.2}
-  .cfg-tag::before{content:"";display:inline-block;width:8px;height:8px;margin-right:7px;border-radius:50%;background:#ff7a3d;vertical-align:1px}
+  .cfg-tag::before{content:"";display:inline-block;width:8px;height:8px;margin-right:7px;border-radius:50%;background:#e8783f;vertical-align:1px}
 }
 
 /* 15.11.2026, владелец: видео на телефоне – горизонтальное и не больше трети экрана; «8X, 9X или L9» на телефоне не показываем */
