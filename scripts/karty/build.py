@@ -469,6 +469,35 @@ def ceny(p, rs, car):
     return p
 
 
+def pohozhie(outdir):
+    """«Похожие автомобили»: только модели с новой карточкой на сайте – ссылка, кнопка, фото с первого экрана"""
+    import glob
+    K = {}
+    for f in glob.glob(f'{outdir}/*.json'):
+        d = json.load(open(f, encoding='utf-8'))
+        car = json.loads(one(r'window\.CAR=(\{.*?\});\s*</script>', d['html'], d['slug']).group(1))
+        y = re.search(r'<span class="kicker">[^<]*?(20\d\d)</span>', d['html'])
+        sm = 'Китай · ' + ('Электро' if car['type'] == 'bev' else 'Гибрид') + (f' · {y.group(1)}' if y else '')
+        K[d['slug']] = {'f': f, 'd': d, 'name': car['name'], 'min': car['minPrice'], 'url': d['url'], 'img': d['preload'], 'sm': sm}
+    by_name = {html.unescape(k['name']): s for s, k in K.items()}
+    for s, k in K.items():
+        h = k['d']['html']
+        m = one(r'<div class="sim w-grid m-lane" data-mob="lenta">(.*?)</div>\s*<p class="src">', h, f'{s}: похожие')
+        was = [html.unescape(x) for x in re.findall(r'<b>([^<]+)</b>', m.group(1))]
+        pick = [by_name[x] for x in was if x in by_name and by_name[x] != s]
+        for o in sorted(K, key=lambda o: abs(K[o]['min'] - k['min'])):
+            if len(pick) >= 3: break
+            if o != s and o not in pick: pick.append(o)
+        cards = ''
+        for o in pick[:3]:
+            c = K[o]; nm = html.escape(c['name'])
+            sm = c['sm']
+            cards += (f'<a class="w-card" href="{c["url"]}"><img src="{c["img"]}" alt="{nm}" loading="lazy"><small>{sm}</small><b>{nm}</b>'
+                      f'<span class="pr">в Китае от {c["min"]:,} ¥</span><span class="w-btn wide sm">Смотреть {nm}</span></a>').replace(',', '\u00a0')
+        k['d']['html'] = h.replace(m.group(1), cards)
+        json.dump(k['d'], open(k['f'], 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
+
+
 def astro_route(site, url, slug):
     d = os.path.join(site, 'src/pages' + url)
     os.makedirs(d, exist_ok=True)
@@ -546,6 +575,7 @@ def main():
         open(f'{pub}/kartochki/{site_slug}/cfg-data.js', 'w', encoding='utf-8').write(js)
         astro_route(site, url, site_slug)
         index.append(site_slug)
+    pohozhie(outdir)
     if not a.only:
         open(f'{outdir}/index.ts', 'w', encoding='utf-8').write(
             '// Модели с карточкой «Китай под заказ» (scripts/karty/build.py). Для них [model].astro страницу не строит.\n'
