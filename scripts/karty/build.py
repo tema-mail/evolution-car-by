@@ -186,6 +186,9 @@ def copy_shared(ob, pub):
         '#lizing,#vs{display:none!important}\n'
         # пара фото в обзоре – одной высоты: рядом с коллажем 4:3 соседнее фото тоже 4:3
         '.og:has(.k43) .of:not(.t) img{aspect-ratio:4/3!important;object-fit:cover}\n'
+        '/* обзор: плашки с цифрами не липнут к тексту над ними (правка владельца 27.11.2026) */\n'
+        '.ob .lead+.stats{margin-top:24px}\n'
+        '@media (max-width:760px){.ob .lead+.stats{margin-top:18px}}\n'
         '/* только тёмная тема: переключатель скрыт (в разметке остаётся – на него завязан karta.js) */\n'
         '#tema,[data-evk-toggle]{display:none!important}\n'
         '/* кнопка виджета Битрикс24 – в углу, выше нижнего меню карточки на телефоне */\n'
