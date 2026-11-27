@@ -719,6 +719,26 @@ def ceny(p, rs, car):
     return p
 
 
+def sim_img(slug, src):
+    """превью для «Похожих»: машина по контуру (рендеры с прозрачным фоном) в одной рамке 800×450 –
+    одинаковая ширина и линия колёс у всех моделей, как у Zeekr 9X (решение владельца 27.11.2026)"""
+    import io, hashlib
+    from PIL import Image
+    b = open(PUB + src, 'rb').read() if src.startswith('/') else get(src)
+    im = Image.open(io.BytesIO(b)).convert('RGBA')
+    a = im.getchannel('A').point(lambda v: 255 if v > 24 else 0)
+    im = im.crop(a.getbbox())
+    W, H, CW, CH, BOT = 800, 450, 560, 270, 395
+    k = min(CW / im.width, CH / im.height)
+    im = im.resize((round(im.width * k), round(im.height * k)), Image.LANCZOS)
+    c = Image.new('RGBA', (W, H), (0, 0, 0, 0))
+    c.alpha_composite(im, ((W - im.width) // 2, BOT - im.height))
+    os.makedirs(f'{PUB}/kartochki/{slug}', exist_ok=True)
+    out = f'{PUB}/kartochki/{slug}/sim.webp'
+    c.save(out, 'WEBP', quality=85, method=6)
+    return f'/kartochki/{slug}/sim.webp?v={hashlib.md5(open(out, "rb").read()).hexdigest()[:8]}'
+
+
 def pohozhie(outdir):
     """«Похожие автомобили»: только модели с новой карточкой на сайте – ссылка, кнопка, фото с первого экрана"""
     import glob
@@ -728,7 +748,7 @@ def pohozhie(outdir):
         car = json.loads(one(r'window\.CAR=(\{.*?\});\s*</script>', d['html'], d['slug']).group(1))
         y = re.search(r'<span class="kicker">[^<]*?(20\d\d)</span>', d['html'])
         sm = 'Китай · ' + ('Электро' if car['type'] == 'bev' else 'Гибрид') + (f' · {y.group(1)}' if y else '')
-        K[d['slug']] = {'f': f, 'd': d, 'name': car['name'], 'min': car['minPrice'], 'url': d['url'], 'img': d['preload'], 'sm': sm}
+        K[d['slug']] = {'f': f, 'd': d, 'name': car['name'], 'min': car['minPrice'], 'url': d['url'], 'img': sim_img(d['slug'], d['preload']), 'sm': sm}
     by_name = {html.unescape(k['name']): s for s, k in K.items()}
     for s, k in K.items():
         h = k['d']['html']
