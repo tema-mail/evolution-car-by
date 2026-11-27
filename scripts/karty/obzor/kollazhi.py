@@ -94,7 +94,12 @@ def render(j, codes, shot):
     f = os.path.join(CACHE, url.split('/img/', 1)[1].replace('/', '__'))
     os.makedirs(CACHE, exist_ok=True)
     if not os.path.exists(f): urllib.request.urlretrieve(url, f)
-    return Image.open(f).convert('RGB')
+    im = Image.open(f)
+    if im.mode in ('RGBA', 'LA', 'P'):
+        # рендер-вырезка (Lynk, Li hero): без фона convert('RGB') показывал мусор прозрачных пикселей –
+        # чёрный фон и «лесенку» над крышей (лидар Lynk 08, 27.11.2026). Кладём на светлую студию, как у остальных марок
+        im = im.convert('RGBA'); bg = Image.new('RGBA', im.size, (236, 236, 233, 255)); bg.alpha_composite(im); im = bg
+    return im.convert('RGB')
 
 
 def cover(im, box, w, h):
