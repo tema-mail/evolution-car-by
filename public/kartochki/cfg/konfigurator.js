@@ -152,7 +152,8 @@
   function fixShot() { if (!shotsNow().some(function (s) { return s.id === state.shot; })) state.shot = "hero"; }
   function srcFor(shot) {
     if (isInt(shot)) return D.paths.int.replace("{code}", intCode()).replace("{shot}", shot);
-    return D.paths.ext.replace("{code}", shot === "hero" ? extCode() : (angCode() || extCode())).replace("{shot}", shot);
+    var u = D.paths.ext.replace("{code}", shot === "hero" ? extCode() : (angCode() || extCode())).replace("{shot}", shot);
+    return (D.fix && D.fix[u]) || u;
   }
   var cache = {};
   function preload(src) {

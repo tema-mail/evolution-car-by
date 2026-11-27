@@ -24,6 +24,10 @@
 /* лизинг – до калькулятора с данными партнёров (середина декабря); сравнение с другими моделями – уедет в блог */
 #lizing,#vs{display:none!important}
 .og:has(.k43) .of:not(.t) img{aspect-ratio:4/3!important;object-fit:cover}
+/* одна комплектация: карточка на всю ширину (фото слева, цена и состав справа), сравнения нет */
+.sec.odna#sravnenie{display:none!important}
+.odna .vers{grid-template-columns:1fr!important;grid-auto-flow:row!important;grid-auto-columns:auto!important;overflow:visible;margin-right:0;padding-right:0}
+@media (min-width:761px){.odna .v4{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);column-gap:40px;align-items:start;padding:24px}.odna .v4>*{grid-column:2}.odna .v4 .vi{grid-column:1;grid-row:1/span 9;margin:0;align-self:stretch;aspect-ratio:auto;min-height:100%}.odna .v4 .vi img{width:92%}.odna .v4 .bt{max-width:320px}.odna .v4 .w-btn{margin-top:4px;justify-self:start;width:auto;min-width:260px}}
 /* обзор: плашки с цифрами не липнут к тексту над ними (правка владельца 27.11.2026) */
 .ob .lead+.stats{margin-top:24px}
 @media (max-width:760px){.ob .lead+.stats{margin-top:18px}}

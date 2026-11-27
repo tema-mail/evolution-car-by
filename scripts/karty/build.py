@@ -155,6 +155,12 @@ def copy_shared(ob, pub):
         '    if (!endpoint && window.evkLead) { window.evkLead({ name: data.name, phone: data.phone, form: "конфигуратор", text: data.text }).then(function (ok) { if (ok) done(); else { st.textContent = "Не удалось отправить. Попробуйте ещё раз или позвоните нам."; st.className = "z9__form-status is-error"; } }); return; }\n'
         '    if (!endpoint) { root.dispatchEvent(new CustomEvent("zeekr:lead", { bubbles: true, detail: data })); done(); return; }',
         'конфигуратор: заявка')
+    # битые кадры исходного конфигуратора подменяем своими (D.fix: адрес tema-mail -> /kartochki/<slug>/cfg-fix/…)
+    s = patch(s,
+        '    return D.paths.ext.replace("{code}", shot === "hero" ? extCode() : (angCode() || extCode())).replace("{shot}", shot);\n  }',
+        '    var u = D.paths.ext.replace("{code}", shot === "hero" ? extCode() : (angCode() || extCode())).replace("{shot}", shot);\n'
+        '    return (D.fix && D.fix[u]) || u;\n  }',
+        'конфигуратор: свои кадры вместо битых')
     open(f'{k}/cfg/konfigurator.js', 'w', encoding='utf-8').write(s)
 
     # кнопки – основной цвет сайта; блоки и остальные акценты не трогаем
@@ -186,6 +192,16 @@ def copy_shared(ob, pub):
         '#lizing,#vs{display:none!important}\n'
         # пара фото в обзоре – одной высоты: рядом с коллажем 4:3 соседнее фото тоже 4:3
         '.og:has(.k43) .of:not(.t) img{aspect-ratio:4/3!important;object-fit:cover}\n'
+        '/* одна комплектация: карточка на всю ширину (фото слева, цена и состав справа), сравнения нет */\n'
+        '.sec.odna#sravnenie{display:none!important}\n'
+        '.odna .vers{grid-template-columns:1fr!important;grid-auto-flow:row!important;grid-auto-columns:auto!important;overflow:visible;margin-right:0;padding-right:0}\n'
+        '@media (min-width:761px){'
+        '.odna .v4{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);column-gap:40px;align-items:start;padding:24px}'
+        '.odna .v4>*{grid-column:2}'
+        '.odna .v4 .vi{grid-column:1;grid-row:1/span 9;margin:0;align-self:stretch;aspect-ratio:auto;min-height:100%}'
+        '.odna .v4 .vi img{width:92%}'
+        '.odna .v4 .bt{max-width:320px}'
+        '.odna .v4 .w-btn{margin-top:4px;justify-self:start;width:auto;min-width:260px}}\n'
         '/* обзор: плашки с цифрами не липнут к тексту над ними (правка владельца 27.11.2026) */\n'
         '.ob .lead+.stats{margin-top:24px}\n'
         '@media (max-width:760px){.ob .lead+.stats{margin-top:18px}}\n'
@@ -271,6 +287,14 @@ def build_model(rs, html_src, tpl, cars, links):
         sw = swatches(C['colors'], None)
         scripts = re.sub(r'var SW=\{.*?\};', 'var SW=' + json.dumps(sw, separators=(',', ':')) + ';', scripts, 1, flags=re.S)
         tail = re.sub(r'(<script src="\.\./calc\.js[^"]*"></script>).*$', lambda m: m.group(1) + '\n' + scripts + '\n</body>\n</html>\n', tail, 1, flags=re.S)
+
+    if len(C['versions']) == 1:
+        # одна комплектация (Li MEGA): карточка цены на всю ширину, сравнивать не с чем – блок сравнения скрыт
+        # стилем (разметку не удаляем: на #cmp, #only-diff, #all-open завязан karta.js) – решение владельца 27.11.2026
+        for sid in ['versii', 'sravnenie']:
+            S[sid] = S[sid].replace('class="w-block sec"', 'class="w-block sec odna"', 1)
+        S['versii'] = re.sub(r'<span class="kicker">Комплектации и цены ', '<span class="kicker">Комплектация и цена ', S['versii'], 1)
+        S['versii'] = re.sub(r'<h2>Цены на (.*?) во всех комплектациях</h2>', r'<h2>Цена \1</h2>', S['versii'], 1)
 
     page = head + ''.join(S[i] for i in order) + tail
     return page, C
@@ -863,6 +887,20 @@ def main():
         js = js.replace('"img/', '"' + CFG_BASE.format(proj=proj) + 'img/')
         js = cfg_names(js, rs)
         os.makedirs(f'{pub}/kartochki/{site_slug}', exist_ok=True)
+        # свои кадры вместо битых в исходном конфигураторе: scripts/karty/cfg-fix/<образец>/<ext|int>/<имя как у tema-mail>.webp
+        # (Li MEGA: hero белого с дисками «Диск» у tema-mail 107×60 – собран из белого кузова и колёс серебристого, 27.11.2026)
+        fx = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'cfg-fix', rs)
+        if os.path.isdir(fx):
+            import hashlib
+            fix = {}
+            for kind in sorted(os.listdir(fx)):
+                for f in sorted(os.listdir(os.path.join(fx, kind))):
+                    os.makedirs(f'{pub}/kartochki/{site_slug}/cfg-fix', exist_ok=True)
+                    shutil.copy(os.path.join(fx, kind, f), f'{pub}/kartochki/{site_slug}/cfg-fix/{f}')
+                    v = hashlib.md5(open(os.path.join(fx, kind, f), 'rb').read()).hexdigest()[:8]
+                    orig = one(r'"paths":\{[^\]]*?"' + kind + r'":"([^"]+)"', js, f'{rs}: путь {kind}').group(1)
+                    fix[orig.replace('{code}--{shot}.webp', f)] = f'/kartochki/{site_slug}/cfg-fix/{f}?v={v}'
+            js += '\nwindow.ZEEKR_CFG.fix = ' + json.dumps(fix, ensure_ascii=False) + ';\n'
         open(f'{pub}/kartochki/{site_slug}/cfg-data.js', 'w', encoding='utf-8').write(js)
         astro_route(site, url, site_slug)
         index.append(site_slug)
