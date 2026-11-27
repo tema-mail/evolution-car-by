@@ -455,6 +455,69 @@ def obzor(p, rs, site_slug, pub):
     return p
 
 
+# [уточнить] в сравнении комплектаций -> открытые данные (сверка 27.11.2026, ≥2 источника; нет согласия – «нет данных»)
+# ключ: (строка таблицы, номер колонки версии с 0 – в порядке образца, до KOMPL)
+ND = 'нет данных'
+UTOCHNIT = {
+    # 52 кВт·ч EREV: carnewschina 2026 params, chinaevpro – 10 мин 30–80 %
+    'avatr-12': {('Зарядка 30–80 %', 0): 'около 10 мин', ('Зарядка 30–80 %', 1): 'около 10 мин'},
+    # 230 Max/Ultra: разгон и CCD не объявлены; Harman Kardon – только Ultra (carnewschina, autohome)
+    'lynkco-08': {('Разгон 0–100 км/ч', 0): ND, ('Разгон 0–100 км/ч', 1): ND,
+                  ('Амортизаторы CCD', 0): ND, ('Амортизаторы CCD', 1): ND,
+                  ('Harman Kardon, 23 динамика', 0): '–'},
+    # SU7 2026: carnewschina, Automotive World, paultan
+    'xiaomi-su7': {('Зарядка 10–80 %', 0): 'около 20 мин', ('Зарядка 10–80 %', 1): 'около 20 мин',
+                   ('Разгон 0–100 км/ч', 0): '5,3 с', ('Разгон 0–100 км/ч', 1): '5,7 с',
+                   ('Динамиков', 0): ND, ('Динамиков', 1): ND},
+    # YU7: колонки GT, Standard, Long Range, Pro, Max; carnewschina 2025/2026, evkx, carfolio, arenaev
+    'xiaomi-yu7': {('Зарядка 10–80 %', 2): '21 мин', ('Зарядка 10–80 %', 3): '21 мин', ('Зарядка 10–80 %', 4): '12 мин',
+                   ('Крутящий момент', 0): '1068 Н·м',
+                   ('Максимальная скорость', 2): '240 км/ч', ('Максимальная скорость', 3): '240 км/ч',
+                   ('Пневмоподвеска с CDC', 1): '–', ('Пневмоподвеска с CDC', 2): '–',
+                   **{('Камер', c): '11' for c in (0, 2, 3, 4)},
+                   **{('Центральный экран', c): '16,1″' for c in (1, 2, 3, 4)},
+                   **{('Алькантара в салоне', c): ND for c in (1, 2, 3, 4)},
+                   **{('25 динамиков, Dolby Atmos', c): ND for c in (1, 2, 3, 4)}},
+    # 108 кВт·ч, 800 В: 11,5 мин (paultan, carnewschina, CleanTechnica)
+    'zeekr-009': {('Зарядка 10–80 %', 2): '11,5 мин'},
+    # Max+ = Max 103 кВт·ч: 5,1 с, 240 км/ч; пневмоподвеска у Max – опция (carnewschina 2026, paultan)
+    'zeekr-7x': {('Разгон 0–100 км/ч', 1): '5,1 с (103 кВт·ч)', ('Максимальная скорость', 1): '240 км/ч',
+                 ('Пневмоподвеска', 1): 'опция', ('Пневмоподвеска', 2): 'опция'},
+    'zeekr-x': {('Суппорты Akebono, 4 поршня', 0): ND, ('Суппорты Akebono, 4 поршня', 1): ND},
+}
+
+
+def utochnit(p, rs):
+    # служебные заметки разборщика (CAR.notes) на странице не выводятся – в исходник не кладём
+    m = re.search(r'window\.CAR=(\{.*?\});\s*</script>', p, re.S)
+    if m:
+        car = json.loads(m.group(1))
+        if car.pop('notes', None) is not None:
+            p = p.replace(m.group(1), json.dumps(car, ensure_ascii=False))
+    p = p.replace('<small>цена – уточнить</small>', '<small>цена по запросу</small>')
+    z = UTOCHNIT.get(rs)
+    if not z: return p
+    i = p.find('<div class="cmp" id="cmp"><table>')
+    j = p.index('</table>', i)
+    t, done = p[i:j], set()
+    def row(m):
+        cs = re.findall(r'<td[^>]*>.*?</td>', m.group(1), re.S)
+        if not cs: return m.group(0)
+        if ''.join(cs) != m.group(1): return m.group(0)
+        name = re.sub('<[^>]+>', '', cs[0])
+        hit = False
+        for (r, c), val in z.items():
+            if r != name: continue
+            if '[уточнить]' not in cs[c + 1]: raise SystemExit(f'{rs}: «{r}» колонка {c}: нет метки – {cs[c + 1]}')
+            cs[c + 1] = '<td>' + html.escape(val) + '</td>'
+            done.add((r, c)); hit = True
+        return '<tr>' + ''.join(cs) + '</tr>' if hit else m.group(0)
+    t = re.sub(r'<tr>(.*?)</tr>', row, t, flags=re.S)
+    miss = set(z) - done
+    if miss: raise SystemExit(f'{rs}: не нашёл ячеек {sorted(miss)}')
+    return p[:i] + t + p[j:]
+
+
 def ceny(p, rs, car):
     """чек «под ключ»: неизвестные суммы – «по запросу», итог – ориентир с прежней карточки модели на сайте"""
     ask = '<span class="ask w-ask">[запросить]</span>'
@@ -538,6 +601,7 @@ def main():
         page, C = build_model(rs, src, tpl, cars, links)
         page = clean(page, rs, site_slug, links)
         page = ceny(page, rs, car)
+        page = utochnit(page, rs)
         page = komplektacii(page, rs)
         page = obzor(page, rs, site_slug, pub)
         # рендеры с фоном (Xiaomi) -> вырезанные копии из scripts/karty/vyrezki/
