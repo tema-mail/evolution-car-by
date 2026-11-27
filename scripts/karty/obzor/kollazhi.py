@@ -14,7 +14,8 @@ W, H, G = 1200, 900, 3
 FONT = ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf', 24)
 
 SLUG = {'zeekr-x': 'zeekr-x', 'zeekr-007': 'zeekr-007', 'zeekr-009': 'zeekr-009', 'avatr-12': 'avatr-12',
-        'xiaomi-su7': 'xiaomi-su7', 'xiaomi-yu7': 'xiaomi-yu7', 'lixiang-l9': 'lixiang-l9', 'lixiang-mega': 'lixiang-mega'}
+        'xiaomi-su7': 'xiaomi-su7', 'xiaomi-yu7': 'xiaomi-yu7', 'lixiang-l9': 'lixiang-l9', 'lixiang-mega': 'lixiang-mega',
+        'lynkco-08': 'lynk-co-08', 'lynkco-900': 'lynk-co-900-lynk-co-09'}
 
 # диски: ряды плиток (код опции, подпись); kolesо – центр и радиус переднего колеса на виде сбоку (или ракурс wheel у Li)
 SPEC = {
@@ -58,6 +59,17 @@ SPEC = {
         'diski': {'shot': 'wheel', 'with': ['1482'], 'kol': (661, 565, 150), 'rows': [
             [('1494', '22″ серебристые'), ('1495', 'Livis: 22″ серые')],
             [('1496', '21″ серебристые'), ('1497', '21″ чёрные')]]},
+    },
+    # у Lynk диск задан версией: рендер берём у версии с этим диском
+    'lynkco-08': {
+        'diski': {'shot': 'hero', 'with': ['p3'], 'kol': (660, 373, 93), 'rows': [
+            [('v680', '19″ – версии 230'), ('v682', '20″ – 210 Ultra')]]},
+        'lidar': {'shot': 'hero', 'with': ['v681', 'p3'], 'box': (500, 0, 920, 270)},
+    },
+    'lynkco-900': {
+        'diski': {'shot': 'hero', 'with': ['p3'], 'kol': (611, 373, 90), 'rows': [
+            [('v595', '20″ «Световой вихрь»'), ('v596', '21″ «Световое крыло»')], [('v598', '21″ «Сияние»')]]},
+        'lidar': {'shot': 'hero', 'with': ['v595', 'p5'], 'box': (330, 0, 800, 290)},
     },
     'lixiang-mega': {
         'lidar': {'shot': 'front34', 'with': [], 'box': (150, 120, 1000, 600)},

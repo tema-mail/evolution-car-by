@@ -184,6 +184,8 @@ def copy_shared(ob, pub):
         '#cena{display:none!important}\n'
         '/* лизинг – до калькулятора с данными партнёров (середина декабря); сравнение с другими моделями – уедет в блог */\n'
         '#lizing,#vs{display:none!important}\n'
+        # пара фото в обзоре – одной высоты: рядом с коллажем 4:3 соседнее фото тоже 4:3
+        '.og:has(.k43) .of:not(.t) img{aspect-ratio:4/3!important;object-fit:cover}\n'
         '/* только тёмная тема: переключатель скрыт (в разметке остаётся – на него завязан karta.js) */\n'
         '#tema,[data-evk-toggle]{display:none!important}\n'
         '/* кнопка виджета Битрикс24 – в углу, выше нижнего меню карточки на телефоне */\n'
@@ -474,6 +476,14 @@ OBZOR = {
     'lixiang-mega': [
         ('Четыре лидара', 'lidar.webp', 'Li Auto MEGA спереди'),
     ],
+    'lynkco-08': [
+        ('Лидар на 192 линии во всех версиях', 'lidar.webp', 'Lynk & Co 08: лидар на крыше над лобовым стеклом'),
+        ('Диски 19–20″', 'diski.webp', 'Lynk & Co 08: диски 19″ у версий 230 и 20″ у 210 Ultra'),
+    ],
+    'lynkco-900': [
+        ('Лидар над лобовым стеклом', 'lidar.webp', 'Lynk & Co 900: лидар на крыше над лобовым стеклом'),
+        ('Диски 20–21″', 'diski.webp', 'Lynk & Co 900: диски 20″ «Световой вихрь», 21″ «Световое крыло» и 21″ «Сияние»'),
+    ],
 }
 
 
@@ -532,6 +542,14 @@ def utochnit(p, rs):
         if car.pop('notes', None) is not None:
             p = p.replace(m.group(1), json.dumps(car, ensure_ascii=False))
     p = p.replace('<small>цена – уточнить</small>', '<small>цена по запросу</small>')
+    # Zeekr 7X Max+ (задний привод, 103 кВт·ч): ориентир 249 800 ¥ – carnewschina, 2026 params; цена 85 кВт·ч не найдена
+    if rs == 'zeekr-7x':
+        car = json.loads(re.search(r'window\.CAR=(\{.*?\});\s*</script>', p, re.S).group(1))
+        v = next(v for v in car['versions'] if v['n'] == 'Max+')
+        next(b for b in v['b'] if b['l'].startswith('103'))['p'] = 249800
+        p = re.sub(r'(window\.CAR=)\{.*?\}(;\s*</script>)', lambda m: m.group(1) + json.dumps(car, ensure_ascii=False) + m.group(2), p, 1, flags=re.S)
+        p = patch(p, '<b>Max+</b><small>цена по запросу</small>', '<b>Max+</b><small>от 249 800 ¥</small>', 'zeekr-7x: цена Max+')
+        p = patch(p, 'батарея 85 или 103 кВт·ч; цена ещё не объявлена', 'батарея 85 или 103 кВт·ч; с батареей 103 кВт·ч – от 249 800 ¥', 'zeekr-7x: доплата Max+')
     z = UTOCHNIT.get(rs)
     if not z: return p
     i = p.find('<div class="cmp" id="cmp"><table>')

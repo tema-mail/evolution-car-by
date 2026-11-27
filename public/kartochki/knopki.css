@@ -23,6 +23,7 @@
 #cena{display:none!important}
 /* лизинг – до калькулятора с данными партнёров (середина декабря); сравнение с другими моделями – уедет в блог */
 #lizing,#vs{display:none!important}
+.og:has(.k43) .of:not(.t) img{aspect-ratio:4/3!important;object-fit:cover}
 /* только тёмная тема: переключатель скрыт (в разметке остаётся – на него завязан karta.js) */
 #tema,[data-evk-toggle]{display:none!important}
 /* кнопка виджета Битрикс24 – в углу, выше нижнего меню карточки на телефоне */
