@@ -470,6 +470,11 @@ OBZOR = {
         ('Диски от 19″ до 21″', 'diski.webp', 'Xiaomi YU7: девять вариантов дисков от 19″ до кованых 21″, три из них – для GT'),
         ('Лидар на всех версиях', 'lidar.webp', 'Xiaomi YU7 спереди: лидар над лобовым стеклом'),
     ],
+    # Li L8: под подписями стояли виды спереди/сзади – официальные кадры с lixiang.com/L8
+    'lixiang-l8': [
+        ('Разворот 5,1 м', 'razvorot.webp', 'Li Auto L8: схема разворота с радиусом 5,1 м'),
+        ('Багажник 820 л', 'bagazhnik.webp', 'Li Auto L8: загруженный багажник'),
+    ],
     'lixiang-l9': [
         ('Диски 22″ и разворот 5,3 м', 'diski.webp', 'Li Auto L9: диски 22″ серебристые и серые Livis, 21″ серебристые и чёрные'),
     ],
@@ -612,6 +617,51 @@ def foto(p, rs):
     return p
 
 
+# текстовые плашки -> настоящие фото по подписи (официальные пресс-фото и сайты марок, сбор 27.11.2026).
+# (подпись, файл в scripts/karty/obzor/<образец>/, alt[, (новый заголовок, новый текст)]); кадр обязан показывать то, о чём подпись
+PLASHKI = {
+    'lixiang-l8': [('Ориентир – Maybach и BMW', 'vtoroj-ryad.webp', 'Li Auto L8: второй ряд, кресла с подставками для ног разложены'),
+                   ('Экран для второго ряда', 'ekran-2-ryad.webp', 'Li Auto L8: выдвижной потолочный экран для второго ряда')],
+    'lixiang-l9': [('Второй ряд со шторками и затемнением', 'shtorki.webp', 'Li Auto L9: пассажирка второго ряда у окна со шторкой'),
+                   ('Холодильник 10 л', 'holodilnik.webp', 'Li Auto L9: выдвижной холодильник в центральной консоли'),
+                   ('Звук 9.3.6 на 5440 Вт', 'zvuk.webp', 'Li Auto L9: динамики в подголовнике кресла')],
+    'lixiang-mega': [('Поворотные кресла и стол', 'kresla-stol.webp', 'Li Auto MEGA: семья за столом, кресла второго ряда развёрнуты'),
+                     ('Потолочный свет Home Light', 'svet.webp', 'Li Auto MEGA: светодиодный светильник во весь потолок'),
+                     ('33 динамика', 'dinamiki.webp', 'Li Auto MEGA сверху: расположение динамиков в салоне')],
+    'avatr-12': [('Экраны для второго ряда', 'ekran-2-ryad.webp', 'Avatr 12: потолочный экран для второго ряда'),
+                 ('Камеры вместо зеркал', 'kamery.webp', 'Avatr 12: камера вместо бокового зеркала и экран в салоне'),
+                 ('Meridian, 25 динамиков', 'meridian.webp', 'Avatr 12: потолочный динамик аудиосистемы')],
+    'lynkco-08': [('Кресло пассажира с подставкой для ног', 'kreslo-passazhira.webp', 'Lynk & Co 08: откинутое кресло пассажира с подставкой для ног'),
+                  ('Второй ряд с наклоном спинки', 'vtoroj-ryad.webp', 'Lynk & Co 08: второй ряд под панорамной крышей'),
+                  ('Холодильник 7 л и панорамная крыша', 'holodilnik.webp', 'Lynk & Co 08: холодильник в центральной консоли'),
+                  ('Harman Kardon, 23 динамика', 'harman.webp', 'Lynk & Co 08: динамик Harman Kardon на панели')],
+    'lynkco-900': [('6 мест: два кресла во втором ряду', '6-mest.webp', 'Lynk & Co 900 в разрезе: шесть мест, два кресла во втором ряду'),
+                   ('Harman Kardon', 'harman.webp', 'Lynk & Co 900: динамик Harman Kardon в двери')],
+    'xiaomi-yu7': [('GT: алькантара и массаж всех четырёх мест', 'gt-kresla.webp', 'Xiaomi YU7 GT: кресла с алькантарой'),
+                   ('До 25 динамиков с Dolby Atmos', 'dolby.webp', 'Xiaomi YU7 сверху: динамики в салоне')],
+    'zeekr-7x': [('Второй ряд 1187 мм для ног', 'vtoroj-ryad.webp', 'Zeekr 7X: вид со второго ряда'),
+                 ('Экран 16″, приборы 13″, проекция', 'ekran.webp', 'Zeekr 7X: центральный экран 16″')],
+    'zeekr-x': [('Экран 14,6″ ездит по рельсу', 'ekran.webp', 'Zeekr X: центральный экран 14,6″ на передней панели')],
+    'zeekr-007': [('Экран 15,4″ и проекция 35,5″', 'ekran-hud.webp', 'Zeekr 007: проекция на лобовое стекло и центральный экран'),
+                  ('Zeekr Sound Pro на 23 динамика', 'zvuk.webp', 'Zeekr 007: динамик на передней панели')],
+    'zeekr-009': [('Кресла второго ряда с массажем', 'kresla-2-ryad.webp', 'Zeekr 009: кресла второго ряда с динамиками в подголовниках'),
+                  ('Экраны 10,25″ и 16″, потолочный 17″', 'ekran-potolok.webp', 'Zeekr 009: потолочный экран для второго ряда')],
+}
+
+
+def plashki(p, rs, site_slug, pub):
+    import hashlib
+    for cap, f, alt, *nov in PLASHKI.get(rs, []):
+        src = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'obzor', rs, f)
+        os.makedirs(f'{pub}/kartochki/{site_slug}/img', exist_ok=True)
+        shutil.copy(src, f'{pub}/kartochki/{site_slug}/img/{f}')
+        v = hashlib.md5(open(src, 'rb').read()).hexdigest()[:8]
+        m = one(r'<figure class="of t"><figcaption><b>' + re.escape(cap) + r'</b>([^<]*)</figcaption>', p, f'{rs}: плашка «{cap}»')
+        b, t = (nov[0] if nov else (cap, m.group(1)))
+        p = p.replace(m.group(0), f'<figure class="of k43"><img src="/kartochki/{site_slug}/img/{f}?v={v}" alt="{html.escape(alt)}" width="1200" height="900" loading="lazy"><figcaption><b>{b}</b>{t}</figcaption>')
+    return p
+
+
 def raskladka(p, rs):
     """в каждой вкладке обзора: фото парами (нечётное – первое во всю ширину), текстовые плашки ниже, парами"""
     out_p, pos = [], 0
@@ -741,6 +791,7 @@ def main():
         page = komplektacii(page, rs)
         page = obzor(page, rs, site_slug, pub)
         page = foto(page, rs)
+        page = plashki(page, rs, site_slug, pub)
         page = raskladka(page, rs)
         # рендеры с фоном (Xiaomi) -> вырезанные копии из scripts/karty/vyrezki/
         vd = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'vyrezki')
