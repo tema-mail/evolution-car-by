@@ -434,6 +434,27 @@ def cfg_names(js, rs):
     return js
 
 
+# обзор «Экстерьер»: подпись про цвета или диски – коллаж из рендеров конфигуратора (scripts/karty/obzor/<образец>/)
+OBZOR = {
+    'zeekr-7x': [
+        ('Восемь цветов кузова', 'cveta.webp', 'Zeekr 7X в восьми цветах кузова: белый, чёрный, золотой «Рассвет», янтарно-красный, фиолетовый, серебристый, зелёный, синий'),
+        ('Диски от 19 до 21″', 'diski.webp', 'Zeekr 7X: девять вариантов дисков – 19″ аэродинамические и многоспицевые, 20″ многоспицевые, 21″ спортивные и кованые'),
+    ],
+}
+
+
+def obzor(p, rs, site_slug, pub):
+    import hashlib
+    for cap, f, alt in OBZOR.get(rs, []):
+        src = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'obzor', rs, f)
+        os.makedirs(f'{pub}/kartochki/{site_slug}/img', exist_ok=True)
+        shutil.copy(src, f'{pub}/kartochki/{site_slug}/img/{f}')
+        v = hashlib.md5(open(src, 'rb').read()).hexdigest()[:8]
+        m = one(r'<figure class="of"><img src="[^"]+" alt="[^"]*" loading="lazy"><figcaption><b>' + re.escape(cap) + '</b>', p, f'{rs}: обзор «{cap}»')
+        p = p.replace(m.group(0), f'<figure class="of k43"><img src="/kartochki/{site_slug}/img/{f}?v={v}" alt="{alt}" width="1200" height="900" loading="lazy"><figcaption><b>{cap}</b>')
+    return p
+
+
 def ceny(p, rs, car):
     """чек «под ключ»: неизвестные суммы – «по запросу», итог – ориентир с прежней карточки модели на сайте"""
     ask = '<span class="ask w-ask">[запросить]</span>'
@@ -489,6 +510,7 @@ def main():
         page = clean(page, rs, site_slug, links)
         page = ceny(page, rs, car)
         page = komplektacii(page, rs)
+        page = obzor(page, rs, site_slug, pub)
         # рендеры с фоном (Xiaomi) -> вырезанные копии из scripts/karty/vyrezki/
         vd = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'vyrezki')
         for f in sorted(os.listdir(vd)) if os.path.isdir(vd) else []:
