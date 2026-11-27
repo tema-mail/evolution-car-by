@@ -719,6 +719,20 @@ def ceny(p, rs, car):
     return p
 
 
+def hero_kadr(src, dst):
+    """вырезка (обрезана вплотную к машине) -> холст 1600×725 с полями как у рендеров Zeekr:
+    машина 70 % ширины, низ колёс на 84 % высоты – иначе на первом экране Li крупнее и уходит за край (27.11.2026)"""
+    from PIL import Image
+    im = Image.open(src).convert('RGBA')
+    im = im.crop(im.getchannel('A').point(lambda v: 255 if v > 24 else 0).getbbox())
+    W, H = 1600, 725
+    k = min(W * .70 / im.width, H * .68 / im.height)
+    im = im.resize((round(im.width * k), round(im.height * k)), Image.LANCZOS)
+    c = Image.new('RGBA', (W, H), (0, 0, 0, 0))
+    c.alpha_composite(im, ((W - im.width) // 2, round(H * .84) - im.height))
+    c.save(dst, 'WEBP', quality=86, method=6)
+
+
 def sim_img(slug, src):
     """превью для «Похожих»: машина по контуру (рендеры с прозрачным фоном) в одной рамке 800×450 –
     одинаковая ширина и линия колёс у всех моделей, как у Zeekr 9X (решение владельца 27.11.2026)"""
@@ -820,7 +834,7 @@ def main():
             if not f.startswith(rs + '__'): continue
             name = f.split('__', 1)[1]
             os.makedirs(f'{pub}/kartochki/{site_slug}/hero', exist_ok=True)
-            shutil.copy(os.path.join(vd, f), f'{pub}/kartochki/{site_slug}/hero/{name}')
+            hero_kadr(os.path.join(vd, f), f'{pub}/kartochki/{site_slug}/hero/{name}')
             page = page.replace(f'https://tema-mail.github.io/{rs}-konfigurator/img/{rs}/ext/{name}', f'/kartochki/{site_slug}/hero/{name}')
         # тест-драйв: фото машины у фасада сервиса (scripts/karty/foto-td/<образец>.webp); нет фото – остаётся рендер
         fd = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'foto-td', rs + '.webp')
