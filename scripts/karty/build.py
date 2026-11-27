@@ -292,6 +292,8 @@ def clean(page, rs, site_slug, links):
     p = re.sub(r'<header class="hd" id="hd">.*?</header>\n?', '', p, 1, flags=re.S)
     p = re.sub(r'<footer class="w-footer ft">.*?</footer>\n?', '', p, 1, flags=re.S)
     p = re.sub(r'<div class="w-wrap"></div>\n?', '', p)
+    # строка «Обновлено … · Проверил: [запросить эксперта]» внизу – убрана по просьбе владельца
+    p = re.sub(r'\s*<p class="src">Обновлено [^<]*· Проверил:.*?</p>', '', p, 1, flags=re.S)
     p = re.sub(r'\n\s*data-(question|next|proof|us|client)="[^"]*"', '', p)
     # адреса файлов
     p = p.replace('href="../ev.css', 'href="/kartochki/ev.css').replace('href="../karta.css', 'href="/kartochki/karta.css')
@@ -440,18 +442,53 @@ OBZOR = {
         ('Восемь цветов кузова', 'cveta.webp', 'Zeekr 7X в восьми цветах кузова: белый, чёрный, золотой «Рассвет», янтарно-красный, фиолетовый, серебристый, зелёный, синий'),
         ('Диски от 19 до 21″', 'diski.webp', 'Zeekr 7X: девять вариантов дисков – 19″ аэродинамические и многоспицевые, 20″ многоспицевые, 21″ спортивные и кованые'),
     ],
+    # коллажи и крупные планы – scripts/karty/obzor/kollazhi.py; 4-й элемент – новая подпись (заголовок, текст), если старая расходится с конфигуратором
+    'zeekr-x': [
+        ('Шесть цветов, новый зелёный «Сиэтл»', 'cveta.webp', 'Zeekr X в шести цветах: бежевый «Париж», зелёный «Ханчжоу», серый «Сучжоу», чёрный «Осло», розовый «Калифорния», зелёный «Сиэтл»'),
+        ('Диски 19″ или кованые 20″', 'diski.webp', 'Zeekr X: диски 18″ и 19″ у Max, кованые 20″ светлые и тёмные у Ultra',
+         ('Диски 18–19″ или кованые 20″', 'У Max – 18″ или 19″ в трёх дизайнах, у Ultra – кованые спортивные 20″, светлые или тёмные.')),
+    ],
+    'zeekr-007': [
+        ('Шины R19 серийно, кованые 20″ в FR-LINE', 'diski.webp', 'Zeekr 007: четыре варианта дисков 19″ и три кованых 20″, в том числе FR-LINE с оранжевыми суппортами'),
+    ],
+    'zeekr-009': [
+        ('Диски 19″, по желанию 20″', 'diski.webp', 'Zeekr 009: диски «Синъяо» 19″ и 20″'),
+        ('Лидар над лобовым стеклом', 'lidar.webp', 'Zeekr 009: лидар на крыше над лобовым стеклом'),
+    ],
+    'avatr-12': [
+        ('Четыре лидара', 'lidar.webp', 'Avatr 12 спереди: главный лидар на крыше над лобовым стеклом'),
+        ('Диски 20″ или 21″', 'diski.webp', 'Avatr 12: диски 20″ «Лопасти», 21″ «Луч» и 21″ «Циклон»'),
+    ],
+    'xiaomi-su7': [
+        ('Лидар на крыше у всех версий', 'lidar.webp', 'Xiaomi SU7 спереди: лидар на крыше над лобовым стеклом'),
+        ('Широкие задние шины 265 мм', 'diski.webp', 'Xiaomi SU7: пять вариантов дисков от 19″ до кованых 21″',
+         ('Широкие задние шины 265 мм', 'Спереди 245 мм. В конфигураторе пять вариантов дисков – от 19″ до кованых 21″.')),
+    ],
+    'xiaomi-yu7': [
+        ('Диски от 19″ до 21″', 'diski.webp', 'Xiaomi YU7: девять вариантов дисков от 19″ до кованых 21″, три из них – для GT'),
+        ('Лидар на всех версиях', 'lidar.webp', 'Xiaomi YU7 спереди: лидар над лобовым стеклом'),
+    ],
+    'lixiang-l9': [
+        ('Диски 22″ и разворот 5,3 м', 'diski.webp', 'Li Auto L9: диски 22″ серебристые и серые Livis, 21″ серебристые и чёрные'),
+    ],
+    'lixiang-mega': [
+        ('Четыре лидара', 'lidar.webp', 'Li Auto MEGA спереди'),
+    ],
 }
 
 
 def obzor(p, rs, site_slug, pub):
     import hashlib
-    for cap, f, alt in OBZOR.get(rs, []):
+    for cap, f, alt, *nov in OBZOR.get(rs, []):
         src = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'obzor', rs, f)
         os.makedirs(f'{pub}/kartochki/{site_slug}/img', exist_ok=True)
         shutil.copy(src, f'{pub}/kartochki/{site_slug}/img/{f}')
         v = hashlib.md5(open(src, 'rb').read()).hexdigest()[:8]
-        m = one(r'<figure class="of"><img src="[^"]+" alt="[^"]*" loading="lazy"><figcaption><b>' + re.escape(cap) + '</b>', p, f'{rs}: обзор «{cap}»')
+        m = one(r'<figure class="of[^"]*"><img src="[^"]+" alt="[^"]*" loading="lazy"><figcaption><b>' + re.escape(cap) + '</b>', p, f'{rs}: обзор «{cap}»')
         p = p.replace(m.group(0), f'<figure class="of k43"><img src="/kartochki/{site_slug}/img/{f}?v={v}" alt="{alt}" width="1200" height="900" loading="lazy"><figcaption><b>{cap}</b>')
+        if nov:
+            t = one(r'(<img src="/kartochki/' + re.escape(f'{site_slug}/img/{f}') + r'[^>]*><figcaption>)<b>[^<]*</b>[^<]*(</figcaption>)', p, f'{rs}: подпись «{cap}»')
+            p = p.replace(t.group(0), t.group(1) + f'<b>{nov[0][0]}</b>{nov[0][1]}' + t.group(2))
     return p
 
 
@@ -518,6 +555,87 @@ def utochnit(p, rs):
     return p[:i] + t + p[j:]
 
 
+# снимки салона по подписям (сверено глазами 27.11.2026): у Li int – панель с экраном, int2 – кресла.
+# ('shot', подпись, было, стало) – другой ракурс того же рендера; ('img', откуда, куда) – перенести снимок к другой подписи,
+# откуда становится текстовой плашкой; ('text', подпись) – подходящего снимка нет, остаётся плашка
+FOTO = {
+    'lixiang-l8': [('shot', 'Пять мест вместо шести', '--int.webp', '--int2.webp'), ('text', 'Ориентир – Maybach и BMW'), ('shot', 'Экран 29″ 6K во всю панель', '--int2.webp', '--int.webp')],
+    'lixiang-l9': [('shot', 'Шесть мест в три ряда', '--int.webp', '--int2.webp'), ('text', 'Второй ряд со шторками и затемнением'), ('shot', 'Экран 29″ 6K во всю панель', '--int2.webp', '--int.webp')],
+    'lixiang-mega': [('shot', 'Семь мест, 2+2+3', '--int.webp', '--int2.webp'), ('text', 'Поворотные кресла и стол'), ('shot', 'Экраны OLED 29″ и 21″', '--int2.webp', '--int.webp')],
+    'avatr-12': [('shot', '5 мест, два ряда', '--int.webp', '--int3.webp'), ('shot', 'Экран 35,4″ 4K и 15,6″ в центре', '--int2.webp', '--int.webp'),
+                 ('text', 'Экраны для второго ряда'), ('text', 'Камеры вместо зеркал')],
+    'xiaomi-su7': [('shot', 'Водительское кресло – 18 направлений регулировки', '--int.webp', '--int2.webp'),
+                   ('shot', 'Экран 16,1″ и приборы 7,1″', '--int2.webp', '--int.webp'), ('text', 'Холодильник 4,4 л')],
+    'xiaomi-yu7': [('shot', 'Передние кресла откидываются до 123°', '--int.webp', '--int2.webp'),
+                   ('shot', 'Панорамный экран HyperVision 1,1 м', '--int2.webp', '--int.webp'), ('text', 'Багажник 678 л и передний 141 л')],
+    'lynkco-08': [('img', 'Кресло пассажира с подставкой для ног', 'Экран 15,4″ и проекция 95″')],
+    'lynkco-900': [('img', '6 мест: два кресла во втором ряду', 'Экран 30″ 6K спереди и 30″ сзади')],
+}
+
+
+def fig_re(cap):
+    return r'<figure class="(of[^"]*)">(<img [^>]*>)?<figcaption><b>' + re.escape(cap) + r'</b>'
+
+
+def foto(p, rs):
+    for op in FOTO.get(rs, []):
+        if op[0] == 'shot':
+            m = one(fig_re(op[1]), p, f'{rs}: фото «{op[1]}»')
+            if not m.group(2) or op[2] not in m.group(2): raise SystemExit(f'{rs}: «{op[1]}» – нет {op[2]}')
+            p = p.replace(m.group(0), m.group(0).replace(op[2], op[3]))
+        elif op[0] == 'text':
+            m = one(fig_re(op[1]), p, f'{rs}: фото «{op[1]}»')
+            p = p.replace(m.group(0), f'<figure class="of t"><figcaption><b>{op[1]}</b>')
+        elif op[0] == 'img':
+            a = one(fig_re(op[1]), p, f'{rs}: фото «{op[1]}»'); img = a.group(2)
+            p = p.replace(a.group(0), f'<figure class="of t"><figcaption><b>{op[1]}</b>')
+            b = one(fig_re(op[2]), p, f'{rs}: фото «{op[2]}»')
+            p = p.replace(b.group(0), f'<figure class="of">{img}<figcaption><b>{op[2]}</b>')
+    return p
+
+
+def raskladka(p, rs):
+    """в каждой вкладке обзора: фото парами (нечётное – первое во всю ширину), текстовые плашки ниже, парами"""
+    out_p, pos = [], 0
+    for m in re.finditer(r'<div class="ob" id="o-[a-z]+"><h3>[^<]*</h3>', p):
+        if m.start() < pos: continue
+        # конец вкладки – по балансу div
+        depth, k = 1, m.end()
+        while depth:
+            a, b = p.find('<div', k), p.find('</div>', k)
+            if a != -1 and a < b: depth += 1; k = a + 4
+            else: depth -= 1; k = b + 6
+        body = p[m.end():k - 6]
+        new = sloi(body)
+        out_p.append(p[pos:m.end()] + (new if new is not None else body) + '</div>'); pos = k
+    return ''.join(out_p) + p[pos:]
+
+
+def sloi(body):
+    pos, figs, og = 0, [], '<div class="og">'
+    while pos < len(body):
+        ws = re.match(r'\s+', body[pos:])
+        if ws: pos += ws.end(); continue
+        f = re.match(r'<figure class="of[^"]*">.*?</figure>', body[pos:], re.S)
+        if f: figs.append(f.group(0)); pos += f.end(); continue
+        g = re.match(r'(<div class="og[^"]*"[^>]*>)((?:\s*<figure class="of[^"]*">.*?</figure>)*)\s*</div>', body[pos:], re.S)
+        if g: og = g.group(1); figs += re.findall(r'<figure class="of[^"]*">.*?</figure>', g.group(2), re.S); pos += g.end(); continue
+        return None  # незнакомая разметка – вкладку не трогаем
+    cls = lambda f: re.match(r'<figure class="([^"]*)"', f).group(1).split()
+    txt = [f for f in figs if 't' in cls(f)]
+    ph = [f for f in figs if 't' not in cls(f)]
+    def setbig(f, big):
+        c = [x for x in cls(f) if x != 'big'] + (['big'] if big else [])
+        return re.sub(r'^<figure class="[^"]*"', f'<figure class="{" ".join(c)}"', f)
+    out = []
+    if len(ph) % 2: out.append(setbig(ph[0], True)); ph = ph[1:]
+    if ph: out.append(og + ''.join(setbig(f, False) for f in ph) + '</div>')
+    tail = txt.pop() if len(txt) % 2 else None
+    if txt: out.append('<div class="og">' + ''.join(txt) + '</div>')
+    if tail: out.append(tail)
+    return ''.join(out)
+
+
 def ceny(p, rs, car):
     """чек «под ключ»: неизвестные суммы – «по запросу», итог – ориентир с прежней карточки модели на сайте"""
     ask = '<span class="ask w-ask">[запросить]</span>'
@@ -545,7 +663,7 @@ def pohozhie(outdir):
     by_name = {html.unescape(k['name']): s for s, k in K.items()}
     for s, k in K.items():
         h = k['d']['html']
-        m = one(r'<div class="sim w-grid m-lane" data-mob="lenta">(.*?)</div>\s*<p class="src">', h, f'{s}: похожие')
+        m = one(r'<div class="sim w-grid m-lane" data-mob="lenta">(.*?)</div>\s*</div>\s*</section>', h, f'{s}: похожие')
         was = [html.unescape(x) for x in re.findall(r'<b>([^<]+)</b>', m.group(1))]
         pick = [by_name[x] for x in was if x in by_name and by_name[x] != s]
         for o in sorted(K, key=lambda o: abs(K[o]['min'] - k['min'])):
@@ -604,6 +722,8 @@ def main():
         page = utochnit(page, rs)
         page = komplektacii(page, rs)
         page = obzor(page, rs, site_slug, pub)
+        page = foto(page, rs)
+        page = raskladka(page, rs)
         # рендеры с фоном (Xiaomi) -> вырезанные копии из scripts/karty/vyrezki/
         vd = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'vyrezki')
         for f in sorted(os.listdir(vd)) if os.path.isdir(vd) else []:
