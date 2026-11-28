@@ -35,8 +35,12 @@ KEY="${DEPLOY_KEY:-$HOME/.ssh/hoster_by_ed25519}"
 # Сборка без PUBLIC_SITE_URL ушла на бой (найдено 05.11.2026): canonical, sitemap,
 # robots и разметка 457 файлов вели на зеркало tema-mail.github.io. Проверка здесь,
 # а не только в release.sh, потому что заливка запускается и сама по себе.
-if chuzhie=$(grep -rlE 'tema-mail\.github\.io|xn--80agnajes3a' "$HERE/dist" 2>/dev/null); then
-  echo "НЕ ЗАЛИВАЮ: в сборке чужой домен, файлов: $(echo "$chuzhie" | wc -l | tr -d ' '). Собирать через zsh deploy/release.sh" >&2
+# Исключение (28.11.2026): рендеры конфигураторов на карточках «Китай под заказ»
+# (/kartochki/, /catalog/<марка>/<модель>/) берутся с tema-mail.github.io/<модель>-konfigurator/ –
+# это картинки, не адрес сайта; ~9 000 файлов на хостинг не везём. Любое другое упоминание зеркала ловится.
+if chuzhie=$(grep -rhoE 'tema-mail\.github\.io/?[A-Za-z0-9._-]*|xn--80agnajes3a' "$HERE/dist" 2>/dev/null \
+    | grep -vE '^tema-mail\.github\.io/[a-z0-9-]+-konfigurator$'); then
+  echo "НЕ ЗАЛИВАЮ: в сборке чужой домен, упоминаний: $(echo "$chuzhie" | wc -l | tr -d ' ') ($(echo "$chuzhie" | sort -u | head -3 | tr '\n' ' ')). Собирать через zsh deploy/release.sh" >&2
   exit 1
 fi
 
